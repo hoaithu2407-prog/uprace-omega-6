@@ -67,6 +67,10 @@
       </div>
       <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
         <div>
+          <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
+          <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+        </div>
+        <div>
           <label class="block text-xs text-slate-400 mb-1">Đội</label>
           <select id="input-team" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
             <option value="1">Đội 1</option>
@@ -92,28 +96,18 @@
           <label class="block text-xs text-slate-400 mb-1">Pace</label>
           <input type="number" step="0.1" id="input-pace" placeholder="VD: 5.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Thuộc Tuần</label>
-          <select id="input-week" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
-            <option value="1">Tuần 1</option>
-            <option value="2">Tuần 2</option>
-            <option value="3">Tuần 3</option>
-            <option value="4">Tuần 4</option>
-            <option value="5">Tuần 5</option>
-            <option value="6">Tuần 6</option>
-            <option value="7">Tuần 7</option>
-            <option value="8">Tuần 8</option>
-          </select>
-        </div>
         <div class="flex items-end">
           <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
             Ghi Nhận
           </button>
         </div>
       </form>
+      <div className="mt-2 text-xs text-slate-400 italic" id="auto-week-hint">
+        💡 Hệ thống sẽ tự động tính tuần dựa trên ngày bạn chọn (Tuần 1 bắt đầu từ 21/09/2026 - Thứ 2).
+      </div>
     </section>
 
-    <!-- BẢNG XẾP HẠNG (CÓ BỘ LỌC THEO TUẦN) -->
+    <!-- BẢNG XẾP HẠNG -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
@@ -124,7 +118,6 @@
         </div>
 
         <div class="flex flex-wrap gap-2 w-full md:w-auto">
-          <!-- BỘ LỌC TUẦN -->
           <select id="filter-week" class="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold rounded-lg px-3 py-1.5 text-xs">
             <option value="all">📅 Tất cả các Tuần (Tổng)</option>
             <option value="1">Tuần 1</option>
@@ -137,7 +130,6 @@
             <option value="8">Tuần 8</option>
           </select>
 
-          <!-- BỘ LỌC ĐỘI -->
           <select id="filter-team" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200">
             <option value="all">Tất cả đội</option>
             <option value="1">Đội 1</option>
@@ -168,13 +160,14 @@
       </div>
     </section>
 
-    <!-- QUẢN LÝ & CHỈNH SỬA DANH SÁCH TRACK ĐÃ NHẬP -->
+    <!-- QUẢN LÝ TRACK -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <h2 class="text-cyan-400 font-bold mb-4 text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300">
           <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
             <tr>
+              <th class="p-3">Ngày</th>
               <th class="p-3">Tuần</th>
               <th class="p-3">Thành viên</th>
               <th class="p-3">Đội</th>
@@ -198,9 +191,26 @@
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
     };
 
+    // Ngày bắt đầu giải: 21/09/2026 (Thứ 2 - Tuần 1)
+    const START_DATE = new Date('2026-09-21');
+
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
     let editingId = null;
+
+    // Đặt mặc định ngày hiện tại trên ô input
+    document.getElementById('input-date').valueAsDate = new Date();
+
+    // Hàm tính tuần dựa trên Ngày (Thứ 2 là ngày bắt đầu tuần)
+    function calculateWeekNumber(dateString) {
+      const selectedDate = new Date(dateString);
+      const diffTime = selectedDate - START_DATE;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) return 1; // Nhập ngày trước giải thì quy về tuần 1
+      const weekNum = Math.floor(diffDays / 7) + 1;
+      return weekNum > 8 ? 8 : weekNum; // Tối đa 8 tuần
+    }
 
     function saveToStorage() {
       localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
@@ -243,13 +253,13 @@
       if (!track) return;
 
       editingId = id;
+      document.getElementById('input-date').value = track.date;
       document.getElementById('input-team').value = track.teamId;
       initMemberDropdown();
       document.getElementById('input-member').value = track.member;
       document.getElementById('input-type').value = track.type;
       document.getElementById('input-distance').value = track.distance;
       document.getElementById('input-pace').value = track.pace;
-      document.getElementById('input-week').value = track.week || 1;
 
       document.getElementById('form-title').innerText = "✏️ CHỈNH SỬA TRACK";
       document.getElementById('submit-btn').innerText = "Cập Nhật Track";
@@ -262,6 +272,7 @@
     function cancelEdit() {
       editingId = null;
       document.getElementById('track-form').reset();
+      document.getElementById('input-date').valueAsDate = new Date();
       initMemberDropdown();
       document.getElementById('form-title').innerText = "➕ GHI NHẬN TRACK MỚI";
       document.getElementById('submit-btn').innerText = "Ghi Nhận";
@@ -292,12 +303,12 @@
 
     document.getElementById('track-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      const date = document.getElementById('input-date').value;
       const teamId = parseInt(document.getElementById('input-team').value);
       const member = document.getElementById('input-member').value;
       const type = document.getElementById('input-type').value;
       const distance = parseFloat(document.getElementById('input-distance').value);
       const pace = parseFloat(document.getElementById('input-pace').value);
-      const week = parseInt(document.getElementById('input-week').value);
 
       if (type === 'swim' && (distance <= 500 || pace >= 6)) {
         alert("Bơi phải > 500m và pace < 6!");
@@ -308,17 +319,19 @@
         return;
       }
 
+      // Tự động tính thuộc tuần mấy
+      const week = calculateWeekNumber(date);
+
       if (editingId) {
         const index = tracks.findIndex(t => t.id === editingId);
         if (index > -1) {
-          tracks[index] = { ...tracks[index], teamId, member, type, distance, pace, week };
+          tracks[index] = { ...tracks[index], date, teamId, member, type, distance, pace, week };
         }
         cancelEdit();
       } else {
         tracks.unshift({
           id: Date.now(),
-          teamId, member, type, distance, pace, week,
-          date: new Date().toISOString().split('T')[0]
+          date, teamId, member, type, distance, pace, week
         });
       }
 
@@ -349,10 +362,9 @@
       tracks.forEach(t => {
         const m = memberStats[t.member];
         if (!m) return;
-        const w = t.week || 1;
+        const w = t.week || calculateWeekNumber(t.date);
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
 
-        // Lưu dữ liệu tổng theo môn nếu trùng tuần đang chọn (hoặc chọn 'all')
         if (selectedWeekVal === 'all' || parseInt(selectedWeekVal) === w) {
           if (t.type === 'run') m.runKm += t.distance / 1000;
           if (t.type === 'swim') m.swimKm += t.distance / 1000;
@@ -368,14 +380,12 @@
         let total = 0;
 
         if (selectedWeekVal === 'all') {
-          // Tính tổng 8 tuần
           for (let w = 1; w <= 8; w++) {
             const wKm = m.weeklyKm[w] || 0;
             const isKM = khoMao[m.teamId].includes(w);
             total += isKM ? wKm : Math.min(wKm, 50);
           }
         } else {
-          // Tính riêng tuần đang lọc
           const w = parseInt(selectedWeekVal);
           const wKm = m.weeklyKm[w] || 0;
           const isKM = khoMao[m.teamId].includes(w);
@@ -414,12 +424,14 @@
 
       // Render Lịch sử Track
       document.getElementById('history-body').innerHTML = tracks.length === 0 
-        ? `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
+        ? `<tr><td colspan="9" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
         : tracks.map(t => {
             const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
+            const w = t.week || calculateWeekNumber(t.date);
             return `
               <tr class="hover:bg-slate-700/30">
-                <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${t.week || 1}</td>
+                <td class="p-3 text-slate-300 font-medium text-xs">${t.date}</td>
+                <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
                 <td class="p-3 font-semibold text-slate-100">${t.member}</td>
                 <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">Đội ${t.teamId}</span></td>
                 <td class="p-3">${t.type === 'swim' ? '🏊 Bơi' : '🏃 Chạy'}</td>
