@@ -23,9 +23,14 @@
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
     
-    <!-- THANH SONG ĐẤU (2 THANH: LŨY TIẾN & THEO TUẦN) -->
+    <!-- KHU VỰC DÒNG CẬP NHẬT MỚI NHẤT (KHOANH ĐỎ) -->
+    <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong></span>
+    </div>
+
+    <!-- THANH SONG ĐẤU -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
-      
       <!-- THANH 1: TỔNG LŨY TIẾN -->
       <div>
         <div class="flex justify-between items-center mb-2 font-bold">
@@ -132,13 +137,12 @@
       </form>
     </section>
 
-    <!-- THÔNG TIN LẦN CẬP NHẬT MỚI NHẤT -->
-    <div class="bg-slate-900 border border-cyan-500/30 rounded-xl p-3 flex flex-col md:flex-row justify-between items-center text-xs text-slate-300">
-      <div class="flex items-center gap-2">
-        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong></span>
+    <!-- LỌC ĐỘI & XÓA DỮ LIỆU -->
+    <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+      <div class="text-xs text-slate-400">
+        💡 Lọc đội cho cả 2 bảng xếp hạng bên dưới
       </div>
-      <div class="mt-2 md:mt-0 flex gap-2">
+      <div class="flex gap-2">
         <select id="global-filter-team" class="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200">
           <option value="all">Lọc Đội: Tất cả</option>
           <option value="1">Lọc Đội: Đội 1</option>
@@ -152,11 +156,18 @@
 
     <!-- 1. KẾT QUẢ THEO TUẦN -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <div class="mb-6">
-        <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
-          📅 BẢNG XẾP HẠNG THEO TUẦN
-        </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly cá nhân & trạng thái theo tuần đang chọn ở trên</p>
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
+        <div>
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
+            📅 BẢNG XẾP HẠNG THEO TUẦN
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly cá nhân & trạng thái theo tuần đang chọn ở trên</p>
+        </div>
+
+        <!-- THÔNG TIN CHẾ ĐỘ TUẦN (KHOANH XANH LÁ) -->
+        <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2">
+          <!-- Render thông tin Dưỡng sức / Khô máu -->
+        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -168,8 +179,10 @@
               <th class="p-3">Đội</th>
               <th class="p-3">Chạy (km)</th>
               <th class="p-3">Bơi (km)</th>
-              <th class="p-3">Quy Đổi Tuần (km)</th>
-              <th class="p-3">Trạng thái Track/Ngày</th>
+              <th class="p-3">Quy Đổi Tuần</th>
+              <th class="p-3">Trạng thái Track</th>
+              <!-- CỘT GHI NHẬN TỰ ĐỘNG TÍNH MỨC TRẦN (KHOANH VÀNG) -->
+              <th class="p-3 text-cyan-400 font-black">Ghi Nhận (Hợp Lệ)</th>
             </tr>
           </thead>
           <tbody id="weekly-leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
@@ -427,10 +440,20 @@
     function render() {
       renderKhoMaoButtons();
 
+      // CẬP NHẬT KHOANH ĐỎ: NGÀY GIỜ
       document.getElementById('last-updated-time').innerText = lastUpdated ? lastUpdated : "Chưa có dữ liệu mới";
 
       const selectedWeek = parseInt(document.getElementById('header-select-week').value);
       const filterTeamVal = document.getElementById('global-filter-team').value;
+
+      // CẬP NHẬT KHOANH XANH LÁ: BADGE GHI CHÚ CHẾ ĐỘ TUẦN
+      const t1KM = khoMao[1].includes(selectedWeek);
+      const t2KM = khoMao[2].includes(selectedWeek);
+      document.getElementById('week-mode-badge').innerHTML = `
+        <span>📌 Tuần ${selectedWeek}:</span>
+        <span class="${t1KM ? 'text-amber-400 font-bold' : 'text-slate-300'}">Đội 1 (${t1KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'})</span> • 
+        <span class="${t2KM ? 'text-amber-400 font-bold' : 'text-slate-300'}">Đội 2 (${t2KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'})</span>
+      `;
 
       const memberStats = {};
       [1, 2].forEach(tId => {
@@ -438,7 +461,7 @@
           memberStats[m] = { 
             name: m, teamId: tId, 
             cumRunKm: 0, cumSwimKm: 0, cumConvertedKm: 0, cumTracksCount: 0,
-            weekRunKm: 0, weekSwimKm: 0, weekConvertedKm: 0,
+            weekRunKm: 0, weekSwimKm: 0, weekRawConvertedKm: 0, weekAcceptedKm: 0,
             weeklyKmMap: {}, trackDaysMap: {}
           };
         });
@@ -452,11 +475,12 @@
 
         m.cumTracksCount += 1;
         if (t.type === 'run') m.cumRunKm += t.distance / 1000;
-        if (t.type === 'swim') m.cumSwimKm += t.distance / 1000;
+        if (t.type === 'swim') m.swimKm += t.distance / 1000;
 
         if (w === selectedWeek) {
           if (t.type === 'run') m.weekRunKm += t.distance / 1000;
           if (t.type === 'swim') m.weekSwimKm += t.distance / 1000;
+          m.weekRawConvertedKm += km;
         }
 
         m.weeklyKmMap[w] = (m.weeklyKmMap[w] || 0) + km;
@@ -468,7 +492,7 @@
       let weekTeam1 = 0, weekTeam2 = 0;
 
       const memberList = Object.values(memberStats).map(m => {
-        // Tính Lũy Tiến
+        // Lũy tiến
         let cumTotal = 0;
         for (let w = 1; w <= 8; w++) {
           const wKm = m.weeklyKmMap[w] || 0;
@@ -477,18 +501,17 @@
         }
         m.cumConvertedKm = cumTotal;
 
-        // Tính Theo Tuần Được Chọn
-        const wKmSelected = m.weeklyKmMap[selectedWeek] || 0;
+        // Theo Tuần chọn: Tính cự ly hợp lệ (KHOANH VÀNG)
         const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
-        m.weekConvertedKm = isKMSelected ? wKmSelected : Math.min(wKmSelected, 50);
+        m.weekAcceptedKm = isKMSelected ? m.weekRawConvertedKm : Math.min(m.weekRawConvertedKm, 50);
 
         if (m.teamId === 1) {
           cumTeam1 += cumTotal;
-          weekTeam1 += m.weekConvertedKm;
+          weekTeam1 += m.weekAcceptedKm;
         }
         if (m.teamId === 2) {
           cumTeam2 += cumTotal;
-          weekTeam2 += m.weekConvertedKm;
+          weekTeam2 += m.weekAcceptedKm;
         }
 
         return m;
@@ -510,13 +533,15 @@
       document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
       document.getElementById('week-bar-team2').style.width = `${100 - weekP1}%`;
 
-      // Lọc theo đội
       const filteredMembers = memberList.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
 
-      // RENDER BẢNG KẾT QUẢ THEO TUẦN
-      const sortedWeekly = [...filteredMembers].sort((a, b) => b.weekConvertedKm - a.weekConvertedKm);
+      // 1. RENDER BẢNG KẾT QUẢ THEO TUẦN (CÓ CỘT KHOANH VÀNG)
+      const sortedWeekly = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
       document.getElementById('weekly-leaderboard-body').innerHTML = sortedWeekly.map((m, idx) => {
         const daysCount = m.trackDaysMap[selectedWeek] ? m.trackDaysMap[selectedWeek].size : 0;
+        const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
+        const isExceeded = !isKMSelected && m.weekRawConvertedKm > 50;
+
         return `
           <tr class="hover:bg-slate-700/30">
             <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
@@ -524,18 +549,24 @@
             <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">Đội ${m.teamId}</span></td>
             <td class="p-3">${m.weekRunKm.toFixed(1)} km</td>
             <td class="p-3">${m.weekSwimKm.toFixed(1)} km</td>
-            <td class="p-3 font-extrabold text-amber-400">${m.weekConvertedKm.toFixed(1)} km</td>
+            <td class="p-3 font-semibold text-slate-300">${m.weekRawConvertedKm.toFixed(1)} km</td>
             <td class="p-3">
               ${daysCount >= 6 
                 ? `<span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Đạt (${daysCount}/6 ngày)</span>`
                 : `<span class="text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Mới ${daysCount}/6 ngày</span>`
               }
             </td>
+            <!-- GIÁ TRỊ CỘT GHI NHẬN (KHOANH VÀNG) -->
+            <td class="p-3 font-extrabold text-cyan-400 text-base">
+              ${m.weekAcceptedKm.toFixed(1)} km
+              ${isExceeded ? `<span class="block text-[10px] text-amber-400 font-normal italic">(Trần 50km)</span>` : ''}
+              ${isKMSelected ? `<span class="block text-[10px] text-amber-400 font-normal italic">(🔥 Khô máu)</span>` : ''}
+            </td>
           </tr>
         `;
       }).join('');
 
-      // RENDER BẢNG KẾT QUẢ LŨY TIẾN
+      // 2. RENDER BẢNG KẾT QUẢ LŨY TIẾN
       const sortedCumulative = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
       document.getElementById('cumulative-leaderboard-body').innerHTML = sortedCumulative.map((m, idx) => `
         <tr class="hover:bg-slate-700/30">
@@ -549,7 +580,7 @@
         </tr>
       `).join('');
 
-      // RENDER LỊCH SỬ TRACK
+      // 3. RENDER LỊCH SỬ TRACK
       document.getElementById('history-body').innerHTML = tracks.length === 0 
         ? `<tr><td colspan="9" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
         : tracks.map(t => {
