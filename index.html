@@ -66,26 +66,19 @@
         </button>
       </div>
       <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-        <!-- 1. CHỌN THÀNH VIÊN (CHỈ HIỂN THỊ TÊN) -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
           <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
         </div>
-        
-        <!-- 2. TỰ ĐỘNG NHẢY ĐỘI -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Đội (Tự động)</label>
           <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-400 font-bold" readonly />
           <input type="hidden" id="input-team" />
         </div>
-
-        <!-- 3. NGÀY -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
           <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
-
-        <!-- 4. MÔN -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Môn</label>
           <select id="input-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
@@ -93,63 +86,57 @@
             <option value="swim">Bơi (&gt;500m)</option>
           </select>
         </div>
-
-        <!-- 5. QUÃNG ĐƯỜNG -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
           <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
-
-        <!-- 6. PACE -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Pace</label>
           <input type="number" step="0.1" id="input-pace" placeholder="VD: 5.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
-
-        <!-- NÚT GỬI -->
         <div class="flex items-end">
           <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
             Ghi Nhận
           </button>
         </div>
       </form>
-      <div class="mt-2 text-xs text-slate-400 italic" id="auto-week-hint">
-        💡 Chọn thành viên hệ thống sẽ tự chọn Đội. Ngày chọn sẽ tự động tính đúng Tuần (Thứ 2 là ngày bắt đầu tuần).
+      <div class="mt-2 text-xs text-slate-400 italic">
+        💡 Hệ thống tự động tính Tuần (Thứ 2 đến Chủ Nhật) dựa trên Ngày chọn.
       </div>
     </section>
 
-    <!-- BẢNG XẾP HẠNG -->
+    <!-- THÔNG TIN LẦN CẬP NHẬT MỚI NHẤT -->
+    <div class="bg-slate-900 border border-cyan-500/30 rounded-xl p-3 flex flex-col md:flex-row justify-between items-center text-xs text-slate-300">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong></span>
+      </div>
+      <div class="mt-2 md:mt-0 flex gap-2">
+        <select id="global-filter-team" class="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200">
+          <option value="all">Lọc Đội: Tất cả</option>
+          <option value="1">Lọc Đội: Đội 1</option>
+          <option value="2">Lọc Đội: Đội 2</option>
+        </select>
+        <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-2.5 py-1 text-xs font-semibold">
+          🗑️ Xóa Tất Cả Track
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. KẾT QUẢ THEO TUẦN -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-          <h2 class="text-yellow-400 font-bold text-base flex items-center gap-2">
-            🥇 BẢNG XẾP HẠNG CÁ NHÂN
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
+            📅 KẾT QUẢ THEO TUẦN
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5" id="rank-view-title">Xem kết quả: Tất cả các tuần (Tổng hợp)</p>
+          <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly & trạng thái phạt theo tuần được chọn</p>
         </div>
 
-        <div class="flex flex-wrap gap-2 w-full md:w-auto">
-          <select id="filter-week" class="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold rounded-lg px-3 py-1.5 text-xs">
-            <option value="all">📅 Tất cả các Tuần (Tổng)</option>
-            <option value="1">Tuần 1</option>
-            <option value="2">Tuần 2</option>
-            <option value="3">Tuần 3</option>
-            <option value="4">Tuần 4</option>
-            <option value="5">Tuần 5</option>
-            <option value="6">Tuần 6</option>
-            <option value="7">Tuần 7</option>
-            <option value="8">Tuần 8</option>
+        <div>
+          <select id="select-week-view" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-3 py-1.5 text-xs shadow-md">
+            <!-- Tự động thêm Tuần hiện tại và các tuần -->
           </select>
-
-          <select id="filter-team" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200">
-            <option value="all">Tất cả đội</option>
-            <option value="1">Đội 1</option>
-            <option value="2">Đội 2</option>
-          </select>
-
-          <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-3 py-1.5 text-xs font-semibold">
-            🗑️ Xóa Tất Cả
-          </button>
         </div>
       </div>
 
@@ -162,11 +149,38 @@
               <th class="p-3">Đội</th>
               <th class="p-3">Chạy (km)</th>
               <th class="p-3">Bơi (km)</th>
-              <th class="p-3">Quy Đổi (km)</th>
-              <th class="p-3">Trạng thái Phạt</th>
+              <th class="p-3">Quy Đổi Tuần (km)</th>
+              <th class="p-3">Trạng thái Track/Ngày</th>
             </tr>
           </thead>
-          <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
+          <tbody id="weekly-leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. KẾT QUẢ LŨY TIẾN (TỔNG MÙA GIẢI) -->
+    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+      <div class="mb-6">
+        <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
+          📈 KẾT QUẢ LŨY TIẾN (TỔNG HỢP MÙA GIẢI)
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Tích lũy toàn bộ cự ly qua 8 tuần (Có xét trần 50km/tuần & tuần Khô Máo)</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
+            <tr>
+              <th class="p-3">Hạng</th>
+              <th class="p-3">Thành viên</th>
+              <th class="p-3">Đội</th>
+              <th class="p-3">Tổng Chạy (km)</th>
+              <th class="p-3">Tổng Bơi (km)</th>
+              <th class="p-3">Tổng Quy Đổi (km)</th>
+              <th class="p-3">Tổng Số Track</th>
+            </tr>
+          </thead>
+          <tbody id="cumulative-leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
         </table>
       </div>
     </section>
@@ -213,17 +227,37 @@
 
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
+    let lastUpdated = localStorage.getItem('uprace_last_updated') || null;
     let editingId = null;
 
     document.getElementById('input-date').valueAsDate = new Date();
 
+    function calculateWeekNumber(dateString) {
+      const selectedDate = new Date(dateString);
+      const diffTime = selectedDate - START_DATE;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays < 0) return 1;
+      const weekNum = Math.floor(diffDays / 7) + 1;
+      return weekNum > 8 ? 8 : weekNum;
+    }
+
+    const currentActualWeek = calculateWeekNumber(new Date().toISOString().split('T')[0]);
+
+    function initWeekDropdown() {
+      const select = document.getElementById('select-week-view');
+      let html = `<option value="${currentActualWeek}">🔥 Tuần hiện tại (Tuần ${currentActualWeek})</option>`;
+      for (let w = 1; w <= 8; w++) {
+        html += `<option value="${w}">Tuần ${w}</option>`;
+      }
+      select.innerHTML = html;
+    }
+
     function initMemberSelect() {
       const selectMember = document.getElementById('input-member');
-      // Chỉ hiển thị tên thành viên
       selectMember.innerHTML = ALL_MEMBERS.map(m => 
         `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`
       ).join('');
-
       updateTeamFromMember();
     }
 
@@ -239,14 +273,10 @@
 
     document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
 
-    function calculateWeekNumber(dateString) {
-      const selectedDate = new Date(dateString);
-      const diffTime = selectedDate - START_DATE;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays < 0) return 1;
-      const weekNum = Math.floor(diffDays / 7) + 1;
-      return weekNum > 8 ? 8 : weekNum;
+    function updateLastUpdatedTime() {
+      const now = new Date();
+      lastUpdated = now.toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' });
+      localStorage.setItem('uprace_last_updated', lastUpdated);
     }
 
     function saveToStorage() {
@@ -272,6 +302,8 @@
     function clearAllData() {
       if (confirm("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu track hiện tại không?")) {
         tracks = [];
+        lastUpdated = null;
+        localStorage.removeItem('uprace_last_updated');
         saveToStorage();
         render();
       }
@@ -311,6 +343,7 @@
     function deleteTrack(id) {
       if (confirm("Bạn có chắc muốn xóa track này?")) {
         tracks = tracks.filter(t => t.id !== id);
+        updateLastUpdatedTime();
         saveToStorage();
         render();
       }
@@ -362,27 +395,33 @@
         });
       }
 
+      updateLastUpdatedTime();
       saveToStorage();
       document.getElementById('input-distance').value = '';
       document.getElementById('input-pace').value = '';
       render();
     });
 
-    document.getElementById('filter-team').addEventListener('change', render);
-    document.getElementById('filter-week').addEventListener('change', render);
+    document.getElementById('select-week-view').addEventListener('change', render);
+    document.getElementById('global-filter-team').addEventListener('change', render);
 
     function render() {
       renderKhoMaoButtons();
 
-      const selectedWeekVal = document.getElementById('filter-week').value;
-      document.getElementById('rank-view-title').innerText = selectedWeekVal === 'all' 
-        ? "Xem kết quả: Tất cả các tuần (Tổng hợp)" 
-        : `Xem kết quả riêng: Tuần ${selectedWeekVal}`;
+      document.getElementById('last-updated-time').innerText = lastUpdated ? lastUpdated : "Chưa có dữ liệu mới";
+
+      const selectedWeek = parseInt(document.getElementById('select-week-view').value);
+      const filterTeamVal = document.getElementById('global-filter-team').value;
 
       const memberStats = {};
       [1, 2].forEach(tId => {
         MEMBERS[tId].forEach(m => {
-          memberStats[m] = { name: m, teamId: tId, runKm: 0, swimKm: 0, convertedKm: 0, weeklyKm: {}, trackDays: {} };
+          memberStats[m] = { 
+            name: m, teamId: tId, 
+            cumRunKm: 0, cumSwimKm: 0, cumConvertedKm: 0, cumTracksCount: 0,
+            weekRunKm: 0, weekSwimKm: 0, weekConvertedKm: 0,
+            weeklyKmMap: {}, trackDaysMap: {}
+          };
         });
       });
 
@@ -392,39 +431,45 @@
         const w = t.week || calculateWeekNumber(t.date);
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
 
-        if (selectedWeekVal === 'all' || parseInt(selectedWeekVal) === w) {
-          if (t.type === 'run') m.runKm += t.distance / 1000;
-          if (t.type === 'swim') m.swimKm += t.distance / 1000;
+        // Tích lũy tổng
+        m.cumTracksCount += 1;
+        if (t.type === 'run') m.cumRunKm += t.distance / 1000;
+        if (t.type === 'swim') m.cumSwimKm += t.distance / 1000;
+
+        // Thống kê theo tuần chọn
+        if (w === selectedWeek) {
+          if (t.type === 'run') m.weekRunKm += t.distance / 1000;
+          if (t.type === 'swim') m.weekSwimKm += t.distance / 1000;
         }
 
-        m.weeklyKm[w] = (m.weeklyKm[w] || 0) + km;
-        if (!m.trackDays[w]) m.trackDays[w] = new Set();
-        m.trackDays[w].add(t.date);
+        m.weeklyKmMap[w] = (m.weeklyKmMap[w] || 0) + km;
+        if (!m.trackDaysMap[w]) m.trackDaysMap[w] = new Set();
+        m.trackDaysMap[w].add(t.date);
       });
 
       let team1Total = 0, team2Total = 0;
-      const list = Object.values(memberStats).map(m => {
-        let total = 0;
 
-        if (selectedWeekVal === 'all') {
-          for (let w = 1; w <= 8; w++) {
-            const wKm = m.weeklyKm[w] || 0;
-            const isKM = khoMao[m.teamId].includes(w);
-            total += isKM ? wKm : Math.min(wKm, 50);
-          }
-        } else {
-          const w = parseInt(selectedWeekVal);
-          const wKm = m.weeklyKm[w] || 0;
+      // Tính lũy tiến tổng 8 tuần & tuần được chọn
+      const memberList = Object.values(memberStats).map(m => {
+        let cumTotal = 0;
+        for (let w = 1; w <= 8; w++) {
+          const wKm = m.weeklyKmMap[w] || 0;
           const isKM = khoMao[m.teamId].includes(w);
-          total = isKM ? wKm : Math.min(wKm, 50);
+          cumTotal += isKM ? wKm : Math.min(wKm, 50);
         }
+        m.cumConvertedKm = cumTotal;
 
-        m.convertedKm = total;
-        if (m.teamId === 1) team1Total += total;
-        if (m.teamId === 2) team2Total += total;
+        const wKmSelected = m.weeklyKmMap[selectedWeek] || 0;
+        const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
+        m.weekConvertedKm = isKMSelected ? wKmSelected : Math.min(wKmSelected, 50);
+
+        if (m.teamId === 1) team1Total += cumTotal;
+        if (m.teamId === 2) team2Total += cumTotal;
+
         return m;
       });
 
+      // Cập nhật Thanh Song Đấu
       document.getElementById('score-team1').innerText = `🏆 ĐỘI 1: ${team1Total.toFixed(1)} km`;
       document.getElementById('score-team2').innerText = `ĐỘI 2: ${team2Total.toFixed(1)} km 🏆`;
 
@@ -433,23 +478,46 @@
       document.getElementById('bar-team1').style.width = `${p1}%`;
       document.getElementById('bar-team2').style.width = `${100 - p1}%`;
 
-      const filterTeamVal = document.getElementById('filter-team').value;
-      const filtered = list.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal))
-                           .sort((a, b) => b.convertedKm - a.convertedKm);
+      // Filter theo Đội
+      const filteredMembers = memberList.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
 
-      document.getElementById('leaderboard-body').innerHTML = filtered.map((m, idx) => `
+      // 1. RENDER BẢNG KẾT QUẢ THEO TUẦN
+      const sortedWeekly = [...filteredMembers].sort((a, b) => b.weekConvertedKm - a.weekConvertedKm);
+      document.getElementById('weekly-leaderboard-body').innerHTML = sortedWeekly.map((m, idx) => {
+        const daysCount = m.trackDaysMap[selectedWeek] ? m.trackDaysMap[selectedWeek].size : 0;
+        return `
+          <tr class="hover:bg-slate-700/30">
+            <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
+            <td class="p-3 font-bold text-slate-100">${m.name}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">Đội ${m.teamId}</span></td>
+            <td class="p-3">${m.weekRunKm.toFixed(1)} km</td>
+            <td class="p-3">${m.weekSwimKm.toFixed(1)} km</td>
+            <td class="p-3 font-extrabold text-amber-400">${m.weekConvertedKm.toFixed(1)} km</td>
+            <td class="p-3">
+              ${daysCount >= 6 
+                ? `<span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Đạt (${daysCount}/6 ngày)</span>`
+                : `<span class="text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Mới ${daysCount}/6 ngày</span>`
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // 2. RENDER BẢNG KẾT QUẢ LŨY TIẾN
+      const sortedCumulative = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
+      document.getElementById('cumulative-leaderboard-body').innerHTML = sortedCumulative.map((m, idx) => `
         <tr class="hover:bg-slate-700/30">
           <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
           <td class="p-3 font-bold text-slate-100">${m.name}</td>
           <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">Đội ${m.teamId}</span></td>
-          <td class="p-3">${m.runKm.toFixed(1)} km</td>
-          <td class="p-3">${m.swimKm.toFixed(1)} km</td>
-          <td class="p-3 font-extrabold text-cyan-400">${m.convertedKm.toFixed(1)} km</td>
-          <td class="p-3"><span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full font-semibold">Đạt chuẩn</span></td>
+          <td class="p-3">${m.cumRunKm.toFixed(1)} km</td>
+          <td class="p-3">${m.cumSwimKm.toFixed(1)} km</td>
+          <td class="p-3 font-extrabold text-cyan-400">${m.cumConvertedKm.toFixed(1)} km</td>
+          <td class="p-3 text-slate-400 font-semibold">${m.cumTracksCount} track</td>
         </tr>
       `).join('');
 
-      // Render Lịch sử Track
+      // 3. RENDER LỊCH SỬ TRACK
       document.getElementById('history-body').innerHTML = tracks.length === 0 
         ? `<tr><td colspan="9" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
         : tracks.map(t => {
@@ -474,6 +542,7 @@
           }).join('');
     }
 
+    initWeekDropdown();
     initMemberSelect();
     render();
   </script>
