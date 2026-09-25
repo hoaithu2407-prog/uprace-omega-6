@@ -23,18 +23,48 @@
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
     
-    <!-- THANH SONG ĐẤU -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
-      <div class="flex justify-between items-center mb-3 font-bold">
-        <div class="text-emerald-400 text-lg" id="score-team1">🏆 ĐỘI 1: 0.0 km</div>
-        <span class="text-xs bg-slate-700 px-3 py-1 rounded-full text-slate-300">VS</span>
-        <div class="text-amber-400 text-lg" id="score-team2">ĐỘI 2: 0.0 km 🏆</div>
+    <!-- THANH SONG ĐẤU (2 THANH: LŨY TIẾN & THEO TUẦN) -->
+    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
+      
+      <!-- THANH 1: TỔNG LŨY TIẾN -->
+      <div>
+        <div class="flex justify-between items-center mb-2 font-bold">
+          <div class="text-emerald-400 text-base md:text-lg" id="cum-score-team1">🏆 ĐỘI 1: 0.0 km</div>
+          <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-full uppercase tracking-wider font-extrabold">
+            📈 TỔNG LŨY TIẾN MÙA GIẢI
+          </span>
+          <div class="text-amber-400 text-base md:text-lg" id="cum-score-team2">ĐỘI 2: 0.0 km 🏆</div>
+        </div>
+        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner">
+          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
+          <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+        </div>
       </div>
-      <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700">
-        <div id="bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
-        <div id="bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+
+      <hr class="border-slate-700/60" />
+
+      <!-- THANH 2: KẾT QUẢ THEO TUẦN -->
+      <div>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 mb-2 font-bold">
+          <div class="text-emerald-400 text-base md:text-lg" id="week-score-team1">🏆 ĐỘI 1: 0.0 km</div>
+          
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-amber-300 uppercase font-black">📅 KẾT QUẢ:</span>
+            <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md">
+              <!-- Render tuần tự động -->
+            </select>
+          </div>
+
+          <div class="text-amber-400 text-base md:text-lg" id="week-score-team2">ĐỘI 2: 0.0 km 🏆</div>
+        </div>
+
+        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner">
+          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
+          <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+        </div>
       </div>
-      <div class="grid grid-cols-2 gap-4 mt-4 text-center text-xs text-slate-400 italic">
+
+      <div class="grid grid-cols-2 gap-4 pt-2 text-center text-xs text-slate-400 italic">
         <div>"Đã là 1 thì không thể là 2"</div>
         <div>"Đội 2 thứ 2 thì không ai thứ nhất"</div>
       </div>
@@ -100,9 +130,6 @@
           </button>
         </div>
       </form>
-      <div class="mt-2 text-xs text-slate-400 italic">
-        💡 Hệ thống tự động tính Tuần (Thứ 2 đến Chủ Nhật) dựa trên Ngày chọn.
-      </div>
     </section>
 
     <!-- THÔNG TIN LẦN CẬP NHẬT MỚI NHẤT -->
@@ -125,19 +152,11 @@
 
     <!-- 1. KẾT QUẢ THEO TUẦN -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <div>
-          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
-            📅 KẾT QUẢ THEO TUẦN
-          </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly & trạng thái phạt theo tuần được chọn</p>
-        </div>
-
-        <div>
-          <select id="select-week-view" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-3 py-1.5 text-xs shadow-md">
-            <!-- Tự động thêm Tuần hiện tại và các tuần -->
-          </select>
-        </div>
+      <div class="mb-6">
+        <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
+          📅 BẢNG XẾP HẠNG THEO TUẦN
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly cá nhân & trạng thái theo tuần đang chọn ở trên</p>
       </div>
 
       <div class="overflow-x-auto">
@@ -158,13 +177,13 @@
       </div>
     </section>
 
-    <!-- 2. KẾT QUẢ LŨY TIẾN (TỔNG MÙA GIẢI) -->
+    <!-- 2. KẾT QUẢ LŨY TIẾN -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="mb-6">
         <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
-          📈 KẾT QUẢ LŨY TIẾN (TỔNG HỢP MÙA GIẢI)
+          📈 BẢNG XẾP HẠNG LŨY TIẾN (TỔNG MÙA GIẢI)
         </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Tích lũy toàn bộ cự ly qua 8 tuần (Có xét trần 50km/tuần & tuần Khô Máo)</p>
+        <p class="text-xs text-slate-400 mt-0.5">Tích lũy toàn bộ cự ly qua 8 tuần (Có áp dụng trần 50km/tuần & tuần Khô Máo)</p>
       </div>
 
       <div class="overflow-x-auto">
@@ -245,8 +264,8 @@
     const currentActualWeek = calculateWeekNumber(new Date().toISOString().split('T')[0]);
 
     function initWeekDropdown() {
-      const select = document.getElementById('select-week-view');
-      let html = `<option value="${currentActualWeek}">🔥 Tuần hiện tại (Tuần ${currentActualWeek})</option>`;
+      const select = document.getElementById('header-select-week');
+      let html = `<option value="${currentActualWeek}">Tuần hiện tại (Tuần ${currentActualWeek})</option>`;
       for (let w = 1; w <= 8; w++) {
         html += `<option value="${w}">Tuần ${w}</option>`;
       }
@@ -402,7 +421,7 @@
       render();
     });
 
-    document.getElementById('select-week-view').addEventListener('change', render);
+    document.getElementById('header-select-week').addEventListener('change', render);
     document.getElementById('global-filter-team').addEventListener('change', render);
 
     function render() {
@@ -410,7 +429,7 @@
 
       document.getElementById('last-updated-time').innerText = lastUpdated ? lastUpdated : "Chưa có dữ liệu mới";
 
-      const selectedWeek = parseInt(document.getElementById('select-week-view').value);
+      const selectedWeek = parseInt(document.getElementById('header-select-week').value);
       const filterTeamVal = document.getElementById('global-filter-team').value;
 
       const memberStats = {};
@@ -431,12 +450,10 @@
         const w = t.week || calculateWeekNumber(t.date);
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
 
-        // Tích lũy tổng
         m.cumTracksCount += 1;
         if (t.type === 'run') m.cumRunKm += t.distance / 1000;
         if (t.type === 'swim') m.cumSwimKm += t.distance / 1000;
 
-        // Thống kê theo tuần chọn
         if (w === selectedWeek) {
           if (t.type === 'run') m.weekRunKm += t.distance / 1000;
           if (t.type === 'swim') m.weekSwimKm += t.distance / 1000;
@@ -447,10 +464,11 @@
         m.trackDaysMap[w].add(t.date);
       });
 
-      let team1Total = 0, team2Total = 0;
+      let cumTeam1 = 0, cumTeam2 = 0;
+      let weekTeam1 = 0, weekTeam2 = 0;
 
-      // Tính lũy tiến tổng 8 tuần & tuần được chọn
       const memberList = Object.values(memberStats).map(m => {
+        // Tính Lũy Tiến
         let cumTotal = 0;
         for (let w = 1; w <= 8; w++) {
           const wKm = m.weeklyKmMap[w] || 0;
@@ -459,29 +477,43 @@
         }
         m.cumConvertedKm = cumTotal;
 
+        // Tính Theo Tuần Được Chọn
         const wKmSelected = m.weeklyKmMap[selectedWeek] || 0;
         const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
         m.weekConvertedKm = isKMSelected ? wKmSelected : Math.min(wKmSelected, 50);
 
-        if (m.teamId === 1) team1Total += cumTotal;
-        if (m.teamId === 2) team2Total += cumTotal;
+        if (m.teamId === 1) {
+          cumTeam1 += cumTotal;
+          weekTeam1 += m.weekConvertedKm;
+        }
+        if (m.teamId === 2) {
+          cumTeam2 += cumTotal;
+          weekTeam2 += m.weekConvertedKm;
+        }
 
         return m;
       });
 
-      // Cập nhật Thanh Song Đấu
-      document.getElementById('score-team1').innerText = `🏆 ĐỘI 1: ${team1Total.toFixed(1)} km`;
-      document.getElementById('score-team2').innerText = `ĐỘI 2: ${team2Total.toFixed(1)} km 🏆`;
+      // 1. CẬP NHẬT THANH SONG ĐẤU LŨY TIẾN
+      document.getElementById('cum-score-team1').innerText = `🏆 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
+      document.getElementById('cum-score-team2').innerText = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 🏆`;
+      const cumSum = cumTeam1 + cumTeam2;
+      const cumP1 = cumSum > 0 ? (cumTeam1 / cumSum) * 100 : 50;
+      document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
+      document.getElementById('cum-bar-team2').style.width = `${100 - cumP1}%`;
 
-      const sum = team1Total + team2Total;
-      const p1 = sum > 0 ? (team1Total / sum) * 100 : 50;
-      document.getElementById('bar-team1').style.width = `${p1}%`;
-      document.getElementById('bar-team2').style.width = `${100 - p1}%`;
+      // 2. CẬP NHẬT THANH SONG ĐẤU THEO TUẦN
+      document.getElementById('week-score-team1').innerText = `🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
+      document.getElementById('week-score-team2').innerText = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆`;
+      const weekSum = weekTeam1 + weekTeam2;
+      const weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
+      document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
+      document.getElementById('week-bar-team2').style.width = `${100 - weekP1}%`;
 
-      // Filter theo Đội
+      // Lọc theo đội
       const filteredMembers = memberList.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
 
-      // 1. RENDER BẢNG KẾT QUẢ THEO TUẦN
+      // RENDER BẢNG KẾT QUẢ THEO TUẦN
       const sortedWeekly = [...filteredMembers].sort((a, b) => b.weekConvertedKm - a.weekConvertedKm);
       document.getElementById('weekly-leaderboard-body').innerHTML = sortedWeekly.map((m, idx) => {
         const daysCount = m.trackDaysMap[selectedWeek] ? m.trackDaysMap[selectedWeek].size : 0;
@@ -503,7 +535,7 @@
         `;
       }).join('');
 
-      // 2. RENDER BẢNG KẾT QUẢ LŨY TIẾN
+      // RENDER BẢNG KẾT QUẢ LŨY TIẾN
       const sortedCumulative = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
       document.getElementById('cumulative-leaderboard-body').innerHTML = sortedCumulative.map((m, idx) => `
         <tr class="hover:bg-slate-700/30">
@@ -517,7 +549,7 @@
         </tr>
       `).join('');
 
-      // 3. RENDER LỊCH SỬ TRACK
+      // RENDER LỊCH SỬ TRACK
       document.getElementById('history-body').innerHTML = tracks.length === 0 
         ? `<tr><td colspan="9" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
         : tracks.map(t => {
