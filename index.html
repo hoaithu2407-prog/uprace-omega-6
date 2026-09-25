@@ -57,10 +57,15 @@
       </div>
     </section>
 
-    <!-- FORM NHẬP TRACK -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <h2 class="text-cyan-400 font-bold mb-4 text-base">➕ GHI NHẬN TRACK MỚI</h2>
-      <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <!-- FORM NHẬP / CHỈNH SỬA TRACK -->
+    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700" id="form-section">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
+        <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">
+          ❌ Hủy Sửa
+        </button>
+      </div>
+      <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
         <div>
           <label class="block text-xs text-slate-400 mb-1">Đội</label>
           <select id="input-team" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
@@ -87,29 +92,64 @@
           <label class="block text-xs text-slate-400 mb-1">Pace</label>
           <input type="number" step="0.1" id="input-pace" placeholder="VD: 5.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Thuộc Tuần</label>
+          <select id="input-week" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
+            <option value="1">Tuần 1</option>
+            <option value="2">Tuần 2</option>
+            <option value="3">Tuần 3</option>
+            <option value="4">Tuần 4</option>
+            <option value="5">Tuần 5</option>
+            <option value="6">Tuần 6</option>
+            <option value="7">Tuần 7</option>
+            <option value="8">Tuần 8</option>
+          </select>
+        </div>
         <div class="flex items-end">
-          <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
+          <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
             Ghi Nhận
           </button>
         </div>
       </form>
     </section>
 
-    <!-- BẢNG XẾP HẠNG -->
+    <!-- BẢNG XẾP HẠNG (CÓ BỘ LỌC THEO TUẦN) -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-yellow-400 font-bold text-base">🥇 BẢNG XẾP HẠNG CÁ NHÂN</h2>
-        <div class="flex gap-2">
-          <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-3 py-1.5 text-xs font-semibold">
-            🗑️ Xóa Tất Cả Track
-          </button>
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+          <h2 class="text-yellow-400 font-bold text-base flex items-center gap-2">
+            🥇 BẢNG XẾP HẠNG CÁ NHÂN
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5" id="rank-view-title">Xem kết quả: Tất cả các tuần (Tổng hợp)</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+          <!-- BỘ LỌC TUẦN -->
+          <select id="filter-week" class="bg-slate-900 border border-amber-500/40 text-amber-300 font-bold rounded-lg px-3 py-1.5 text-xs">
+            <option value="all">📅 Tất cả các Tuần (Tổng)</option>
+            <option value="1">Tuần 1</option>
+            <option value="2">Tuần 2</option>
+            <option value="3">Tuần 3</option>
+            <option value="4">Tuần 4</option>
+            <option value="5">Tuần 5</option>
+            <option value="6">Tuần 6</option>
+            <option value="7">Tuần 7</option>
+            <option value="8">Tuần 8</option>
+          </select>
+
+          <!-- BỘ LỌC ĐỘI -->
           <select id="filter-team" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200">
             <option value="all">Tất cả đội</option>
             <option value="1">Đội 1</option>
             <option value="2">Đội 2</option>
           </select>
+
+          <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-3 py-1.5 text-xs font-semibold">
+            🗑️ Xóa Tất Cả
+          </button>
         </div>
       </div>
+
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300">
           <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
@@ -127,6 +167,29 @@
         </table>
       </div>
     </section>
+
+    <!-- QUẢN LÝ & CHỈNH SỬA DANH SÁCH TRACK ĐÃ NHẬP -->
+    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+      <h2 class="text-cyan-400 font-bold mb-4 text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
+            <tr>
+              <th class="p-3">Tuần</th>
+              <th class="p-3">Thành viên</th>
+              <th class="p-3">Đội</th>
+              <th class="p-3">Môn</th>
+              <th class="p-3">Quãng đường</th>
+              <th class="p-3">Pace</th>
+              <th class="p-3">Quy đổi</th>
+              <th class="p-3">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
+        </table>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -135,9 +198,14 @@
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
     };
 
-    // Khởi tạo mảng rỗng - Không có dữ liệu mẫu
-    let tracks = [];
-    let khoMao = { 1: [], 2: [] };
+    let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
+    let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
+    let editingId = null;
+
+    function saveToStorage() {
+      localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
+      localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
+    }
 
     function initMemberDropdown() {
       const teamId = document.getElementById('input-team').value;
@@ -158,12 +226,53 @@
         }
         khoMao[teamId].push(week);
       }
+      saveToStorage();
       render();
     }
 
     function clearAllData() {
       if (confirm("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu track hiện tại không?")) {
         tracks = [];
+        saveToStorage();
+        render();
+      }
+    }
+
+    function startEditTrack(id) {
+      const track = tracks.find(t => t.id === id);
+      if (!track) return;
+
+      editingId = id;
+      document.getElementById('input-team').value = track.teamId;
+      initMemberDropdown();
+      document.getElementById('input-member').value = track.member;
+      document.getElementById('input-type').value = track.type;
+      document.getElementById('input-distance').value = track.distance;
+      document.getElementById('input-pace').value = track.pace;
+      document.getElementById('input-week').value = track.week || 1;
+
+      document.getElementById('form-title').innerText = "✏️ CHỈNH SỬA TRACK";
+      document.getElementById('submit-btn').innerText = "Cập Nhật Track";
+      document.getElementById('submit-btn').className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-500/20";
+      document.getElementById('cancel-edit-btn').classList.remove('hidden');
+
+      window.scrollTo({ top: document.getElementById('form-section').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+      editingId = null;
+      document.getElementById('track-form').reset();
+      initMemberDropdown();
+      document.getElementById('form-title').innerText = "➕ GHI NHẬN TRACK MỚI";
+      document.getElementById('submit-btn').innerText = "Ghi Nhận";
+      document.getElementById('submit-btn').className = "w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20";
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+    }
+
+    function deleteTrack(id) {
+      if (confirm("Bạn có chắc muốn xóa track này?")) {
+        tracks = tracks.filter(t => t.id !== id);
+        saveToStorage();
         render();
       }
     }
@@ -188,6 +297,7 @@
       const type = document.getElementById('input-type').value;
       const distance = parseFloat(document.getElementById('input-distance').value);
       const pace = parseFloat(document.getElementById('input-pace').value);
+      const week = parseInt(document.getElementById('input-week').value);
 
       if (type === 'swim' && (distance <= 500 || pace >= 6)) {
         alert("Bơi phải > 500m và pace < 6!");
@@ -198,22 +308,36 @@
         return;
       }
 
-      tracks.push({
-        id: Date.now(),
-        teamId, member, type, distance, pace,
-        date: new Date().toISOString().split('T')[0],
-        week: 1
-      });
+      if (editingId) {
+        const index = tracks.findIndex(t => t.id === editingId);
+        if (index > -1) {
+          tracks[index] = { ...tracks[index], teamId, member, type, distance, pace, week };
+        }
+        cancelEdit();
+      } else {
+        tracks.unshift({
+          id: Date.now(),
+          teamId, member, type, distance, pace, week,
+          date: new Date().toISOString().split('T')[0]
+        });
+      }
 
+      saveToStorage();
       document.getElementById('input-distance').value = '';
       document.getElementById('input-pace').value = '';
       render();
     });
 
     document.getElementById('filter-team').addEventListener('change', render);
+    document.getElementById('filter-week').addEventListener('change', render);
 
     function render() {
       renderKhoMaoButtons();
+
+      const selectedWeekVal = document.getElementById('filter-week').value;
+      document.getElementById('rank-view-title').innerText = selectedWeekVal === 'all' 
+        ? "Xem kết quả: Tất cả các tuần (Tổng hợp)" 
+        : `Xem kết quả riêng: Tuần ${selectedWeekVal}`;
 
       const memberStats = {};
       [1, 2].forEach(tId => {
@@ -225,23 +349,39 @@
       tracks.forEach(t => {
         const m = memberStats[t.member];
         if (!m) return;
+        const w = t.week || 1;
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
-        if (t.type === 'run') m.runKm += t.distance / 1000;
-        if (t.type === 'swim') m.swimKm += t.distance / 1000;
 
-        m.weeklyKm[t.week] = (m.weeklyKm[t.week] || 0) + km;
-        if (!m.trackDays[t.week]) m.trackDays[t.week] = new Set();
-        m.trackDays[t.week].add(t.date);
+        // Lưu dữ liệu tổng theo môn nếu trùng tuần đang chọn (hoặc chọn 'all')
+        if (selectedWeekVal === 'all' || parseInt(selectedWeekVal) === w) {
+          if (t.type === 'run') m.runKm += t.distance / 1000;
+          if (t.type === 'swim') m.swimKm += t.distance / 1000;
+        }
+
+        m.weeklyKm[w] = (m.weeklyKm[w] || 0) + km;
+        if (!m.trackDays[w]) m.trackDays[w] = new Set();
+        m.trackDays[w].add(t.date);
       });
 
       let team1Total = 0, team2Total = 0;
       const list = Object.values(memberStats).map(m => {
         let total = 0;
-        for (let w = 1; w <= 8; w++) {
+
+        if (selectedWeekVal === 'all') {
+          // Tính tổng 8 tuần
+          for (let w = 1; w <= 8; w++) {
+            const wKm = m.weeklyKm[w] || 0;
+            const isKM = khoMao[m.teamId].includes(w);
+            total += isKM ? wKm : Math.min(wKm, 50);
+          }
+        } else {
+          // Tính riêng tuần đang lọc
+          const w = parseInt(selectedWeekVal);
           const wKm = m.weeklyKm[w] || 0;
           const isKM = khoMao[m.teamId].includes(w);
-          total += isKM ? wKm : Math.min(wKm, 50);
+          total = isKM ? wKm : Math.min(wKm, 50);
         }
+
         m.convertedKm = total;
         if (m.teamId === 1) team1Total += total;
         if (m.teamId === 2) team2Total += total;
@@ -256,8 +396,8 @@
       document.getElementById('bar-team1').style.width = `${p1}%`;
       document.getElementById('bar-team2').style.width = `${100 - p1}%`;
 
-      const filterVal = document.getElementById('filter-team').value;
-      const filtered = list.filter(m => filterVal === 'all' || m.teamId === parseInt(filterVal))
+      const filterTeamVal = document.getElementById('filter-team').value;
+      const filtered = list.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal))
                            .sort((a, b) => b.convertedKm - a.convertedKm);
 
       document.getElementById('leaderboard-body').innerHTML = filtered.map((m, idx) => `
@@ -271,6 +411,28 @@
           <td class="p-3"><span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-full font-semibold">Đạt chuẩn</span></td>
         </tr>
       `).join('');
+
+      // Render Lịch sử Track
+      document.getElementById('history-body').innerHTML = tracks.length === 0 
+        ? `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
+        : tracks.map(t => {
+            const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
+            return `
+              <tr class="hover:bg-slate-700/30">
+                <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${t.week || 1}</td>
+                <td class="p-3 font-semibold text-slate-100">${t.member}</td>
+                <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">Đội ${t.teamId}</span></td>
+                <td class="p-3">${t.type === 'swim' ? '🏊 Bơi' : '🏃 Chạy'}</td>
+                <td class="p-3">${t.distance} m</td>
+                <td class="p-3">${t.pace}</td>
+                <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
+                <td class="p-3 space-x-2">
+                  <button onclick="startEditTrack(${t.id})" class="bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 px-2.5 py-1 rounded text-xs font-medium border border-amber-500/30">✏️ Sửa</button>
+                  <button onclick="deleteTrack(${t.id})" class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2.5 py-1 rounded text-xs font-medium border border-rose-500/30">🗑️ Xóa</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
     }
 
     initMemberDropdown();
