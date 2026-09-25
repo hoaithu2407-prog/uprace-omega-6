@@ -7,10 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=SVN-Bangers&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
-    
     body { 
       background-color: #0f172a; 
       color: #f8fafc; 
@@ -42,14 +40,12 @@
 
     .slogan-font {
       font-family: 'Pangolin', 'Fredoka', cursive, sans-serif;
-      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
     }
   </style>
 </head>
 <body class="pb-12">
   <!-- HEADER BANNER ARTWORK -->
   <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-12 shadow-2xl border-b-4 border-cyan-400">
-    <!-- Nền thiên nhiên biển đảo & mây bọt nước -->
     <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:16px_16px]"></div>
     <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-50"></div>
     <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-yellow-300 rounded-full blur-3xl opacity-40"></div>
@@ -68,7 +64,6 @@
 
       <!-- TRUNG TÂM TIÊU ĐỀ NGHỆ THUẬT -->
       <div class="flex-1 flex flex-col items-center">
-        <!-- BRUSH STROKE CONTAINER -->
         <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-5 rounded-3xl shadow-2xl transform md:-rotate-1 backdrop-blur-sm max-w-2xl w-full">
           
           <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-wider uppercase font-banner flex flex-wrap justify-center items-center gap-x-3 gap-y-1">
@@ -77,7 +72,6 @@
             <span class="text-2xl text-yellow-300">👑</span>
           </h1>
 
-          <!-- THỦY THỦ/RIBBON THỜI GIAN -->
           <div class="mt-4 inline-block relative">
             <div class="bg-amber-100 text-rose-700 font-extrabold text-sm sm:text-base md:text-lg px-6 py-2 rounded-xl border-2 border-amber-300 shadow-md transform hover:scale-105 transition-all">
               ⏰ Thời gian: 21/09/2026 - 19/11/2026 (8 Tuần)
@@ -88,7 +82,6 @@
 
       <!-- MINH HỌA VẬN ĐỘNG VIÊN BƠI LỘI & KHẨU HIỆU -->
       <div class="flex flex-col items-center gap-3">
-        <!-- KHẨU HIỆU VUI NHỊN CÓ KHUNG GIẤY (ĐÃ SỬA FONT) -->
         <div class="bg-yellow-300 text-slate-900 p-3 rounded-2xl border-2 border-amber-400 shadow-lg transform rotate-3 max-w-[200px] text-center">
           <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">
             "Khỏe là chính<br/>Hơn thua là mười! 😊"
@@ -157,9 +150,18 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 pt-1 text-center text-xs text-slate-400 italic">
-        <div>"Đã là 1 thì không thể là 2"</div>
-        <div>"Đội 2 thứ 2 thì không ai thứ nhất"</div>
+      <!-- SLOGAN ĐỘI 1 VÀ ĐỘI 2 ĐÃ ĐƯỢC NỔI BẬT VỚI EMOJI HÀI HƯỚC -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-center text-xs font-bold font-banner">
+        <div class="bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 p-2.5 rounded-xl shadow-md flex items-center justify-center gap-1.5 transform hover:scale-102 transition-all">
+          <span>🔥 ĐỘI 1:</span>
+          <span class="italic font-extrabold text-white">"Đã là 1 thì không thể là 2!"</span>
+          <span>🥇💥</span>
+        </div>
+        <div class="bg-amber-950/80 text-amber-300 border border-amber-500/40 p-2.5 rounded-xl shadow-md flex items-center justify-center gap-1.5 transform hover:scale-102 transition-all">
+          <span>🚀 ĐỘI 2:</span>
+          <span class="italic font-extrabold text-white">"Đội 2 thứ 2 thì không ai thứ nhất!"</span>
+          <span>😎✨</span>
+        </div>
       </div>
     </section>
 
