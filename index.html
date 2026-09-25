@@ -66,21 +66,26 @@
         </button>
       </div>
       <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
+        <!-- 1. CHỌN THÀNH VIÊN -->
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
+          <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
+        </div>
+        
+        <!-- 2. TỰ ĐỘNG NHẢY ĐỘI -->
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Đội (Tự động)</label>
+          <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-400 font-bold" readonly />
+          <input type="hidden" id="input-team" />
+        </div>
+
+        <!-- 3. NGÀY -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
           <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Đội</label>
-          <select id="input-team" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
-            <option value="1">Đội 1</option>
-            <option value="2">Đội 2</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
-          <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100"></select>
-        </div>
+
+        <!-- 4. MÔN -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Môn</label>
           <select id="input-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
@@ -88,22 +93,28 @@
             <option value="swim">Bơi (&gt;500m)</option>
           </select>
         </div>
+
+        <!-- 5. QUÃNG ĐƯỜNG -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
           <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
+
+        <!-- 6. PACE -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Pace</label>
           <input type="number" step="0.1" id="input-pace" placeholder="VD: 5.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
         </div>
+
+        <!-- NÚT GỬI -->
         <div class="flex items-end">
           <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
             Ghi Nhận
           </button>
         </div>
       </form>
-      <div className="mt-2 text-xs text-slate-400 italic" id="auto-week-hint">
-        💡 Hệ thống sẽ tự động tính tuần dựa trên ngày bạn chọn (Tuần 1 bắt đầu từ 21/09/2026 - Thứ 2).
+      <div class="mt-2 text-xs text-slate-400 italic" id="auto-week-hint">
+        💡 Chọn thành viên hệ thống sẽ tự chọn Đội. Ngày chọn sẽ tự động tính đúng Tuần (Thứ 2 là ngày bắt đầu tuần).
       </div>
     </section>
 
@@ -191,39 +202,57 @@
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
     };
 
-    // Ngày bắt đầu giải: 21/09/2026 (Thứ 2 - Tuần 1)
+    // Tạo danh sách tất cả thành viên kèm Đội
+    const ALL_MEMBERS = [];
+    Object.keys(MEMBERS).forEach(tId => {
+      MEMBERS[tId].forEach(name => {
+        ALL_MEMBERS.push({ name, teamId: parseInt(tId) });
+      });
+    });
+
     const START_DATE = new Date('2026-09-21');
 
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
     let editingId = null;
 
-    // Đặt mặc định ngày hiện tại trên ô input
     document.getElementById('input-date').valueAsDate = new Date();
 
-    // Hàm tính tuần dựa trên Ngày (Thứ 2 là ngày bắt đầu tuần)
+    function initMemberSelect() {
+      const selectMember = document.getElementById('input-member');
+      selectMember.innerHTML = ALL_MEMBERS.map(m => 
+        `<option value="${m.name}" data-team="${m.teamId}">${m.name} (Đội ${m.teamId})</option>`
+      ).join('');
+
+      updateTeamFromMember();
+    }
+
+    function updateTeamFromMember() {
+      const selectMember = document.getElementById('input-member');
+      const selectedOption = selectMember.options[selectMember.selectedIndex];
+      if (selectedOption) {
+        const teamId = selectedOption.getAttribute('data-team');
+        document.getElementById('input-team').value = teamId;
+        document.getElementById('input-team-display').value = `Đội ${teamId}`;
+      }
+    }
+
+    document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
+
     function calculateWeekNumber(dateString) {
       const selectedDate = new Date(dateString);
       const diffTime = selectedDate - START_DATE;
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
       
-      if (diffDays < 0) return 1; // Nhập ngày trước giải thì quy về tuần 1
+      if (diffDays < 0) return 1;
       const weekNum = Math.floor(diffDays / 7) + 1;
-      return weekNum > 8 ? 8 : weekNum; // Tối đa 8 tuần
+      return weekNum > 8 ? 8 : weekNum;
     }
 
     function saveToStorage() {
       localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
       localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
     }
-
-    function initMemberDropdown() {
-      const teamId = document.getElementById('input-team').value;
-      const selectMember = document.getElementById('input-member');
-      selectMember.innerHTML = MEMBERS[teamId].map(m => `<option value="${m}">${m}</option>`).join('');
-    }
-
-    document.getElementById('input-team').addEventListener('change', initMemberDropdown);
 
     function toggleKhoMao(teamId, week) {
       const idx = khoMao[teamId].indexOf(week);
@@ -253,10 +282,9 @@
       if (!track) return;
 
       editingId = id;
-      document.getElementById('input-date').value = track.date;
-      document.getElementById('input-team').value = track.teamId;
-      initMemberDropdown();
       document.getElementById('input-member').value = track.member;
+      updateTeamFromMember();
+      document.getElementById('input-date').value = track.date;
       document.getElementById('input-type').value = track.type;
       document.getElementById('input-distance').value = track.distance;
       document.getElementById('input-pace').value = track.pace;
@@ -273,7 +301,7 @@
       editingId = null;
       document.getElementById('track-form').reset();
       document.getElementById('input-date').valueAsDate = new Date();
-      initMemberDropdown();
+      updateTeamFromMember();
       document.getElementById('form-title').innerText = "➕ GHI NHẬN TRACK MỚI";
       document.getElementById('submit-btn').innerText = "Ghi Nhận";
       document.getElementById('submit-btn').className = "w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20";
@@ -319,7 +347,6 @@
         return;
       }
 
-      // Tự động tính thuộc tuần mấy
       const week = calculateWeekNumber(date);
 
       if (editingId) {
@@ -447,7 +474,7 @@
           }).join('');
     }
 
-    initMemberDropdown();
+    initMemberSelect();
     render();
   </script>
 </body>
