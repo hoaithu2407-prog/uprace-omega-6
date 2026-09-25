@@ -23,7 +23,7 @@
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
     
-    <!-- KHU VỰC DÒNG CẬP NHẬT MỚI NHẤT (KHOANH ĐỎ) -->
+    <!-- KHU VỰC DÒNG CẬP NHẬT MỚI NHẤT -->
     <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong></span>
@@ -161,10 +161,9 @@
           <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
             📅 BẢNG XẾP HẠNG THEO TUẦN
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Thống kê chi tiết cự ly cá nhân & trạng thái theo tuần đang chọn ở trên</p>
+          <p class="text-xs text-slate-400 mt-0.5">Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m (Chạy đơn lẻ ≥ 1.000m, Bơi ≥ 500m)</p>
         </div>
 
-        <!-- THÔNG TIN CHẾ ĐỘ TUẦN (KHOANH XANH LÁ) -->
         <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300 flex items-center gap-2">
           <!-- Render thông tin Dưỡng sức / Khô máu -->
         </div>
@@ -180,9 +179,11 @@
               <th class="p-3">Chạy (km)</th>
               <th class="p-3">Bơi (km)</th>
               <th class="p-3">Quy Đổi Tuần</th>
-              <th class="p-3">Trạng thái Track</th>
-              <!-- CỘT GHI NHẬN TỰ ĐỘNG TÍNH MỨC TRẦN (KHOANH VÀNG) -->
+              <th class="p-3">Trạng thái Ngày Hợp Lệ</th>
               <th class="p-3 text-cyan-400 font-black">Ghi Nhận (Hợp Lệ)</th>
+              <th class="p-3 text-center">Hoàn thành?</th>
+              <!-- CỘT TIỀN PHẠT (CỘNG DỒN) -->
+              <th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt (50k/ngày)</th>
             </tr>
           </thead>
           <tbody id="weekly-leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
@@ -440,13 +441,11 @@
     function render() {
       renderKhoMaoButtons();
 
-      // CẬP NHẬT KHOANH ĐỎ: NGÀY GIỜ
       document.getElementById('last-updated-time').innerText = lastUpdated ? lastUpdated : "Chưa có dữ liệu mới";
 
       const selectedWeek = parseInt(document.getElementById('header-select-week').value);
       const filterTeamVal = document.getElementById('global-filter-team').value;
 
-      // CẬP NHẬT KHOANH XANH LÁ: BADGE GHI CHÚ CHẾ ĐỘ TUẦN
       const t1KM = khoMao[1].includes(selectedWeek);
       const t2KM = khoMao[2].includes(selectedWeek);
       document.getElementById('week-mode-badge').innerHTML = `
@@ -462,7 +461,7 @@
             name: m, teamId: tId, 
             cumRunKm: 0, cumSwimKm: 0, cumConvertedKm: 0, cumTracksCount: 0,
             weekRunKm: 0, weekSwimKm: 0, weekRawConvertedKm: 0, weekAcceptedKm: 0,
-            weeklyKmMap: {}, trackDaysMap: {}
+            weeklyKmMap: {}, dailyTracksMap: {}
           };
         });
       });
@@ -475,7 +474,7 @@
 
         m.cumTracksCount += 1;
         if (t.type === 'run') m.cumRunKm += t.distance / 1000;
-        if (t.type === 'swim') m.swimKm += t.distance / 1000;
+        if (t.type === 'swim') m.cumSwimKm += t.distance / 1000;
 
         if (w === selectedWeek) {
           if (t.type === 'run') m.weekRunKm += t.distance / 1000;
@@ -484,15 +483,17 @@
         }
 
         m.weeklyKmMap[w] = (m.weeklyKmMap[w] || 0) + km;
-        if (!m.trackDaysMap[w]) m.trackDaysMap[w] = new Set();
-        m.trackDaysMap[w].add(t.date);
+
+        // Lưu các track theo ngày để kiểm tra điều kiện hợp lệ
+        if (!m.dailyTracksMap[w]) m.dailyTracksMap[w] = {};
+        if (!m.dailyTracksMap[w][t.date]) m.dailyTracksMap[w][t.date] = [];
+        m.dailyTracksMap[w][t.date].push(t);
       });
 
       let cumTeam1 = 0, cumTeam2 = 0;
       let weekTeam1 = 0, weekTeam2 = 0;
 
       const memberList = Object.values(memberStats).map(m => {
-        // Lũy tiến
         let cumTotal = 0;
         for (let w = 1; w <= 8; w++) {
           const wKm = m.weeklyKmMap[w] || 0;
@@ -501,7 +502,6 @@
         }
         m.cumConvertedKm = cumTotal;
 
-        // Theo Tuần chọn: Tính cự ly hợp lệ (KHOANH VÀNG)
         const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
         m.weekAcceptedKm = isKMSelected ? m.weekRawConvertedKm : Math.min(m.weekRawConvertedKm, 50);
 
@@ -517,7 +517,6 @@
         return m;
       });
 
-      // 1. CẬP NHẬT THANH SONG ĐẤU LŨY TIẾN
       document.getElementById('cum-score-team1').innerText = `🏆 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
       document.getElementById('cum-score-team2').innerText = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 🏆`;
       const cumSum = cumTeam1 + cumTeam2;
@@ -525,7 +524,6 @@
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${100 - cumP1}%`;
 
-      // 2. CẬP NHẬT THANH SONG ĐẤU THEO TUẦN
       document.getElementById('week-score-team1').innerText = `🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
       document.getElementById('week-score-team2').innerText = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆`;
       const weekSum = weekTeam1 + weekTeam2;
@@ -535,12 +533,50 @@
 
       const filteredMembers = memberList.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
 
-      // 1. RENDER BẢNG KẾT QUẢ THEO TUẦN (CÓ CỘT KHOANH VÀNG)
+      // 1. RENDER BẢNG KẾT QUẢ THEO TUẦN (CÓ KIỂM TRA TRACK HỢP LỆ & TIỀN PHẠT)
       const sortedWeekly = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
       document.getElementById('weekly-leaderboard-body').innerHTML = sortedWeekly.map((m, idx) => {
-        const daysCount = m.trackDaysMap[selectedWeek] ? m.trackDaysMap[selectedWeek].size : 0;
         const isKMSelected = khoMao[m.teamId].includes(selectedWeek);
         const isExceeded = !isKMSelected && m.weekRawConvertedKm > 50;
+
+        // Tính số NGÀY HỢP LỆ theo quy tắc mới:
+        // Ngày hợp lệ nếu: Có bơi >= 500m HOẶC tổng chạy trong ngày >= 3000m
+        const weekDaysData = m.dailyTracksMap[selectedWeek] || {};
+        let validDaysCount = 0;
+
+        Object.keys(weekDaysData).forEach(dateStr => {
+          const dayTracks = weekDaysData[dateStr];
+          let totalRunInDay = 0;
+          let hasSwimValid = false;
+
+          dayTracks.forEach(t => {
+            if (t.type === 'run') totalRunInDay += t.distance;
+            if (t.type === 'swim' && t.distance >= 500) hasSwimValid = true;
+          });
+
+          if (hasSwimValid || totalRunInDay >= 3000) {
+            validDaysCount += 1;
+          }
+        });
+
+        // Xử lý logic Hoàn thành? & Tiền phạt
+        let completionStatusHtml = '';
+        let penaltyHtml = '<span class="text-slate-500">—</span>';
+
+        if (validDaysCount >= 6) {
+          completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
+          penaltyHtml = `<span class="text-emerald-400 font-semibold">0 đ</span>`;
+        } else {
+          if (selectedWeek < currentActualWeek) {
+            completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
+            const fineAmount = (6 - validDaysCount) * 50000;
+            penaltyHtml = `<span class="text-rose-400 font-bold">${fineAmount.toLocaleString('vi-VN')} đ</span>`;
+          } else {
+            completionStatusHtml = `<span class="text-slate-600 font-bold text-xs">—</span>`;
+            const pendingFine = (6 - validDaysCount) * 50000;
+            penaltyHtml = `<span class="text-slate-400 italic text-xs">Tạm tính -${pendingFine.toLocaleString('vi-VN')}đ</span>`;
+          }
+        }
 
         return `
           <tr class="hover:bg-slate-700/30">
@@ -551,16 +587,21 @@
             <td class="p-3">${m.weekSwimKm.toFixed(1)} km</td>
             <td class="p-3 font-semibold text-slate-300">${m.weekRawConvertedKm.toFixed(1)} km</td>
             <td class="p-3">
-              ${daysCount >= 6 
-                ? `<span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Đạt (${daysCount}/6 ngày)</span>`
-                : `<span class="text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Mới ${daysCount}/6 ngày</span>`
+              ${validDaysCount >= 6 
+                ? `<span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-semibold">Đạt (${validDaysCount}/6 ngày)</span>`
+                : `<span class="text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-semibold">Mới ${validDaysCount}/6 ngày</span>`
               }
             </td>
-            <!-- GIÁ TRỊ CỘT GHI NHẬN (KHOANH VÀNG) -->
             <td class="p-3 font-extrabold text-cyan-400 text-base">
               ${m.weekAcceptedKm.toFixed(1)} km
               ${isExceeded ? `<span class="block text-[10px] text-amber-400 font-normal italic">(Trần 50km)</span>` : ''}
               ${isKMSelected ? `<span class="block text-[10px] text-amber-400 font-normal italic">(🔥 Khô máu)</span>` : ''}
+            </td>
+            <td class="p-3 text-center">
+              ${completionStatusHtml}
+            </td>
+            <td class="p-3 text-right">
+              ${penaltyHtml}
             </td>
           </tr>
         `;
