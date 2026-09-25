@@ -3,33 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UPRACE OMEGA MÙA 6 - SONG ĐẤU MÙA MƯA GIÓ</title>
+  <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=SVN-Bangers&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+    
+    body { 
+      background-color: #0f172a; 
+      color: #f8fafc; 
+      font-family: system-ui, -apple-system, sans-serif; 
+    }
+
+    .font-banner {
+      font-family: 'Fredoka', 'Pangolin', cursive, sans-serif;
+    }
+
+    .banner-title-white {
+      text-shadow: 
+        3px 3px 0 #1e3a8a,
+        -3px -3px 0 #1e3a8a,
+        3px -3px 0 #1e3a8a,
+        -3px 3px 0 #1e3a8a,
+        0px 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .banner-title-yellow {
+      color: #facc15;
+      text-shadow: 
+        3px 3px 0 #1e3a8a,
+        -3px -3px 0 #1e3a8a,
+        3px -3px 0 #1e3a8a,
+        -3px 3px 0 #1e3a8a,
+        0px 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .slogan-font {
+      font-family: 'Pangolin', 'Fredoka', cursive, sans-serif;
+      text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+    }
   </style>
 </head>
 <body class="pb-12">
-  <!-- HEADER -->
-  <header class="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-700 p-6 shadow-xl text-center">
-    <div class="max-w-6xl mx-auto">
-      <span class="bg-yellow-400 text-slate-900 font-black px-4 py-1 rounded-full text-xs uppercase mb-2 inline-block shadow">
-        ✨ UPRACE OMEGA MÙA 6
-      </span>
-      <h1 class="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">SONG ĐẤU MÙA MƯA GIÓ</h1>
-      <p class="text-cyan-100 text-sm mt-1">21/09/2026 – 19/11/2026 (8 Tuần) • Khỏe là chính - Hơn thua là mười!</p>
+  <!-- HEADER BANNER ARTWORK -->
+  <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-12 shadow-2xl border-b-4 border-cyan-400">
+    <!-- Nền thiên nhiên biển đảo & mây bọt nước -->
+    <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:16px_16px]"></div>
+    <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-50"></div>
+    <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-yellow-300 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+      
+      <!-- MINH HỌA VẬN ĐỘNG VIÊN CHẠY BỘ -->
+      <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">
+          🏃‍♀️
+        </div>
+        <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
+          Chạy Hết Sức
+        </span>
+      </div>
+
+      <!-- TRUNG TÂM TIÊU ĐỀ NGHỆ THUẬT -->
+      <div class="flex-1 flex flex-col items-center">
+        <!-- BRUSH STROKE CONTAINER -->
+        <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-5 rounded-3xl shadow-2xl transform md:-rotate-1 backdrop-blur-sm max-w-2xl w-full">
+          
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-wider uppercase font-banner flex flex-wrap justify-center items-center gap-x-3 gap-y-1">
+            <span class="text-white banner-title-white">UPRACE</span>
+            <span class="banner-title-yellow">OMEGA MÙA 6</span>
+            <span class="text-2xl text-yellow-300">👑</span>
+          </h1>
+
+          <!-- THỦY THỦ/RIBBON THỜI GIAN -->
+          <div class="mt-4 inline-block relative">
+            <div class="bg-amber-100 text-rose-700 font-extrabold text-sm sm:text-base md:text-lg px-6 py-2 rounded-xl border-2 border-amber-300 shadow-md transform hover:scale-105 transition-all">
+              ⏰ Thời gian: 21/09/2026 - 19/11/2026 (8 Tuần)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MINH HỌA VẬN ĐỘNG VIÊN BƠI LỘI & KHẨU HIỆU -->
+      <div class="flex flex-col items-center gap-3">
+        <!-- KHẨU HIỆU VUI NHỊN CÓ KHUNG GIẤY (ĐÃ SỬA FONT) -->
+        <div class="bg-yellow-300 text-slate-900 p-3 rounded-2xl border-2 border-amber-400 shadow-lg transform rotate-3 max-w-[200px] text-center">
+          <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">
+            "Khỏe là chính<br/>Hơn thua là mười! 😊"
+          </p>
+        </div>
+
+        <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
+          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">
+            🏊‍♂️
+          </div>
+          <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
+            Bơi Hết Máo
+          </span>
+        </div>
+      </div>
+
     </div>
   </header>
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
     
-    <!-- KHU VỰC DÒNG CẬP NHẬT MỚI NHẤT VỚI GHI CHÚ CẢNH SÁT THU LÊ -->
+    <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
     <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- THANH SONG ĐẤU (2 THANH: LŨY TIẾN & THEO TUẦN) -->
+    <!-- THANH SONG ĐẤU (2 THANH) -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
@@ -155,7 +242,6 @@
             <option value="2">Lọc Đội: Đội 2</option>
           </select>
 
-          <!-- BADGE HIỂN THỊ THÔNG TIN CHẾ ĐỘ HOẶC CÁC TUẦN KHÔ MÁU -->
           <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300"></div>
         </div>
       </div>
@@ -163,7 +249,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
           <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head">
-            <!-- Render động tiêu đề bảng -->
+            <!-- Render tiêu đề -->
           </thead>
           <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
         </table>
@@ -409,7 +495,6 @@
       let isCumulativeView = (selectedView === 'cumulative');
       let targetWeek = isCumulativeView ? currentActualWeek : (selectedView === 'current' ? currentActualWeek : parseInt(selectedView));
 
-      // CẬP NHẬT BADGE & TIÊU ĐỀ
       if (isCumulativeView) {
         document.getElementById('leaderboard-title').innerText = "📈 BẢNG XẾP HẠNG LŨY TIẾN MÙA GIẢI";
         document.getElementById('leaderboard-subtitle').innerText = "Tổng cự ly tích lũy qua 8 tuần (Đã tính trần 50km/tuần & tuần Khô Máo)";
@@ -434,7 +519,6 @@
         `;
       }
 
-      // TÍNH TOÁN DỮ LIỆU
       const memberStats = {};
       [1, 2].forEach(tId => {
         MEMBERS[tId].forEach(m => {
@@ -497,7 +581,6 @@
         return m;
       });
 
-      // 1. THANH SONG ĐẤU LŨY TIẾN
       document.getElementById('cum-score-team1').innerText = `🏆 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
       document.getElementById('cum-score-team2').innerText = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 🏆`;
       const cumSum = cumTeam1 + cumTeam2;
@@ -505,7 +588,6 @@
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${100 - cumP1}%`;
 
-      // 2. THANH SONG ĐẤU THEO TUẦN
       document.getElementById('week-score-team1').innerText = `🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
       document.getElementById('week-score-team2').innerText = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆`;
       const weekSum = weekTeam1 + weekTeam2;
@@ -515,7 +597,6 @@
 
       const filteredMembers = memberList.filter(m => filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
 
-      // RENDER TABLE HEAD
       const headContainer = document.getElementById('leaderboard-head');
       if (isCumulativeView) {
         headContainer.innerHTML = `
@@ -546,7 +627,6 @@
         `;
       }
 
-      // RENDER TABLE BODY
       const bodyContainer = document.getElementById('leaderboard-body');
 
       if (isCumulativeView) {
@@ -642,7 +722,6 @@
         }).join('');
       }
 
-      // RENDER LỊCH SỬ TRACK
       document.getElementById('history-body').innerHTML = tracks.length === 0 
         ? `<tr><td colspan="9" class="p-4 text-center text-slate-500 italic">Chưa có track nào được ghi nhận.</td></tr>`
         : tracks.map(t => {
