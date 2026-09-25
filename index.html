@@ -66,7 +66,7 @@
         </button>
       </div>
       <form id="track-form" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-        <!-- 1. CHỌN THÀNH VIÊN -->
+        <!-- 1. CHỌN THÀNH VIÊN (CHỈ HIỂN THỊ TÊN) -->
         <div>
           <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
           <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
@@ -202,7 +202,6 @@
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
     };
 
-    // Tạo danh sách tất cả thành viên kèm Đội
     const ALL_MEMBERS = [];
     Object.keys(MEMBERS).forEach(tId => {
       MEMBERS[tId].forEach(name => {
@@ -220,8 +219,9 @@
 
     function initMemberSelect() {
       const selectMember = document.getElementById('input-member');
+      // Chỉ hiển thị tên thành viên
       selectMember.innerHTML = ALL_MEMBERS.map(m => 
-        `<option value="${m.name}" data-team="${m.teamId}">${m.name} (Đội ${m.teamId})</option>`
+        `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`
       ).join('');
 
       updateTeamFromMember();
