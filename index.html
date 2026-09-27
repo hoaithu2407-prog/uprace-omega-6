@@ -410,7 +410,6 @@
 
     document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
 
-    // THIẾT LẬP HIỆU ỨNG ĐỔI MÀU Ô MÔN ĐỂ NỔI BẬT
     document.getElementById('input-type').addEventListener('change', (e) => {
       const type = e.target.value;
       if (type === 'swim') {
@@ -477,7 +476,6 @@
       document.getElementById('input-date').value = track.date;
       document.getElementById('input-type').value = track.type;
       
-      // KÍCH HOẠT ĐỔI MÀU Ô MÔN KHI EDIT
       const selectType = document.getElementById('input-type');
       selectType.dispatchEvent(new Event('change'));
 
@@ -544,7 +542,6 @@
       let isSuspicious = document.getElementById('input-is-suspicious').checked;
       let note = document.getElementById('input-note').value.trim();
 
-      // 1. KIỂM TRA ĐIỀU KIỆN MIN CỰ LY HỢP LỆ (BƠI >= 500M)
       if (type === 'swim' && distance < 500) {
         alert("⚠️ Bơi tối thiểu phải từ 500m trở lên mới được tính!");
         return;
@@ -554,7 +551,6 @@
         return;
       }
 
-      // 2. CẢNH BÁO PACE BẤT THƯỜNG SO VỚI MÔN THI ĐẤU
       if (type === 'swim' && (pace < 2.0 || pace > 7.0)) {
         const confirmPace = confirm(`⚠️ CẢNH BÁO PACE BƠI BẤT THƯỜNG:\n\nPace bơi bạn nhập là ${pace} (Thông thường từ 2.0 - 7.0).\n\nBạn có chắc chắn đây là môn BƠI không hay nhập nhầm môn CHẠY?`);
         if (!confirmPace) return;
@@ -569,7 +565,6 @@
         if (!note) note = `Pace chạy bất thường (${pace})`;
       }
 
-      // 3. CẢNH BÁO TRÙNG TRACK (TRÙNG NGÀY + THÀNH VIÊN + QUÃNG ĐƯỜNG + PACE)
       const duplicateTrack = tracks.find(t => 
         t.id !== editingId &&
         t.member === member &&
@@ -887,6 +882,9 @@
           }).join('');
       }
 
+      // -------------------------------------------------------------
+      // SẮP XẾP BẢNG DANH SÁCH TRACK THEO NĂM-THÁNG-NGÀY GIẢM DẦN
+      // -------------------------------------------------------------
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
 
@@ -894,6 +892,14 @@
         const matchTeam = (historyTeamVal === 'all' || t.teamId === parseInt(historyTeamVal));
         const matchMember = (historyMemberVal === 'all' || t.member === historyMemberVal);
         return matchTeam && matchMember;
+      });
+
+      // HÀM SẮP XẾP THEO NGÀY MỚI NHẤT Ở TRÊN
+      filteredTracks.sort((a, b) => {
+        if (b.date !== a.date) {
+          return b.date.localeCompare(a.date); // Sắp xếp theo chuỗi YYYY-MM-DD giảm dần
+        }
+        return b.id - a.id; // Nếu trùng ngày thì xếp theo ID mới hơn
       });
 
       document.getElementById('history-body').innerHTML = filteredTracks.length === 0 
