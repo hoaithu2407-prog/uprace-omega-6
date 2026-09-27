@@ -212,13 +212,18 @@
             <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
             <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
           </div>
+
+          <!-- LÀM NỔI BẬT RỰC RỠ Ô CHỌN MÔN TRÁNH NHẬP LỘN -->
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Môn</label>
-            <select id="input-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100">
-              <option value="run">Chạy (&gt;1000m)</option>
-              <option value="swim">Bơi (&gt;500m)</option>
+            <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">
+              ⚡ MÔN THI ĐẤU
+            </label>
+            <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer">
+              <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (&gt;1000m)</option>
+              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
             </select>
           </div>
+
           <div>
             <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
             <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
@@ -405,6 +410,16 @@
 
     document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
 
+    // THIẾT LẬP HIỆU ỨNG ĐỔI MÀU Ô MÔN ĐỂ NỔI BẬT
+    document.getElementById('input-type').addEventListener('change', (e) => {
+      const type = e.target.value;
+      if (type === 'swim') {
+        e.target.className = "w-full bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 border-2 border-cyan-200 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-cyan-500/30 focus:ring-2 focus:ring-cyan-300 transition-all cursor-pointer";
+      } else {
+        e.target.className = "w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer";
+      }
+    });
+
     function updateLastUpdatedTime() {
       const now = new Date();
       lastUpdated = now.toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' });
@@ -441,7 +456,6 @@
       }
     }
 
-    // XÁC NHẬN HỢP LỆ CHO TRACK NGHI VẤN
     function approveTrack(id) {
       const track = tracks.find(t => t.id === id);
       if (track) {
@@ -462,6 +476,11 @@
       updateTeamFromMember();
       document.getElementById('input-date').value = track.date;
       document.getElementById('input-type').value = track.type;
+      
+      // KÍCH HOẠT ĐỔI MÀU Ô MÔN KHI EDIT
+      const selectType = document.getElementById('input-type');
+      selectType.dispatchEvent(new Event('change'));
+
       document.getElementById('input-distance').value = track.distance;
       document.getElementById('input-pace').value = track.pace;
       document.getElementById('input-is-suspicious').checked = !!track.isSuspicious;
@@ -482,6 +501,10 @@
       document.getElementById('input-is-suspicious').checked = false;
       document.getElementById('input-note').value = '';
       updateTeamFromMember();
+
+      const selectType = document.getElementById('input-type');
+      selectType.dispatchEvent(new Event('change'));
+
       document.getElementById('form-title').innerText = "➕ GHI NHẬN TRACK MỚI";
       document.getElementById('submit-btn').innerText = "Ghi Nhận";
       document.getElementById('submit-btn').className = "w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20";
@@ -518,16 +541,46 @@
       const type = document.getElementById('input-type').value;
       const distance = parseFloat(document.getElementById('input-distance').value);
       const pace = parseFloat(document.getElementById('input-pace').value);
-      const isSuspicious = document.getElementById('input-is-suspicious').checked;
-      const note = document.getElementById('input-note').value.trim();
+      let isSuspicious = document.getElementById('input-is-suspicious').checked;
+      let note = document.getElementById('input-note').value.trim();
 
-      if (type === 'swim' && (distance <= 500 || pace >= 6)) {
-        alert("Bơi phải > 500m và pace < 6!");
+      // 1. KIỂM TRA ĐIỀU KIỆN MIN CỰ LY HỢP LỆ (BƠI >= 500M)
+      if (type === 'swim' && distance < 500) {
+        alert("⚠️ Bơi tối thiểu phải từ 500m trở lên mới được tính!");
         return;
       }
-      if (type === 'run' && (distance <= 1000 || pace >= 12)) {
-        alert("Chạy phải > 1000m và pace < 12!");
+      if (type === 'run' && distance <= 1000) {
+        alert("⚠️ Chạy phải > 1000m!");
         return;
+      }
+
+      // 2. CẢNH BÁO PACE BẤT THƯỜNG SO VỚI MÔN THI ĐẤU
+      if (type === 'swim' && (pace < 2.0 || pace > 7.0)) {
+        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE BƠI BẤT THƯỜNG:\n\nPace bơi bạn nhập là ${pace} (Thông thường từ 2.0 - 7.0).\n\nBạn có chắc chắn đây là môn BƠI không hay nhập nhầm môn CHẠY?`);
+        if (!confirmPace) return;
+        isSuspicious = true;
+        if (!note) note = `Pace bơi bất thường (${pace})`;
+      }
+
+      if (type === 'run' && (pace < 5.0 || pace > 12.0)) {
+        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE CHẠY BẤT THƯỜNG:\n\nPace chạy bạn nhập là ${pace} (Thông thường từ 5.0 - 12.0).\n\nBạn có chắc chắn đây là môn CHẠY không hay nhập nhầm môn BƠI?`);
+        if (!confirmPace) return;
+        isSuspicious = true;
+        if (!note) note = `Pace chạy bất thường (${pace})`;
+      }
+
+      // 3. CẢNH BÁO TRÙNG TRACK (TRÙNG NGÀY + THÀNH VIÊN + QUÃNG ĐƯỜNG + PACE)
+      const duplicateTrack = tracks.find(t => 
+        t.id !== editingId &&
+        t.member === member &&
+        t.date === date &&
+        t.distance === distance &&
+        t.pace === pace
+      );
+
+      if (duplicateTrack) {
+        const confirmDuplicate = confirm(`⚠️ CẢNH BÁO TRÙNG TRACK:\n\nThành viên ${member} trong ngày ${date} ĐÃ CÓ 1 track cùng quãng đường (${distance}m) và pace (${pace})!\n\nBạn có chắc chắn muốn tiếp tục GHI NHẬN THÊM track trùng này không?`);
+        if (!confirmDuplicate) return;
       }
 
       const week = calculateWeekNumber(date);
@@ -633,9 +686,8 @@
         });
       });
 
-      // CHỈ CỘNG VÀO BẢNG XẾP HẠNG CÁC TRACK ĐÃ ĐƯỢC DUYỆT (HOẶC KHÔNG NGHI VẤN)
       tracks.forEach(t => {
-        if (t.isSuspicious && !t.isApproved) return; // BỎ QUA TRACK NGHI VẤN CHƯA XÁC NHẬN
+        if (t.isSuspicious && !t.isApproved) return;
 
         const m = memberStats[t.member];
         if (!m) return;
@@ -835,7 +887,6 @@
           }).join('');
       }
 
-      // RENDER DANH SÁCH TRACK ĐÃ NHẬP VÀ XÁC NHẬN TRACK
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
 
@@ -852,7 +903,6 @@
             const w = t.week || calculateWeekNumber(t.date);
             const isSuspicious = t.isSuspicious && !t.isApproved;
 
-            // STATUS CHECKMARK
             let statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Track hợp lệ</span>`;
             if (isSuspicious) {
               statusHtml = `
@@ -877,7 +927,7 @@
                     ${t.teamId}
                   </span>
                 </td>
-                <td class="p-3">${t.type === 'swim' ? '🏊 Bơi' : '🏃 Chạy'}</td>
+                <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
                 <td class="p-3">${t.distance} m</td>
                 <td class="p-3">${t.pace}</td>
                 <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
