@@ -109,7 +109,7 @@
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- THANH SONG ĐẤU -->
+    <!-- THANH SONG ĐẤU THỂ HIỆN CÁN CÂN CÂN BẰNG CHÍNH GIỮA -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
@@ -133,9 +133,21 @@
           </div>
         </div>
 
-        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
-          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
+        <!-- CONTAINER THANH TIẾN TRÌNH CÓ VẠCH CÂN BẰNG 50% -->
+        <div class="relative w-full bg-slate-900 h-7 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <!-- Vạch cán cân trung tâm (50%) -->
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
+          
+          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative" style="width: 50%">
+            <!-- Mũi tên phân định cán cân -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-white rounded-full border-2 border-slate-900 shadow-md z-20 flex items-center justify-center text-[8px]">⚖️</div>
+          </div>
           <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+        </div>
+        <div class="flex justify-between items-center text-[11px] text-slate-400 mt-1 font-semibold px-1">
+          <span>0%</span>
+          <span class="text-cyan-400 font-bold">⚖️ Cán Cân Cân Bằng (50%)</span>
+          <span>100%</span>
         </div>
       </div>
 
@@ -165,9 +177,21 @@
           </div>
         </div>
 
-        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
-          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
+        <!-- CONTAINER THANH TIẾN TRÌNH TUẦN CÓ VẠCH CÂN BẰNG 50% -->
+        <div class="relative w-full bg-slate-900 h-7 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <!-- Vạch cán cân trung tâm (50%) -->
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
+
+          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative" style="width: 50%">
+            <!-- Mũi tên phân định cán cân -->
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-white rounded-full border-2 border-slate-900 shadow-md z-20 flex items-center justify-center text-[8px]">⚖️</div>
+          </div>
           <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+        </div>
+        <div class="flex justify-between items-center text-[11px] text-slate-400 mt-1 font-semibold px-1">
+          <span>0%</span>
+          <span class="text-cyan-400 font-bold">⚖️ Cán Cân Cân Bằng (50%)</span>
+          <span>100%</span>
         </div>
       </div>
 
@@ -815,9 +839,6 @@
         return matchTeam && matchMember;
       });
 
-      // -------------------------------------------------------------
-      // CẬP NHẬT CÁC TIÊU ĐỀ CỘT RÚT GỌN TẠI ĐÂY
-      // -------------------------------------------------------------
       const headContainer = document.getElementById('leaderboard-head');
       if (isCumulativeView) {
         headContainer.innerHTML = `
