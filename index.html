@@ -109,19 +109,31 @@
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- THANH SONG ĐẤU (2 THANH) -->
+    <!-- THANH SONG ĐẤU -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
       <div>
-        <div class="flex justify-between items-center mb-2 font-bold">
-          <div class="text-emerald-400 text-base md:text-lg" id="cum-score-team1">🏆 ĐỘI 1: 0.0 km</div>
-          <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-full uppercase tracking-wider font-extrabold">
-            📈 TỔNG LŨY TIẾN MÙA GIẢI
-          </span>
-          <div class="text-amber-400 text-base md:text-lg" id="cum-score-team2">ĐỘI 2: 0.0 km 🏆</div>
+        <div class="flex justify-between items-center mb-1 font-bold">
+          <div class="text-emerald-400 text-base md:text-lg flex items-center gap-1.5" id="cum-score-team1">
+            ĐỘI 1: 0.0 km
+          </div>
+          
+          <div class="flex flex-col items-center">
+            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase tracking-wider font-extrabold">
+              📈 TỔNG LŨY TIẾN MÙA GIẢI
+            </span>
+            <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
+              <!-- Render thông tin Đội Dẫn Đầu & Chênh Lệch -->
+            </span>
+          </div>
+
+          <div class="text-amber-400 text-base md:text-lg flex items-center gap-1.5" id="cum-score-team2">
+            ĐỘI 2: 0.0 km
+          </div>
         </div>
-        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner">
+
+        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
           <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
           <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
         </div>
@@ -131,20 +143,29 @@
 
       <!-- THANH 2: KẾT QUẢ THEO TUẦN -->
       <div>
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 mb-2 font-bold">
-          <div class="text-emerald-400 text-base md:text-lg" id="week-score-team1">🏆 ĐỘI 1: 0.0 km</div>
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 mb-1 font-bold">
+          <div class="text-emerald-400 text-base md:text-lg flex items-center gap-1.5" id="week-score-team1">
+            ĐỘI 1: 0.0 km
+          </div>
           
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-amber-300 uppercase font-black">📊 KẾT QUẢ:</span>
-            <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1.5 text-xs shadow-md">
-              <!-- Render tuần tự động -->
-            </select>
+          <div class="flex flex-col items-center">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-amber-300 uppercase font-black">📊 KẾT QUẢ:</span>
+              <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md">
+                <!-- Render tuần tự động -->
+              </select>
+            </div>
+            <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
+              <!-- Render thông tin Đội Thắng Tuần & Chênh Lệch -->
+            </span>
           </div>
 
-          <div class="text-amber-400 text-base md:text-lg" id="week-score-team2">ĐỘI 2: 0.0 km 🏆</div>
+          <div class="text-amber-400 text-base md:text-lg flex items-center gap-1.5" id="week-score-team2">
+            ĐỘI 2: 0.0 km
+          </div>
         </div>
 
-        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner">
+        <div class="w-full bg-slate-900 h-6 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
           <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500" style="width: 50%"></div>
           <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
         </div>
@@ -218,7 +239,7 @@
               ⚡ MÔN THI ĐẤU
             </label>
             <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer">
-              <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (&gt;1000m)</option>
+              <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
               <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
             </select>
           </div>
@@ -255,7 +276,7 @@
       </form>
     </section>
 
-    <!-- BẢNG XẾP HẠNG VỚI CỘT ĐÃ NHẬP TUẦN VÀ TỰ ĐỘNG TÍNH THÀNH TÍCH / TIỀN PHẠT -->
+    <!-- BẢNG XẾP HẠNG -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
@@ -352,7 +373,6 @@
 
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
-    // LƯU TRẠNG THÁI TICK "ĐÃ NHẬP TUẦN" DẠNG: { "ThànhVien_TuanX": true/false }
     let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
     let lastUpdated = localStorage.getItem('uprace_last_updated') || null;
     let editingId = null;
@@ -555,23 +575,19 @@
         alert("⚠️ Bơi tối thiểu phải từ 500m trở lên mới được tính!");
         return;
       }
-      if (type === 'run' && distance <= 1000) {
-        alert("⚠️ Chạy phải > 1000m!");
+      if (type === 'run' && distance < 1000) {
+        alert("⚠️ Chạy tối thiểu phải từ 1000m trở lên mới được tính!");
         return;
       }
 
-      if (type === 'swim' && (pace < 2.0 || pace > 7.0)) {
-        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE BƠI BẤT THƯỜNG:\n\nPace bơi bạn nhập là ${pace} (Thông thường từ 2.0 - 7.0).\n\nBạn có chắc chắn đây là môn BƠI không hay nhập nhầm môn CHẠY?`);
+      if (type === 'swim' && (pace < 1.3 || pace > 8.0)) {
+        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE BƠI BẤT THƯỜNG:\n\nPace bơi bạn nhập là ${pace} (Thông thường từ 1.3 - 8.0).\n\nBạn có chắc chắn đây là môn BƠI không hay chọn nhầm môn CHẠY?`);
         if (!confirmPace) return;
-        isSuspicious = true;
-        if (!note) note = `Pace bơi bất thường (${pace})`;
       }
 
-      if (type === 'run' && (pace < 5.0 || pace > 12.0)) {
-        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE CHẠY BẤT THƯỜNG:\n\nPace chạy bạn nhập là ${pace} (Thông thường từ 5.0 - 12.0).\n\nBạn có chắc chắn đây là môn CHẠY không hay nhập nhầm môn BƠI?`);
+      if (type === 'run' && (pace < 4.0 || pace > 12.0)) {
+        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE CHẠY BẤT THƯỜNG:\n\nPace chạy bạn nhập là ${pace} (Thông thường từ 4.0 - 12.0).\n\nBạn có chắc chắn đây là môn CHẠY không hay chọn nhầm môn BƠI?`);
         if (!confirmPace) return;
-        isSuspicious = true;
-        if (!note) note = `Pace chạy bất thường (${pace})`;
       }
 
       const duplicateTrack = tracks.find(t => 
@@ -742,15 +758,52 @@
         return m;
       });
 
-      document.getElementById('cum-score-team1').innerText = `🏆 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
-      document.getElementById('cum-score-team2').innerText = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 🏆`;
+      const cumDiff = Math.abs(cumTeam1 - cumTeam2);
+      const cumWinnerTag = document.getElementById('cum-winner-tag');
+      
+      if (cumTeam1 > cumTeam2) {
+        document.getElementById('cum-score-team1').innerHTML = `👑 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
+        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km`;
+        cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        cumWinnerTag.innerHTML = `👑 ĐỘI 1 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
+      } else if (cumTeam2 > cumTeam1) {
+        document.getElementById('cum-score-team1').innerHTML = `ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
+        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 👑`;
+        cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        cumWinnerTag.innerHTML = `👑 ĐỘI 2 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
+      } else {
+        document.getElementById('cum-score-team1').innerHTML = `ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
+        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km`;
+        cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
+        cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+      }
+
       const cumSum = cumTeam1 + cumTeam2;
       const cumP1 = cumSum > 0 ? (cumTeam1 / cumSum) * 100 : 50;
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${100 - cumP1}%`;
 
-      document.getElementById('week-score-team1').innerText = `🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
-      document.getElementById('week-score-team2').innerText = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆`;
+      const weekDiff = Math.abs(weekTeam1 - weekTeam2);
+      const weekWinnerTag = document.getElementById('week-winner-tag');
+      const weekTitleText = selectedView === 'cumulative' ? `TẤT CẢ` : `TUẦN ${targetWeek}`;
+
+      if (weekTeam1 > weekTeam2) {
+        document.getElementById('week-score-team1').innerHTML = `🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
+        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km`;
+        weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
+      } else if (weekTeam2 > weekTeam1) {
+        document.getElementById('week-score-team1').innerHTML = `ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
+        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆`;
+        weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
+      } else {
+        document.getElementById('week-score-team1').innerHTML = `ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
+        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km`;
+        weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
+        weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+      }
+
       const weekSum = weekTeam1 + weekTeam2;
       const weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
       document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
@@ -762,16 +815,19 @@
         return matchTeam && matchMember;
       });
 
+      // -------------------------------------------------------------
+      // CẬP NHẬT CÁC TIÊU ĐỀ CỘT RÚT GỌN TẠI ĐÂY
+      // -------------------------------------------------------------
       const headContainer = document.getElementById('leaderboard-head');
       if (isCumulativeView) {
         headContainer.innerHTML = `
           <tr>
             <th class="p-3">Hạng</th>
-            <th class="p-3">Thành viên</th>
+            <th class="p-3">TV</th>
             <th class="p-3 text-center">Đội</th>
-            <th class="p-3">Tổng Chạy (km)</th>
-            <th class="p-3">Tổng Bơi (km)</th>
-            <th class="p-3 text-cyan-400 font-black">Tổng Quy Đổi (km)</th>
+            <th class="p-3">Chạy</th>
+            <th class="p-3">Bơi</th>
+            <th class="p-3 text-cyan-400 font-black">Quy đổi</th>
             <th class="p-3 text-center">Số Track</th>
           </tr>
         `;
@@ -779,14 +835,14 @@
         headContainer.innerHTML = `
           <tr>
             <th class="p-3">Hạng</th>
-            <th class="p-3">Thành viên</th>
+            <th class="p-3">TV</th>
             <th class="p-3 text-center">Đội</th>
-            <th class="p-3">Chạy (km)</th>
-            <th class="p-3">Bơi (km)</th>
-            <th class="p-3">Quy Đổi Tuần</th>
+            <th class="p-3">Chạy</th>
+            <th class="p-3">Bơi</th>
+            <th class="p-3">Quy đổi</th>
             <th class="p-3 text-center">Số Ngày</th>
             <th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
-            <th class="p-3 text-center">Đã nhập tuần</th>
+            <th class="p-3 text-center">Đã nhập</th>
             <th class="p-3 text-center">Hoàn thành?</th>
             <th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt</th>
           </tr>
@@ -840,14 +896,12 @@
               }
             });
 
-            // LẤY TRẠNG THÁI "ĐÃ NHẬP TUẦN"
             const key = `${m.name}_Week${targetWeek}`;
             const isWeekEntered = !!memberWeekCompleted[key];
 
             let completionStatusHtml = '<span class="text-slate-500 font-medium text-xs">⏳ Chưa chốt</span>';
             let penaltyHtml = '<span class="text-slate-600 font-bold text-xs">—</span>';
 
-            // KHI ĐƯỢC TICK CHỌN "ĐÃ NHẬP TUẦN" THÌ TÍNH HOÀN THÀNH VÀ TIỀN PHẠT TƯƠNG ỨNG
             if (isWeekEntered) {
               if (validDaysCount >= 6) {
                 completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
