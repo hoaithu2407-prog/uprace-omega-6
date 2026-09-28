@@ -213,7 +213,6 @@
             <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
           </div>
 
-          <!-- LÀM NỔI BẬT RỰC RỠ Ô CHỌN MÔN TRÁNH NHẬP LỘN -->
           <div>
             <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">
               ⚡ MÔN THI ĐẤU
@@ -256,7 +255,7 @@
       </form>
     </section>
 
-    <!-- BẢNG XẾP HẠNG DUY NHẤT -->
+    <!-- BẢNG XẾP HẠNG VỚI CỘT ĐÃ NHẬP TUẦN VÀ TỰ ĐỘNG TÍNH THÀNH TÍCH / TIỀN PHẠT -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
@@ -291,7 +290,7 @@
       </div>
     </section>
 
-    <!-- DANH SÁCH TRACK ĐÃ NHẬP VỚI TÔ SÁNG NGHI VẤN VÀ CỘT XÁC NHẬN TRACK -->
+    <!-- DANH SÁCH TRACK ĐÃ NHẬP -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
         <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
@@ -353,6 +352,8 @@
 
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
+    // LƯU TRẠNG THÁI TICK "ĐÃ NHẬP TUẦN" DẠNG: { "ThànhVien_TuanX": true/false }
+    let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
     let lastUpdated = localStorage.getItem('uprace_last_updated') || null;
     let editingId = null;
 
@@ -428,6 +429,14 @@
     function saveToStorage() {
       localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
       localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
+      localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
+    }
+
+    function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
+      const key = `${memberName}_Week${weekNum}`;
+      memberWeekCompleted[key] = isChecked;
+      saveToStorage();
+      render();
     }
 
     function toggleKhoMao(teamId, week) {
@@ -777,6 +786,7 @@
             <th class="p-3">Quy Đổi Tuần</th>
             <th class="p-3 text-center">Số Ngày</th>
             <th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
+            <th class="p-3 text-center">Đã nhập tuần</th>
             <th class="p-3 text-center">Hoàn thành?</th>
             <th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt</th>
           </tr>
@@ -807,7 +817,7 @@
       } else {
         const sorted = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
         bodyContainer.innerHTML = sorted.length === 0
-          ? `<tr><td colspan="10" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
+          ? `<tr><td colspan="11" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
           : sorted.map((m, idx) => {
             const isKMSelected = khoMao[m.teamId].includes(targetWeek);
             const isExceeded = !isKMSelected && m.weekRawConvertedKm > 50;
@@ -830,22 +840,22 @@
               }
             });
 
-            let completionStatusHtml = '';
+            // LẤY TRẠNG THÁI "ĐÃ NHẬP TUẦN"
+            const key = `${m.name}_Week${targetWeek}`;
+            const isWeekEntered = !!memberWeekCompleted[key];
+
+            let completionStatusHtml = '<span class="text-slate-500 font-medium text-xs">⏳ Chưa chốt</span>';
             let penaltyHtml = '<span class="text-slate-600 font-bold text-xs">—</span>';
 
-            if (validDaysCount >= 6) {
-              completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
-              if (targetWeek < currentActualWeek) {
+            // KHI ĐƯỢC TICK CHỌN "ĐÃ NHẬP TUẦN" THÌ TÍNH HOÀN THÀNH VÀ TIỀN PHẠT TƯƠNG ỨNG
+            if (isWeekEntered) {
+              if (validDaysCount >= 6) {
+                completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
                 penaltyHtml = `<span class="text-emerald-400 font-semibold">0 đ</span>`;
-              }
-            } else {
-              if (targetWeek < currentActualWeek) {
+              } else {
                 completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
                 const fineAmount = (6 - validDaysCount) * 50000;
                 penaltyHtml = `<span class="text-rose-400 font-bold">${fineAmount.toLocaleString('vi-VN')} đ</span>`;
-              } else {
-                completionStatusHtml = `<span class="text-slate-600 font-bold text-xs">—</span>`;
-                penaltyHtml = `<span class="text-slate-600 font-bold text-xs">—</span>`;
               }
             }
 
@@ -872,6 +882,9 @@
                   ${isKMSelected ? `<span class="block text-[10px] text-amber-400 font-normal italic">(🔥 Khô máu)</span>` : ''}
                 </td>
                 <td class="p-3 text-center">
+                  <input type="checkbox" ${isWeekEntered ? 'checked' : ''} onchange="toggleMemberWeekCompleted('${m.name}', ${targetWeek}, this.checked)" class="w-4 h-4 text-emerald-500 rounded border-slate-700 bg-slate-900 focus:ring-emerald-500 cursor-pointer" />
+                </td>
+                <td class="p-3 text-center">
                   ${completionStatusHtml}
                 </td>
                 <td class="p-3 text-right">
@@ -882,9 +895,6 @@
           }).join('');
       }
 
-      // -------------------------------------------------------------
-      // SẮP XẾP BẢNG DANH SÁCH TRACK THEO NĂM-THÁNG-NGÀY GIẢM DẦN
-      // -------------------------------------------------------------
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
 
@@ -894,12 +904,11 @@
         return matchTeam && matchMember;
       });
 
-      // HÀM SẮP XẾP THEO NGÀY MỚI NHẤT Ở TRÊN
       filteredTracks.sort((a, b) => {
         if (b.date !== a.date) {
-          return b.date.localeCompare(a.date); // Sắp xếp theo chuỗi YYYY-MM-DD giảm dần
+          return b.date.localeCompare(a.date);
         }
-        return b.id - a.id; // Nếu trùng ngày thì xếp theo ID mới hơn
+        return b.id - a.id;
       });
 
       document.getElementById('history-body').innerHTML = filteredTracks.length === 0 
