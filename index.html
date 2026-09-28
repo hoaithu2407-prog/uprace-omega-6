@@ -109,41 +109,56 @@
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- THANH SONG ĐẤU -->
+    <!-- THANH SONG ĐẤU THỎ VÀ RÙA -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
       <div>
-        <div class="flex justify-between items-center mb-1 font-bold">
-          <div class="flex items-center gap-1.5 transition-all" id="cum-score-team1">
-            ĐỘI 1: 0.0 km
+        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
+        <div class="flex justify-between items-center mb-1 font-extrabold text-sm sm:text-base">
+          <div id="cum-title-team1" class="text-emerald-400 flex items-center gap-1.5">
+            🐢 RÙA: ĐỘI 1 (0.0 km)
           </div>
-          
+
           <div class="flex flex-col items-center">
             <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase tracking-wider font-extrabold">
               📈 TỔNG LŨY TIẾN MÙA GIẢI
             </span>
             <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Dẫn Đầu & Chênh Lệch -->
+              <!-- Render thông tin Đội Dẫn Đầu -->
             </span>
           </div>
 
-          <div class="flex items-center gap-1.5 transition-all" id="cum-score-team2">
-            ĐỘI 2: 0.0 km
+          <div id="cum-title-team2" class="text-amber-400 flex items-center gap-1.5">
+            🐰 THỎ: ĐỘI 2 (0.0 km)
           </div>
         </div>
 
-        <div class="relative w-full bg-slate-900 h-7 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+        <!-- CONTAINER THANH TIẾN TRÌNH CÓ CHỮ SỐ KM BÊN TRONG -->
+        <div class="relative w-full bg-slate-900 h-8 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <!-- Vạch cán cân trung tâm (50%) -->
           <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
           
-          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative" style="width: 50%">
+          <!-- THANH ĐỘI 1 -->
+          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-hidden" style="width: 50%">
+            <span id="cum-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
+              0.0 km
+            </span>
             <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-white rounded-full border-2 border-slate-900 shadow-md z-20 flex items-center justify-center text-[8px]">⚖️</div>
           </div>
-          <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+
+          <!-- THANH ĐỘI 2 -->
+          <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
+            <span id="cum-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
+              0.0 km
+            </span>
+          </div>
         </div>
-        <div class="flex justify-between items-center text-[11px] text-slate-500 mt-1 font-semibold px-1">
-          <span>0%</span>
-          <span>100%</span>
+
+        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
+        <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
+          <span id="cum-pct-team1" class="text-emerald-400">50.0%</span>
+          <span id="cum-pct-team2" class="text-amber-400">50.0%</span>
         </div>
       </div>
 
@@ -151,11 +166,12 @@
 
       <!-- THANH 2: KẾT QUẢ THEO TUẦN -->
       <div>
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 mb-1 font-bold">
-          <div class="flex items-center gap-1.5 transition-all" id="week-score-team1">
-            ĐỘI 1: 0.0 km
+        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
+        <div class="flex justify-between items-center mb-1 font-extrabold text-sm sm:text-base">
+          <div id="week-title-team1" class="text-emerald-400 flex items-center gap-1.5">
+            🐢 RÙA: ĐỘI 1 (0.0 km)
           </div>
-          
+
           <div class="flex flex-col items-center">
             <div class="flex items-center gap-2">
               <span class="text-xs text-amber-300 uppercase font-black">📊 KẾT QUẢ:</span>
@@ -164,26 +180,40 @@
               </select>
             </div>
             <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Thắng Tuần & Chênh Lệch -->
+              <!-- Render thông tin Đội Thắng Tuần -->
             </span>
           </div>
 
-          <div class="flex items-center gap-1.5 transition-all" id="week-score-team2">
-            ĐỘI 2: 0.0 km
+          <div id="week-title-team2" class="text-amber-400 flex items-center gap-1.5">
+            🐰 THỎ: ĐỘI 2 (0.0 km)
           </div>
         </div>
 
-        <div class="relative w-full bg-slate-900 h-7 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+        <!-- CONTAINER THANH TIẾN TRÌNH TUẦN CÓ CHỮ SỐ KM BÊN TRONG -->
+        <div class="relative w-full bg-slate-900 h-8 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <!-- Vạch cán cân trung tâm (50%) -->
           <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
 
-          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative" style="width: 50%">
+          <!-- THANH ĐỘI 1 -->
+          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-hidden" style="width: 50%">
+            <span id="week-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
+              0.0 km
+            </span>
             <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-4 h-4 bg-white rounded-full border-2 border-slate-900 shadow-md z-20 flex items-center justify-center text-[8px]">⚖️</div>
           </div>
-          <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500" style="width: 50%"></div>
+
+          <!-- THANH ĐỘI 2 -->
+          <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
+            <span id="week-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
+              0.0 km
+            </span>
+          </div>
         </div>
-        <div class="flex justify-between items-center text-[11px] text-slate-500 mt-1 font-semibold px-1">
-          <span>0%</span>
-          <span>100%</span>
+
+        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
+        <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
+          <span id="week-pct-team1" class="text-emerald-400">50.0%</span>
+          <span id="week-pct-team2" class="text-amber-400">50.0%</span>
         </div>
       </div>
 
@@ -343,7 +373,6 @@
             <option value="all">👤 Lọc Tên: Tất cả</option>
           </select>
 
-          <!-- BỔ SUNG BỘ LỌC TRẠNG THÁI CẦN DUYỆT -->
           <select id="history-filter-status" class="bg-slate-900 border border-amber-500/60 rounded-xl px-3 py-1 text-xs text-amber-300 font-bold shadow">
             <option value="all">Trạng thái: Tất cả</option>
             <option value="pending">⚠️ Chỉ track Cần duyệt</option>
@@ -782,80 +811,90 @@
         return m;
       });
 
+      // -------------------------------------------------------------
+      // LOGIC THỎ - RÙA LŨY TIẾN MÙA GIẢI
+      // -------------------------------------------------------------
       const cumDiff = Math.abs(cumTeam1 - cumTeam2);
       const cumWinnerTag = document.getElementById('cum-winner-tag');
-      
+      const cumSum = cumTeam1 + cumTeam2;
+
+      let cumP1 = 50, cumP2 = 50;
+      if (cumSum > 0) {
+        cumP1 = (cumTeam1 / cumSum) * 100;
+        cumP2 = (cumTeam2 / cumSum) * 100;
+      }
+
+      document.getElementById('cum-pct-team1').innerText = `${cumP1.toFixed(1)}%`;
+      document.getElementById('cum-pct-team2').innerText = `${cumP2.toFixed(1)}%`;
+
+      document.getElementById('cum-val-team1').innerText = `${cumTeam1.toFixed(1)} km`;
+      document.getElementById('cum-val-team2').innerText = `${cumTeam2.toFixed(1)} km`;
+
       if (cumTeam1 > cumTeam2) {
-        document.getElementById('cum-score-team1').className = "flex items-center gap-1.5 font-black text-emerald-400 text-lg md:text-xl drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]";
-        document.getElementById('cum-score-team1').innerHTML = `<span class="animate-bounce">🎉</span> 👑 ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
-        
-        document.getElementById('cum-score-team2').className = "flex items-center gap-1.5 font-semibold text-slate-400 text-sm md:text-base opacity-80";
-        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km`;
+        document.getElementById('cum-title-team1').innerHTML = `<span>🐰 THỎ: ĐỘI 1</span> <span class="text-xs opacity-80">(${cumTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs opacity-80">(${cumTeam2.toFixed(1)} km)</span> <span>🐢 RÙA: ĐỘI 2</span>`;
         
         cumWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
         cumWinnerTag.innerHTML = `🎉 ĐỘI 1 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
       } else if (cumTeam2 > cumTeam1) {
-        document.getElementById('cum-score-team1').className = "flex items-center gap-1.5 font-semibold text-slate-400 text-sm md:text-base opacity-80";
-        document.getElementById('cum-score-team1').innerHTML = `ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
+        document.getElementById('cum-title-team1').innerHTML = `<span>🐢 RÙA: ĐỘI 1</span> <span class="text-xs opacity-80">(${cumTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs opacity-80">(${cumTeam2.toFixed(1)} km)</span> <span>🐰 THỎ: ĐỘI 2</span>`;
 
-        document.getElementById('cum-score-team2').className = "flex items-center gap-1.5 font-black text-amber-400 text-lg md:text-xl drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]";
-        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km 👑 <span class="animate-bounce">🎉</span>`;
-        
         cumWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
         cumWinnerTag.innerHTML = `🎉 ĐỘI 2 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
       } else {
-        document.getElementById('cum-score-team1').className = "flex items-center gap-1.5 font-bold text-emerald-400 text-base md:text-lg";
-        document.getElementById('cum-score-team1').innerHTML = `ĐỘI 1: ${cumTeam1.toFixed(1)} km`;
-
-        document.getElementById('cum-score-team2').className = "flex items-center gap-1.5 font-bold text-amber-400 text-base md:text-lg";
-        document.getElementById('cum-score-team2').innerHTML = `ĐỘI 2: ${cumTeam2.toFixed(1)} km`;
+        document.getElementById('cum-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs opacity-80">(${cumTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs opacity-80">(${cumTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
 
         cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
         cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
       }
 
-      const cumSum = cumTeam1 + cumTeam2;
-      const cumP1 = cumSum > 0 ? (cumTeam1 / cumSum) * 100 : 50;
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
-      document.getElementById('cum-bar-team2').style.width = `${100 - cumP1}%`;
+      document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
+      // -------------------------------------------------------------
+      // LOGIC THỎ - RÙA TUẦN
+      // -------------------------------------------------------------
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekWinnerTag = document.getElementById('week-winner-tag');
       const weekTitleText = selectedView === 'cumulative' ? `TẤT CẢ` : `TUẦN ${targetWeek}`;
+      const weekSum = weekTeam1 + weekTeam2;
+
+      let weekP1 = 50, weekP2 = 50;
+      if (weekSum > 0) {
+        weekP1 = (weekTeam1 / weekSum) * 100;
+        weekP2 = (weekTeam2 / weekSum) * 100;
+      }
+
+      document.getElementById('week-pct-team1').innerText = `${weekP1.toFixed(1)}%`;
+      document.getElementById('week-pct-team2').innerText = `${weekP2.toFixed(1)}%`;
+
+      document.getElementById('week-val-team1').innerText = `${weekTeam1.toFixed(1)} km`;
+      document.getElementById('week-val-team2').innerText = `${weekTeam2.toFixed(1)} km`;
 
       if (weekTeam1 > weekTeam2) {
-        document.getElementById('week-score-team1').className = "flex items-center gap-1.5 font-black text-emerald-400 text-lg md:text-xl drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]";
-        document.getElementById('week-score-team1').innerHTML = `<span class="animate-bounce">🎉</span> 🏆 ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
-
-        document.getElementById('week-score-team2').className = "flex items-center gap-1.5 font-semibold text-slate-400 text-sm md:text-base opacity-80";
-        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km`;
+        document.getElementById('week-title-team1').innerHTML = `<span>🐰 THỎ: ĐỘI 1</span> <span class="text-xs opacity-80">(${weekTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs opacity-80">(${weekTeam2.toFixed(1)} km)</span> <span>🐢 RÙA: ĐỘI 2</span>`;
 
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
         weekWinnerTag.innerHTML = `🎉 ĐỘI 1 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
       } else if (weekTeam2 > weekTeam1) {
-        document.getElementById('week-score-team1').className = "flex items-center gap-1.5 font-semibold text-slate-400 text-sm md:text-base opacity-80";
-        document.getElementById('week-score-team1').innerHTML = `ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
-
-        document.getElementById('week-score-team2').className = "flex items-center gap-1.5 font-black text-amber-400 text-lg md:text-xl drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]";
-        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km 🏆 <span class="animate-bounce">🎉</span>`;
+        document.getElementById('week-title-team1').innerHTML = `<span>🐢 RÙA: ĐỘI 1</span> <span class="text-xs opacity-80">(${weekTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs opacity-80">(${weekTeam2.toFixed(1)} km)</span> <span>🐰 THỎ: ĐỘI 2</span>`;
 
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
         weekWinnerTag.innerHTML = `🎉 ĐỘI 2 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
       } else {
-        document.getElementById('week-score-team1').className = "flex items-center gap-1.5 font-bold text-emerald-400 text-base md:text-lg";
-        document.getElementById('week-score-team1').innerHTML = `ĐỘI 1: ${weekTeam1.toFixed(1)} km`;
-
-        document.getElementById('week-score-team2').className = "flex items-center gap-1.5 font-bold text-amber-400 text-base md:text-lg";
-        document.getElementById('week-score-team2').innerHTML = `ĐỘI 2: ${weekTeam2.toFixed(1)} km`;
+        document.getElementById('week-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs opacity-80">(${weekTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs opacity-80">(${weekTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
 
         weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
         weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
       }
 
-      const weekSum = weekTeam1 + weekTeam2;
-      const weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
       document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
-      document.getElementById('week-bar-team2').style.width = `${100 - weekP1}%`;
+      document.getElementById('week-bar-team2').style.width = `${weekP2}%`;
 
       const filteredMembers = memberList.filter(m => {
         const matchTeam = (filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
@@ -994,9 +1033,6 @@
           }).join('');
       }
 
-      // -------------------------------------------------------------
-      // LOGIC BỘ LỌC DANH SÁCH TRACK ĐÃ NHẬP CÓ BỔ SUNG "CẦN DUYỆT"
-      // -------------------------------------------------------------
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
       const historyStatusVal = document.getElementById('history-filter-status').value;
