@@ -285,7 +285,7 @@
       const date = document.getElementById('add-date-input').value;
 
       if (dist <= 0) {
-        alert("⚠️ Vui lòng nhập số mét hợp lệ!");
+        alert("⚠️️ Vui lòng nhập số mét hợp lệ!");
         return;
       }
 
@@ -359,8 +359,6 @@
       return weekNum > 8 ? 8 : weekNum;
     }
 
-    const currentActualWeek = calculateWeekNumber(new Date().toISOString().split('T')[0]);
-
     function initWeekDropdown() {
       const select = document.getElementById('header-select-week');
       let html = `<option value="1" selected>Tuần 1</option>`;
@@ -392,12 +390,12 @@
 
     function render() {
       renderKhoMaoButtons();
-      const selectedView = document.getElementById('header-select-week').value;
+      const selectedView = document.getElementById('header-select-week').value || "1";
       const filterTeamVal = document.getElementById('global-filter-team').value;
       const filterMemberVal = document.getElementById('global-filter-member').value;
 
       let isCumulativeView = (selectedView === 'cumulative');
-      let targetWeek = isCumulativeView ? currentActualWeek : parseInt(selectedView);
+      let targetWeek = isCumulativeView ? 1 : parseInt(selectedView);
 
       const memberStats = {};
       [1, 2].forEach(tId => {
@@ -415,7 +413,8 @@
         const m = memberStats[t.member];
         if (!m) return;
 
-        const w = parseInt(t.week) || calculateWeekNumber(t.date);
+        // Ưu tiên lấy trực tiếp cột week từ Supabase
+        const w = parseInt(t.week) || 1;
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
 
         m.cumTracksCount += 1;
@@ -465,7 +464,7 @@
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
-      // TÍNH TOÁN THANH TUẦN ĐƯỢC CHỌN (HIỂN THỊ CHUẨN 1 CHỮ SỐ THẬP PHÂN .toFixed(1))
+      // TÍNH TOÁN THANH TUẦN ĐƯỢC CHỌN (CHUẨN XÁC 1 CHỮ SỐ THẬP PHÂN .toFixed(1))
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekSum = weekTeam1 + weekTeam2;
       let weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
@@ -479,7 +478,7 @@
       document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
       document.getElementById('week-bar-team2').style.width = `${weekP2}%`;
 
-      if (weekTeam1 > weekTeam2) {
+      if (weekTeam1 >= weekTeam2) {
         document.getElementById('week-title-team1').innerHTML = `<span class="text-yellow-300">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span class="text-emerald-300">🐢 RÙA: ĐỘI 2</span>`;
       } else {
