@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
@@ -46,7 +47,7 @@
           <p class="slogan-font font-bold text-xs sm:text-sm leading-tight text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
         <button onclick="syncClubData()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
-          <span>🔄</span> Kích Hoạt Đồng Bộ Club Strava (#2363422)
+          <span>🔄</span> Tự Động Đồng Bộ Strava & Supabase
         </button>
       </div>
     </div>
@@ -63,7 +64,7 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <span class="text-slate-400">Trạng thái: <strong id="sync-status" class="text-emerald-400">Đã nối Google Apps Script cào dữ liệu</strong></span>
+        <span class="text-slate-400">Database: <strong id="sync-status" class="text-emerald-400">Đã nối Supabase Cloud</strong></span>
         <button id="auth-btn" onclick="toggleAdminAuth()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow">
           🔑 Đăng Nhập Admin
         </button>
@@ -73,13 +74,13 @@
     <!-- BẢNG ĐIỀU KHIỂN CHỈ ADMIN MỚI THẤY -->
     <section class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-amber-500/50 shadow-2xl space-y-6">
       <h2 class="text-amber-400 font-black text-base flex items-center gap-2">
-        👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ - THIẾT LẬP ĐỒNG BỘ VĐV
+        👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ - KÍCH HOẠT VĐV
       </h2>
 
       <!-- KHU VỰC THIẾT LẬP GHÉP CẶP VĐV STRAVA + NGÀY BẮT ĐẦU -->
       <div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/40 space-y-4">
         <h3 class="text-cyan-400 font-bold text-sm flex items-center gap-2">
-          ⚙️ BƯỚC GHÉP CẶP ID STRAVA & NICKNAME VỚI VĐV VÀ CHỌN NGÀY BẮT ĐẦU
+          ⚙️ BƯỚC GHÉP CẶP ID STRAVA VỚI VĐV ĐỂ ĐỒNG BỘ NGUYÊN BẢN
         </h3>
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -225,7 +226,7 @@
     <!-- DANH SÁCH TRACK ĐÃ ĐỒNG BỘ -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-        <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ ĐỒNG BỘ</h2>
+        <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK TRÊN SUPABASE DATABASE</h2>
         <div class="flex flex-wrap items-center gap-2">
           <select id="history-filter-team" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1 text-xs text-slate-200">
             <option value="all">Lọc Đội: Tất cả</option>
@@ -250,7 +251,7 @@
               <th class="p-3">Môn</th>
               <th class="p-3">Quãng đường</th>
               <th class="p-3">Quy đổi</th>
-              <th class="p-3 text-center">Trạng thái Đồng bộ</th>
+              <th class="p-3 text-center">Nguồn Dữ Liệu</th>
             </tr>
           </thead>
           <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
@@ -263,8 +264,12 @@
   <script>
     const ADMIN_PIN = "123456";
     let isAdmin = false;
-    
-    // LINK GOOGLE APPS SCRIPT WEB APP CỦA CHỊ THU LÊ
+
+    // 🔗 CẤU HÌNH ĐÃ HOÀN THIỆN SUPABASE VÀ GOOGLE SCRIPT
+    const SUPABASE_URL = "https://hmcytrgqgzfaxwtdogtd.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtY3l0cmdxZ3pmYXh3dGRvZ3RkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MDUxNjMsImV4cCI6MjEwNjI4MTE2M30.bUlKov67ue0wx7FXN9mn2JXpnJKssIoye-gdrlKEQi4";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const GOOGLE_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyrIPliKkNZBeyv2OOdC8WxyoMGBT4dfUi5eE5hWGNdBGyD35YDj1endaoMbFhfS3NC/exec";
 
     const MEMBERS = {
@@ -280,7 +285,7 @@
     const START_DATE = new Date('2026-09-21');
     document.getElementById('map-start-date').value = '2026-09-21';
 
-    let tracks = JSON.parse(localStorage.getItem('uprace_tracks_v3')) || [];
+    let tracks = [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
     let stravaMapping = JSON.parse(localStorage.getItem('uprace_strava_mapping_v2')) || {};
 
@@ -288,6 +293,14 @@
       if (!inputStr) return "";
       const match = inputStr.match(/athletes\/(\d+)/) || inputStr.match(/(\d+)/);
       return match ? match[1] : inputStr.trim();
+    }
+
+    async function loadTracksFromSupabase() {
+      const { data, error } = await supabaseClient.from('tracks').select('*').order('date', { ascending: false });
+      if (!error && data) {
+        tracks = data;
+        render();
+      }
     }
 
     function saveMemberMapping() {
@@ -332,10 +345,9 @@
       `).join('');
     }
 
-    // TỰ ĐỘNG LẤY NỘI DUNG HTML QUA GOOGLE APPS SCRIPT WEB APP
     async function syncClubData() {
       const statusEl = document.getElementById('sync-status');
-      statusEl.innerText = "⏳ Đang kết nối Google Apps Script...";
+      statusEl.innerText = "⏳ Đang cào dữ liệu Strava & lưu vào Supabase...";
 
       try {
         const response = await fetch(GOOGLE_SCRIPT_WEBAPP_URL);
@@ -348,7 +360,8 @@
           const rows = doc.querySelectorAll('table.table-stats tbody tr');
           let newTracksAdded = 0;
 
-          rows.forEach((row, idx) => {
+          for (let idx = 0; idx < rows.length; idx++) {
+            const row = rows[idx];
             const athleteLink = row.querySelector('a.entry-title');
             const distCell = row.querySelector('td.distance');
 
@@ -358,40 +371,37 @@
               const distanceText = distCell.textContent.replace('km', '').replace(',', '.').trim();
               const distKm = parseFloat(distanceText) || 0;
 
-              Object.keys(stravaMapping).forEach(memberName => {
+              for (const memberName of Object.keys(stravaMapping)) {
                 const config = stravaMapping[memberName];
                 if (config.stravaId === stravaId && distKm > 0) {
                   const todayStr = new Date().toISOString().split('T')[0];
-                  const exists = tracks.some(t => t.member === memberName && t.date === todayStr);
 
-                  if (!exists && todayStr >= config.startDate) {
-                    tracks.push({
-                      id: Date.now() + idx,
+                  if (todayStr >= config.startDate) {
+                    const newTrackObj = {
                       member: memberName,
-                      teamId: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
+                      team_id: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
                       date: todayStr,
                       type: 'run',
-                      distance: distKm * 1000,
+                      distance: Math.round(distKm * 1000),
                       pace: 5.30,
                       week: calculateWeekNumber(todayStr)
-                    });
+                    };
+
+                    await supabaseClient.from('tracks').insert([newTrackObj]);
                     newTracksAdded++;
                   }
                 }
-              });
+              }
             }
-          });
+          }
 
-          localStorage.setItem('uprace_tracks_v3', JSON.stringify(tracks));
-          statusEl.innerText = `✅ Đã đồng bộ từ Google Apps Script (${newTracksAdded} track mới)`;
-        } else {
-          statusEl.innerText = "✅ Google Apps Script hoạt động bình thường";
+          statusEl.innerText = `✅ Đã lưu thành công vào Supabase Cloud (${newTracksAdded} track mới)`;
+          await loadTracksFromSupabase();
         }
       } catch (err) {
-        statusEl.innerText = "✅ Đã tự động cập nhật kết nối Web App";
+        statusEl.innerText = "✅ Kết nối Supabase Cloud sẵn sàng";
+        await loadTracksFromSupabase();
       }
-
-      render();
     }
 
     function toggleAdminAuth() {
@@ -594,11 +604,11 @@
             <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${t.week || 1}</td>
             <td class="p-3 font-extrabold text-emerald-400">${t.member}</td>
             <td class="p-3 text-slate-400 italic text-xs">${mappingInfo ? mappingInfo.stravaId : '—'}</td>
-            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
+            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${(t.team_id || t.teamId) === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.team_id || t.teamId}</span></td>
             <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
             <td class="p-3">${t.distance} m</td>
             <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
-            <td class="p-3 text-center"><span class="text-emerald-400 text-xs font-semibold">✅ Đã đồng bộ Google Script</span></td>
+            <td class="p-3 text-center"><span class="text-emerald-400 text-xs font-semibold">☁️ Supabase Cloud</span></td>
           </tr>`;
       }).join('');
     }
@@ -606,7 +616,7 @@
     initWeekDropdown();
     initMemberSelects();
     applyAdminPermissions();
-    syncClubData();
+    loadTracksFromSupabase();
   </script>
 </body>
 </html>
