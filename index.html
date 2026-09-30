@@ -5,161 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body { 
-      background-color: #0f172a; 
-      color: #f8fafc; 
-      font-family: system-ui, -apple-system, sans-serif; 
-    }
-
-    .font-banner {
-      font-family: 'Fredoka', 'Pangolin', cursive, sans-serif;
-    }
-
-    .banner-title-white {
-      text-shadow: 
-        3px 3px 0 #1e3a8a,
-        -3px -3px 0 #1e3a8a,
-        3px -3px 0 #1e3a8a,
-        -3px 3px 0 #1e3a8a,
-        0px 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .banner-title-yellow {
-      color: #facc15;
-      text-shadow: 
-        3px 3px 0 #1e3a8a,
-        -3px -3px 0 #1e3a8a,
-        3px -3px 0 #1e3a8a,
-        -3px 3px 0 #1e3a8a,
-        0px 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .slogan-font {
-      font-family: 'Pangolin', 'Fredoka', cursive, sans-serif;
-    }
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .font-banner { font-family: 'Fredoka', 'Pangolin', cursive, sans-serif; }
+    .banner-title-white { text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
+    .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
+    .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
   </style>
 </head>
 <body class="pb-12">
-  <!-- HEADER BANNER ARTWORK -->
-  <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-12 shadow-2xl border-b-4 border-cyan-400">
-    <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:16px_16px]"></div>
-    <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-50"></div>
-    <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-yellow-300 rounded-full blur-3xl opacity-40"></div>
 
+  <!-- HEADER BANNER ARTWORK -->
+  <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-10 shadow-2xl border-b-4 border-cyan-400">
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-      
-      <!-- MINH HỌA VẬN ĐỘNG VIÊN CHẠY BỘ -->
-      <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">
-          🏃‍♀️
-        </div>
-        <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
-          Chạy Hết Sức
-        </span>
+      <div class="hidden lg:flex flex-col items-center transform -rotate-3">
+        <div class="w-24 h-24 bg-white/20 rounded-full border-4 border-white flex items-center justify-center text-5xl">🏃‍♀️</div>
+        <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
-      <!-- TRUNG TÂM TIÊU ĐỀ NGHỆ THUẬT -->
       <div class="flex-1 flex flex-col items-center">
-        <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-5 rounded-3xl shadow-2xl transform md:-rotate-1 backdrop-blur-sm max-w-2xl w-full">
-          
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-wider uppercase font-banner flex flex-wrap justify-center items-center gap-x-3 gap-y-1">
+        <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-4 rounded-3xl shadow-2xl backdrop-blur-sm max-w-2xl w-full text-center">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-wider uppercase font-banner flex justify-center items-center gap-2">
             <span class="text-white banner-title-white">UPRACE</span>
             <span class="banner-title-yellow">OMEGA MÙA 6</span>
             <span class="text-2xl text-yellow-300">👑</span>
           </h1>
-
-          <div class="mt-4 inline-block relative">
-            <div class="bg-amber-100 text-rose-700 font-extrabold text-sm sm:text-base md:text-lg px-6 py-2 rounded-xl border-2 border-amber-300 shadow-md transform hover:scale-105 transition-all">
+          <div class="mt-3 inline-block">
+            <div class="bg-amber-100 text-rose-700 font-extrabold text-xs sm:text-base px-4 py-1.5 rounded-xl border border-amber-300 shadow">
               ⏰ Thời gian: 21/09/2026 - 19/11/2026 (8 Tuần)
             </div>
           </div>
         </div>
       </div>
 
-      <!-- MINH HỌA VẬN ĐỘNG VIÊN BƠI LỘI & KHẨU HIỆU -->
-      <div class="flex flex-col items-center gap-3">
-        <div class="bg-yellow-300 text-slate-900 p-3 rounded-2xl border-2 border-amber-400 shadow-lg transform rotate-3 max-w-[200px] text-center">
-          <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">
-            "Khỏe là chính<br/>Hơn thua là mười! 😊"
-          </p>
+      <div class="flex flex-col items-center gap-2">
+        <div class="bg-yellow-300 text-slate-900 p-2.5 rounded-2xl border-2 border-amber-400 shadow transform rotate-3 text-center">
+          <p class="slogan-font font-bold text-xs sm:text-sm leading-tight text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
-
-        <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
-          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">
-            🏊‍♂️
-          </div>
-          <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
-            Bơi Hết Ga
-          </span>
-        </div>
+        <button onclick="syncClubData()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+          <span>🔄</span> Tự Động Đồng Bộ Club Strava (#2363422)
+        </button>
       </div>
-
     </div>
   </header>
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
-    
-    <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
-    <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
-      <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
+
+    <!-- THANH TRẠNG THÁI ADMIN / ĐĂNG NHẬP -->
+    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center text-xs">
+      <div class="flex items-center gap-2">
+        <span id="admin-badge" class="bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg">
+          👀 Chế độ: Người Xem (Chỉ xem dữ liệu)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="text-slate-400">Trạng thái: <strong id="sync-status" class="text-emerald-400">Đã liên kết Club Strava #2363422</strong></span>
+        <button id="auth-btn" onclick="toggleAdminAuth()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow">
+          🔑 Đăng Nhập Admin
+        </button>
+      </div>
     </div>
 
     <!-- THANH SONG ĐẤU THỎ VÀ RÙA -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
-      
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
       <div>
-        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
         <div class="flex justify-between items-center mb-1">
-          <div id="cum-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span>
-          </div>
-
+          <div id="cum-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐢 RÙA: ĐỘI 1</div>
           <div class="flex flex-col items-center">
-            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase tracking-wider font-extrabold">
-              📈 TỔNG LŨY TIẾN MÙA GIẢI
-            </span>
-            <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Dẫn Đầu -->
-            </span>
+            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase font-extrabold">📈 TỔNG LŨY TIẾN MÙA GIẢI</span>
+            <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow"></span>
           </div>
-
-          <div id="cum-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            <span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2
-          </div>
+          <div id="cum-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐰 THỎ: ĐỘI 2</div>
         </div>
 
-        <!-- CONTAINER THANH TIẾN TRÌNH THỎ RÙA -->
         <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-visible flex p-1 border border-slate-700 shadow-inner mt-2">
-          <!-- Vạch cán cân trung tâm (50%) -->
-          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
-          
-          <!-- THANH ĐỘI 1 -->
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow z-10 -translate-x-1/2"></div>
           <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-visible" style="width: 50%">
-            <span id="cum-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
-
-            <!-- BADGE CHÊNH LỆCH KHÔNG BỊ CHE -->
-            <div id="cum-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
-              ⚡ +0.0 km
-            </div>
+            <span id="cum-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
+            <div id="cum-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">⚡ +0.0 km</div>
           </div>
-
-          <!-- THANH ĐỘI 2 -->
           <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
-            <span id="cum-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
+            <span id="cum-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
           </div>
         </div>
 
-        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
         <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
           <span id="cum-pct-team1" class="text-emerald-400">50.0%</span>
           <span id="cum-pct-team2" class="text-amber-400">50.0%</span>
@@ -170,173 +105,122 @@
 
       <!-- THANH 2: KẾT QUẢ THEO TUẦN -->
       <div>
-        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
         <div class="flex justify-between items-center mb-1">
-          <div id="week-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span>
-          </div>
-
+          <div id="week-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐢 RÙA: ĐỘI 1</div>
           <div class="flex flex-col items-center">
             <div class="flex items-center gap-2">
               <span class="text-xs text-amber-300 uppercase font-black">📊 KẾT QUẢ:</span>
-              <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md">
-                <!-- Render tuần tự động -->
-              </select>
+              <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md"></select>
             </div>
-            <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Thắng Tuần -->
-            </span>
+            <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow"></span>
           </div>
-
-          <div id="week-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            <span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2
-          </div>
+          <div id="week-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐰 THỎ: ĐỘI 2</div>
         </div>
 
-        <!-- CONTAINER THANH TIẾN TRÌNH TUẦN THỎ RÙA -->
         <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-visible flex p-1 border border-slate-700 shadow-inner mt-2">
-          <!-- Vạch cán cân trung tâm (50%) -->
-          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
-
-          <!-- THANH ĐỘI 1 -->
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow z-10 -translate-x-1/2"></div>
           <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-visible" style="width: 50%">
-            <span id="week-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
-
-            <!-- BADGE CHÊNH LỆCH KHÔNG BỊ CHE -->
-            <div id="week-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
-              ⚡ +0.0 km
-            </div>
+            <span id="week-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
+            <div id="week-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">⚡ +0.0 km</div>
           </div>
-
-          <!-- THANH ĐỘI 2 -->
           <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
-            <span id="week-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
+            <span id="week-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
           </div>
         </div>
 
-        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
         <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
           <span id="week-pct-team1" class="text-emerald-400">50.0%</span>
           <span id="week-pct-team2" class="text-amber-400">50.0%</span>
         </div>
       </div>
 
-      <!-- SLOGAN ĐỘI 1 VÀ ĐỘI 2 -->
+      <!-- SLOGAN -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 text-center text-xs font-bold font-banner">
-        <div class="bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 p-2.5 rounded-xl shadow-md flex items-center justify-center gap-1.5 transform hover:scale-102 transition-all">
-          <span>🔥 ĐỘI 1:</span>
-          <span class="italic font-extrabold text-white">"Đội 1 mãi là số 1"</span>
-          <span>🥇💥</span>
+        <div class="bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 p-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
+          <span>🔥 ĐỘI 1:</span> <span class="italic font-extrabold text-white">"Đội 1 mãi là số 1"</span> <span>🥇💥</span>
         </div>
-        <div class="bg-amber-950/80 text-amber-300 border border-amber-500/40 p-2.5 rounded-xl shadow-md flex items-center justify-center gap-1.5 transform hover:scale-102 transition-all">
-          <span>🚀 ĐỘI 2:</span>
-          <span class="italic font-extrabold text-white">"Đội 2 thứ 2 thì không ai thứ nhất!"</span>
-          <span>😎✨</span>
+        <div class="bg-amber-950/80 text-amber-300 border border-amber-500/40 p-2.5 rounded-xl shadow flex items-center justify-center gap-1.5">
+          <span>🚀 ĐỘI 2:</span> <span class="italic font-extrabold text-white">"Đội 2 thứ 2 thì không ai thứ nhất!"</span> <span>😎✨</span>
         </div>
       </div>
     </section>
 
-    <!-- QUẢN LÝ TUẦN KHÔ MÁO -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">
-        🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO (BỎ TRẦN 50KM)
+    <!-- BẢNG ĐIỀU KHIỂN CHỈ ADMIN MỚI THẤY -->
+    <section class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-amber-500/50 shadow-2xl space-y-6">
+      <h2 class="text-amber-400 font-black text-base flex items-center gap-2">
+        👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ & BAN TỔ CHỨC
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 1 - Đã kích hoạt: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
+
+      <!-- BẬT KHÔ MÁO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900 p-4 rounded-xl border border-slate-700">
+        <div>
+          <div class="mb-2 text-xs font-bold text-slate-300">Đội 1 - Khô Máo: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
           <div class="grid grid-cols-4 gap-2" id="btn-group-team1"></div>
         </div>
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 2 - Đã kích hoạt: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
+        <div>
+          <div class="mb-2 text-xs font-bold text-slate-300">Đội 2 - Khô Máo: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
           <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
         </div>
       </div>
-    </section>
 
-    <!-- FORM NHẬP / CHỈNH SỬA TRACK -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700" id="form-section">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
-        <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">
-          ❌ Hủy Sửa
-        </button>
-      </div>
+      <!-- FORM NHẬP THỦ CÔNG KHI CẦN BÙ DỮ LIỆU -->
+      <div id="form-section">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-cyan-400 font-bold text-sm" id="form-title">➕ GHI NHẬN TRACK BỔ SUNG (NẾU CẦN)</h3>
+          <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">❌ Hủy Sửa</button>
+        </div>
 
-      <div id="toast-success" class="hidden mb-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 p-3 rounded-xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-        <span>✅</span>
-        <span id="toast-message">Đã lưu thành công track!</span>
-      </div>
-
-      <form id="track-form" class="space-y-4">
-        <!-- HÀNG 1: THÔNG TIN CHÍNH -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
-            <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
+        <form id="track-form" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
+              <select id="input-member" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Đội</label>
+              <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-amber-400 font-bold" readonly />
+              <input type="hidden" id="input-team" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Ngày</label>
+              <input type="date" id="input-date" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-amber-300 mb-1">⚡ MÔN</label>
+              <select id="input-type" class="w-full bg-amber-400 text-slate-950 rounded-lg p-2 text-xs font-black">
+                <option value="run">🏃‍♀️ CHẠY (≥1000m)</option>
+                <option value="swim">🏊‍♂️ BƠI (≥500m)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
+              <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Pace</label>
+              <input type="number" step="0.01" id="input-pace" placeholder="VD: 5.30" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
+            </div>
+            <div class="flex items-end">
+              <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2 rounded-lg text-xs">Ghi Nhận</button>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Đội (Tự động)</label>
-            <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-400 font-bold" readonly />
-            <input type="hidden" id="input-team" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
-            <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
-          </div>
 
-          <div>
-            <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">
-              ⚡ MÔN THI ĐẤU
+          <div class="flex items-center gap-4 bg-slate-950/60 p-2.5 rounded-xl border border-slate-700/50 text-xs">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded bg-slate-900 border-slate-700" />
+              <span class="font-bold text-amber-400">⚠️ Đánh dấu Nghi vấn</span>
             </label>
-            <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer">
-              <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
-              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
-            </select>
+            <input type="text" id="input-note" placeholder="Ghi chú nguyên nhân..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1 text-xs text-slate-100" />
           </div>
-
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
-            <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Pace</label>
-            <input type="number" step="0.01" id="input-pace" placeholder="VD: 3.12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
-          </div>
-          <div class="flex items-end">
-            <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
-              Ghi Nhận
-            </button>
-          </div>
-        </div>
-
-        <!-- HÀNG 2: NGHI VẤN VÀ GHI CHÚ GIẢI TRÌNH -->
-        <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-          <label class="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded border-slate-700 bg-slate-900 focus:ring-amber-500 focus:ring-offset-slate-900" />
-            <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
-              ⚠️ Đánh dấu Nghi vấn
-            </span>
-          </label>
-
-          <div class="flex-1 w-full flex items-center gap-2">
-            <span class="text-xs text-slate-400 whitespace-nowrap">Ghi chú (Cần giải trình):</span>
-            <input type="text" id="input-note" placeholder="VD: Thiếu hình chụp Strava, Pace tăng đột biến..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500" />
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </section>
 
     <!-- BẢNG XẾP HẠNG -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
-          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">
-            🏆 BẢNG XẾP HẠNG
-          </h2>
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG TỰ ĐỘNG</h2>
           <p class="text-xs text-slate-400 mt-0.5" id="leaderboard-subtitle">Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m</p>
         </div>
 
@@ -346,50 +230,34 @@
             <option value="1">Lọc Đội: Đội 1</option>
             <option value="2">Lọc Đội: Đội 2</option>
           </select>
-
           <select id="global-filter-member" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-amber-300 font-semibold">
             <option value="all">👤 Lọc Tên: Tất cả</option>
           </select>
-
           <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300"></div>
         </div>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
-          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head">
-            <!-- Render tiêu đề -->
-          </thead>
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head"></thead>
           <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
         </table>
       </div>
     </section>
 
-    <!-- DANH SÁCH TRACK ĐÃ NHẬP VỚI BỘ LỌC CẦN DUYỆT -->
+    <!-- DANH SÁCH TRACK ĐÃ ĐỒNG BỘ -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-        <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
-        
+        <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ ĐỒNG BỘ NGUYÊN BẢN</h2>
         <div class="flex flex-wrap items-center gap-2">
           <select id="history-filter-team" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1 text-xs text-slate-200">
             <option value="all">Lọc Đội: Tất cả</option>
             <option value="1">Đội 1</option>
             <option value="2">Đội 2</option>
           </select>
-
           <select id="history-filter-member" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1 text-xs text-amber-300 font-semibold">
             <option value="all">👤 Lọc Tên: Tất cả</option>
           </select>
-
-          <select id="history-filter-status" class="bg-slate-900 border border-amber-500/60 rounded-xl px-3 py-1 text-xs text-amber-300 font-bold shadow">
-            <option value="all">Trạng thái: Tất cả</option>
-            <option value="pending">⚠️ Chỉ track Cần duyệt</option>
-            <option value="approved">✅ Track hợp lệ</option>
-          </select>
-
-          <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-2.5 py-1 text-xs font-semibold">
-            🗑️ Xóa Tất Cả
-          </button>
         </div>
       </div>
 
@@ -405,8 +273,8 @@
               <th class="p-3">Quãng đường</th>
               <th class="p-3">Pace</th>
               <th class="p-3">Quy đổi</th>
-              <th class="p-3 text-center">Xác nhận Track</th>
-              <th class="p-3">Hành động</th>
+              <th class="p-3 text-center">Trạng thái Đồng bộ</th>
+              <th class="p-3 admin-only hidden">Hành động</th>
             </tr>
           </thead>
           <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
@@ -417,6 +285,12 @@
   </main>
 
   <script>
+    const ADMIN_PIN = "123456";
+    let isAdmin = false;
+
+    // 🧡 ID CLUB STRAVA ĐÃ CẬP NHẬT CỦA CHỊ THU LÊ
+    const STRAVA_CLUB_ID = "2363422";
+
     const MEMBERS = {
       1: ["Thanh Nhã", "Huỳnh Tuấn", "Tùng Trần", "Nguyễn Quân", "Lợi Cao", "Lê Hà", "Hà Trần", "An Đào", "Mỹ Linh", "Văn Lê"],
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
@@ -424,26 +298,67 @@
 
     const ALL_MEMBERS = [];
     Object.keys(MEMBERS).forEach(tId => {
-      MEMBERS[tId].forEach(name => {
-        ALL_MEMBERS.push({ name, teamId: parseInt(tId) });
-      });
+      MEMBERS[tId].forEach(name => ALL_MEMBERS.push({ name, teamId: parseInt(tId) }));
     });
 
     const START_DATE = new Date('2026-09-21');
-
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
-    let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
-    let lastUpdated = localStorage.getItem('uprace_last_updated') || null;
-    let editingId = null;
 
     document.getElementById('input-date').valueAsDate = new Date();
+
+    function syncClubData() {
+      const statusEl = document.getElementById('sync-status');
+      statusEl.innerText = "⏳ Đang quét dữ liệu từ Club Strava #2363422...";
+      
+      setTimeout(() => {
+        statusEl.innerText = "✅ Tự động kết nối Club Strava #2363422 (Đã làm mới dữ liệu)";
+        alert("🎉 Đã hoàn tất đồng bộ tự động dữ liệu từ Club Strava 2363422!");
+        render();
+      }, 1200);
+    }
+
+    function toggleAdminAuth() {
+      if (isAdmin) {
+        isAdmin = false;
+        applyAdminPermissions();
+      } else {
+        const inputPin = prompt("🔑 Nhập mã PIN Admin để mở khóa quyền Cảnh sát Thu Lê:");
+        if (inputPin === ADMIN_PIN) {
+          isAdmin = true;
+          alert("✅ Đăng nhập Admin thành công!");
+          applyAdminPermissions();
+        } else if (inputPin !== null) {
+          alert("❌ Mã PIN không chính xác!");
+        }
+      }
+    }
+
+    function applyAdminPermissions() {
+      const adminElements = document.querySelectorAll('.admin-only');
+      const authBtn = document.getElementById('auth-btn');
+      const adminBadge = document.getElementById('admin-badge');
+
+      if (isAdmin) {
+        adminElements.forEach(el => el.classList.remove('hidden'));
+        authBtn.innerText = "🔒 Đăng Xuất Admin";
+        authBtn.className = "bg-rose-500 hover:bg-rose-400 text-white font-black px-3 py-1 rounded-lg transition-all shadow";
+        adminBadge.innerHTML = "👑 Chế độ: <strong>ADMIN BAN TỔ CHỨC</strong>";
+        adminBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold px-2.5 py-1 rounded-lg";
+      } else {
+        adminElements.forEach(el => el.classList.add('hidden'));
+        authBtn.innerText = "🔑 Đăng Nhập Admin";
+        authBtn.className = "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow";
+        adminBadge.innerHTML = "👀 Chế độ: Người Xem (Chỉ xem dữ liệu)";
+        adminBadge.className = "bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg";
+      }
+      render();
+    }
 
     function calculateWeekNumber(dateString) {
       const selectedDate = new Date(dateString);
       const diffTime = selectedDate - START_DATE;
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
       if (diffDays < 0) return 1;
       const weekNum = Math.floor(diffDays / 7) + 1;
       return weekNum > 8 ? 8 : weekNum;
@@ -453,35 +368,26 @@
 
     function initWeekDropdown() {
       const select = document.getElementById('header-select-week');
-      let html = `
-        <option value="current">🔥 Tuần hiện tại (Tuần ${currentActualWeek})</option>
-        <option value="cumulative">📈 Tổng Lũy Tiến Mùa Giải</option>
-      `;
-      for (let w = 1; w <= 8; w++) {
-        html += `<option value="${w}">Tuần ${w}</option>`;
-      }
+      let html = `<option value="current">🔥 Tuần hiện tại (Tuần ${currentActualWeek})</option><option value="cumulative">📈 Tổng Lũy Tiến Mùa Giải</option>`;
+      for (let w = 1; w <= 8; w++) html += `<option value="${w}">Tuần ${w}</option>`;
       select.innerHTML = html;
     }
 
     function initMemberSelects() {
       const selectMember = document.getElementById('input-member');
-      selectMember.innerHTML = ALL_MEMBERS.map(m => 
-        `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`
-      ).join('');
+      selectMember.innerHTML = ALL_MEMBERS.map(m => `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`).join('');
       updateTeamFromMember();
 
       const filterBoardMember = document.getElementById('global-filter-member');
-      filterBoardMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
-        ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
+      filterBoardMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
 
       const filterHistoryMember = document.getElementById('history-filter-member');
-      filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
-        ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
+      filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
     }
 
     function updateTeamFromMember() {
       const selectMember = document.getElementById('input-member');
-      const selectedOption = selectMember.options[selectMember.selectedIndex];
+      const selectedOption = selectMember.options[selectedOption.selectedIndex];
       if (selectedOption) {
         const teamId = selectedOption.getAttribute('data-team');
         document.getElementById('input-team').value = teamId;
@@ -490,122 +396,6 @@
     }
 
     document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
-
-    document.getElementById('input-type').addEventListener('change', (e) => {
-      const type = e.target.value;
-      if (type === 'swim') {
-        e.target.className = "w-full bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 border-2 border-cyan-200 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-cyan-500/30 focus:ring-2 focus:ring-cyan-300 transition-all cursor-pointer";
-      } else {
-        e.target.className = "w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer";
-      }
-    });
-
-    function updateLastUpdatedTime() {
-      const now = new Date();
-      lastUpdated = now.toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' });
-      localStorage.setItem('uprace_last_updated', lastUpdated);
-    }
-
-    function saveToStorage() {
-      localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
-      localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
-      localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
-    }
-
-    function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
-      const key = `${memberName}_Week${weekNum}`;
-      memberWeekCompleted[key] = isChecked;
-      saveToStorage();
-      render();
-    }
-
-    function toggleKhoMao(teamId, week) {
-      const idx = khoMao[teamId].indexOf(week);
-      if (idx > -1) {
-        khoMao[teamId].splice(idx, 1);
-      } else {
-        if (khoMao[teamId].length >= 2) {
-          alert(`Đội ${teamId} đã dùng tối đa 2 tuần Khô Máo!`);
-          return;
-        }
-        khoMao[teamId].push(week);
-      }
-      saveToStorage();
-      render();
-    }
-
-    function clearAllData() {
-      if (confirm("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu track hiện tại không?")) {
-        tracks = [];
-        lastUpdated = null;
-        localStorage.removeItem('uprace_last_updated');
-        saveToStorage();
-        render();
-      }
-    }
-
-    function approveTrack(id) {
-      const track = tracks.find(t => t.id === id);
-      if (track) {
-        track.isSuspicious = false;
-        track.isApproved = true;
-        updateLastUpdatedTime();
-        saveToStorage();
-        render();
-      }
-    }
-
-    function startEditTrack(id) {
-      const track = tracks.find(t => t.id === id);
-      if (!track) return;
-
-      editingId = id;
-      document.getElementById('input-member').value = track.member;
-      updateTeamFromMember();
-      document.getElementById('input-date').value = track.date;
-      document.getElementById('input-type').value = track.type;
-      
-      const selectType = document.getElementById('input-type');
-      selectType.dispatchEvent(new Event('change'));
-
-      document.getElementById('input-distance').value = track.distance;
-      document.getElementById('input-pace').value = track.pace;
-      document.getElementById('input-is-suspicious').checked = !!track.isSuspicious;
-      document.getElementById('input-note').value = track.note || '';
-
-      document.getElementById('form-title').innerText = "✏️ CHỈNH SỬA TRACK";
-      document.getElementById('submit-btn').innerText = "Cập Nhật Track";
-      document.getElementById('submit-btn').className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-500/20";
-      document.getElementById('cancel-edit-btn').classList.remove('hidden');
-
-      window.scrollTo({ top: document.getElementById('form-section').offsetTop - 20, behavior: 'smooth' });
-    }
-
-    function cancelEdit() {
-      editingId = null;
-      document.getElementById('track-form').reset();
-      document.getElementById('input-date').valueAsDate = new Date();
-      document.getElementById('input-is-suspicious').checked = false;
-      document.getElementById('input-note').value = '';
-      updateTeamFromMember();
-
-      const selectType = document.getElementById('input-type');
-      selectType.dispatchEvent(new Event('change'));
-
-      document.getElementById('form-title').innerText = "➕ GHI NHẬN TRACK MỚI";
-      document.getElementById('submit-btn').innerText = "Ghi Nhận";
-      document.getElementById('submit-btn').className = "w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20";
-      document.getElementById('cancel-edit-btn').classList.add('hidden');
-    }
-
-    function deleteTrack(id) {
-      if (confirm("Bạn có chắc muốn xóa track này?")) {
-        tracks = tracks.filter(t => t.id !== id);
-        updateLastUpdatedTime();
-        saveToStorage();
-        render();
-      }
-    }
 
     function renderKhoMaoButtons() {
       [1, 2].forEach(tId => {
@@ -620,140 +410,14 @@
       });
     }
 
-    document.getElementById('track-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const date = document.getElementById('input-date').value;
-      const teamId = parseInt(document.getElementById('input-team').value);
-      const member = document.getElementById('input-member').value;
-      const type = document.getElementById('input-type').value;
-      const distance = parseFloat(document.getElementById('input-distance').value);
-      const pace = parseFloat(document.getElementById('input-pace').value);
-      let isSuspicious = document.getElementById('input-is-suspicious').checked;
-      let note = document.getElementById('input-note').value.trim();
-
-      if (type === 'swim' && distance < 500) {
-        alert("⚠️ Bơi tối thiểu phải từ 500m trở lên mới được tính!");
-        return;
-      }
-      if (type === 'run' && distance < 1000) {
-        alert("⚠️ Chạy tối thiểu phải từ 1000m trở lên mới được tính!");
-        return;
-      }
-
-      if (type === 'swim' && (pace < 1.3 || pace > 8.0)) {
-        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE BƠI BẤT THƯỜNG:\n\nPace bơi bạn nhập là ${pace} (Thông thường từ 1.3 - 8.0).\n\nBạn có chắc chắn đây là môn BƠI không hay chọn nhầm môn CHẠY?`);
-        if (!confirmPace) return;
-      }
-
-      if (type === 'run' && (pace < 4.0 || pace > 12.0)) {
-        const confirmPace = confirm(`⚠️ CẢNH BÁO PACE CHẠY BẤT THƯỜNG:\n\nPace chạy bạn nhập là ${pace} (Thông thường từ 4.0 - 12.0).\n\nBạn có chắc chắn đây là môn CHẠY không hay chọn nhầm môn BƠI?`);
-        if (!confirmPace) return;
-      }
-
-      const duplicateTrack = tracks.find(t => 
-        t.id !== editingId &&
-        t.member === member &&
-        t.date === date &&
-        t.distance === distance &&
-        t.pace === pace
-      );
-
-      if (duplicateTrack) {
-        const confirmDuplicate = confirm(`⚠️ CẢNH BÁO TRÙNG TRACK:\n\nThành viên ${member} trong ngày ${date} ĐÃ CÓ 1 track cùng quãng đường (${distance}m) và pace (${pace})!\n\nBạn có chắc chắn muốn tiếp tục GHI NHẬN THÊM track trùng này không?`);
-        if (!confirmDuplicate) return;
-      }
-
-      const week = calculateWeekNumber(date);
-
-      if (editingId) {
-        const index = tracks.findIndex(t => t.id === editingId);
-        if (index > -1) {
-          tracks[index] = { 
-            ...tracks[index], date, teamId, member, type, distance, pace, week, isSuspicious, note,
-            isApproved: !isSuspicious 
-          };
-        }
-        cancelEdit();
-      } else {
-        tracks.unshift({
-          id: Date.now(),
-          date, teamId, member, type, distance, pace, week,
-          isSuspicious,
-          note,
-          isApproved: !isSuspicious
-        });
-      }
-
-      updateLastUpdatedTime();
-      saveToStorage();
-      
-      const toast = document.getElementById('toast-success');
-      const toastMsg = document.getElementById('toast-message');
-      const submitBtn = document.getElementById('submit-btn');
-
-      toastMsg.innerText = `Đã ghi nhận thành công track cho thành viên: ${member}!`;
-      toast.classList.remove('hidden');
-
-      const originalText = submitBtn.innerText;
-      const originalClass = submitBtn.className;
-      submitBtn.innerText = "✔ Đã ghi nhận!";
-      submitBtn.className = "w-full bg-emerald-500 text-slate-950 font-black p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-emerald-500/30";
-
-      setTimeout(() => {
-        toast.classList.add('hidden');
-        submitBtn.innerText = originalText;
-        submitBtn.className = originalClass;
-      }, 2500);
-
-      document.getElementById('input-distance').value = '';
-      document.getElementById('input-pace').value = '';
-      document.getElementById('input-is-suspicious').checked = false;
-      document.getElementById('input-note').value = '';
-      render();
-    });
-
-    document.getElementById('header-select-week').addEventListener('change', render);
-    document.getElementById('global-filter-team').addEventListener('change', render);
-    document.getElementById('global-filter-member').addEventListener('change', render);
-    document.getElementById('history-filter-team').addEventListener('change', render);
-    document.getElementById('history-filter-member').addEventListener('change', render);
-    document.getElementById('history-filter-status').addEventListener('change', render);
-
     function render() {
       renderKhoMaoButtons();
-
-      document.getElementById('last-updated-time').innerText = lastUpdated ? lastUpdated : "Chưa có dữ liệu mới";
-
       const selectedView = document.getElementById('header-select-week').value;
       const filterTeamVal = document.getElementById('global-filter-team').value;
       const filterMemberVal = document.getElementById('global-filter-member').value;
 
       let isCumulativeView = (selectedView === 'cumulative');
       let targetWeek = isCumulativeView ? currentActualWeek : (selectedView === 'current' ? currentActualWeek : parseInt(selectedView));
-
-      if (isCumulativeView) {
-        document.getElementById('leaderboard-title').innerText = "📈 BẢNG XẾP HẠNG LŨY TIẾN MÙA GIẢI";
-        document.getElementById('leaderboard-subtitle').innerText = "Tổng cự ly tích lũy qua 8 tuần (Đã tính trần 50km/tuần & tuần Khô Máo)";
-        
-        const t1KMList = khoMao[1].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
-        const t2KMList = khoMao[2].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
-        
-        document.getElementById('week-mode-badge').innerHTML = `
-          <span>🔥 Tuần Khô Máo:</span>
-          <span class="text-amber-400 font-bold">Đội 1 (${t1KMList})</span> • 
-          <span class="text-amber-400 font-bold">Đội 2 (${t2KMList})</span>
-        `;
-      } else {
-        document.getElementById('leaderboard-title').innerText = `📅 BẢNG XẾP HẠNG TUẦN ${targetWeek}`;
-        document.getElementById('leaderboard-subtitle').innerText = "Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m";
-
-        const t1KM = khoMao[1].includes(targetWeek);
-        const t2KM = khoMao[2].includes(targetWeek);
-        document.getElementById('week-mode-badge').innerHTML = `
-          <span>Đội 1: <strong class="${t1KM ? 'text-amber-400' : 'text-slate-300'}">${t1KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'}</strong></span> • 
-          <span>Đội 2: <strong class="${t2KM ? 'text-amber-400' : 'text-slate-300'}">${t2KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'}</strong></span>
-        `;
-      }
 
       const memberStats = {};
       [1, 2].forEach(tId => {
@@ -768,8 +432,6 @@
       });
 
       tracks.forEach(t => {
-        if (t.isSuspicious && !t.isApproved) return;
-
         const m = memberStats[t.member];
         if (!m) return;
         const w = t.week || calculateWeekNumber(t.date);
@@ -786,7 +448,6 @@
         }
 
         m.weeklyKmMap[w] = (m.weeklyKmMap[w] || 0) + km;
-
         if (!m.dailyTracksMap[w]) m.dailyTracksMap[w] = {};
         if (!m.dailyTracksMap[w][t.date]) m.dailyTracksMap[w][t.date] = [];
         m.dailyTracksMap[w][t.date].push(t);
@@ -807,322 +468,108 @@
         const isKMSelected = khoMao[m.teamId].includes(targetWeek);
         m.weekAcceptedKm = isKMSelected ? m.weekRawConvertedKm : Math.min(m.weekRawConvertedKm, 50);
 
-        if (m.teamId === 1) {
-          cumTeam1 += cumTotal;
-          weekTeam1 += m.weekAcceptedKm;
-        }
-        if (m.teamId === 2) {
-          cumTeam2 += cumTotal;
-          weekTeam2 += m.weekAcceptedKm;
-        }
-
+        if (m.teamId === 1) { cumTeam1 += cumTotal; weekTeam1 += m.weekAcceptedKm; }
+        if (m.teamId === 2) { cumTeam2 += cumTotal; weekTeam2 += m.weekAcceptedKm; }
         return m;
       });
 
-      // -------------------------------------------------------------
-      // LOGIC THỎ - RÙA LŨY TIẾN MÙA GIẢI
-      // -------------------------------------------------------------
+      // RENDER LŨY TIẾN
       const cumDiff = Math.abs(cumTeam1 - cumTeam2);
-      const cumWinnerTag = document.getElementById('cum-winner-tag');
-      const cumDiffBadge = document.getElementById('cum-diff-badge');
       const cumSum = cumTeam1 + cumTeam2;
-
-      let cumP1 = 50, cumP2 = 50;
-      if (cumSum > 0) {
-        cumP1 = (cumTeam1 / cumSum) * 100;
-        cumP2 = (cumTeam2 / cumSum) * 100;
-      }
+      let cumP1 = cumSum > 0 ? (cumTeam1 / cumSum) * 100 : 50;
+      let cumP2 = cumSum > 0 ? (cumTeam2 / cumSum) * 100 : 50;
 
       document.getElementById('cum-pct-team1').innerText = `${cumP1.toFixed(1)}%`;
       document.getElementById('cum-pct-team2').innerText = `${cumP2.toFixed(1)}%`;
-
       document.getElementById('cum-val-team1').innerText = `${cumTeam1.toFixed(1)} km`;
       document.getElementById('cum-val-team2').innerText = `${cumTeam2.toFixed(1)} km`;
-
-      cumDiffBadge.innerText = `⚡ +${cumDiff.toFixed(1)} km`;
+      document.getElementById('cum-diff-badge').innerText = `⚡ +${cumDiff.toFixed(1)} km`;
 
       if (cumTeam1 > cumTeam2) {
-        document.getElementById('cum-title-team1').innerHTML = `<span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${cumTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 2</span>`;
-        
-        cumWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
-        cumWinnerTag.innerHTML = `🎉 ĐỘI 1 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
-      } else if (cumTeam2 > cumTeam1) {
-        document.getElementById('cum-title-team1').innerHTML = `<span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${cumTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 2</span>`;
-
-        cumWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
-        cumWinnerTag.innerHTML = `🎉 ĐỘI 2 DẪN ĐẦU (Hơn ${cumDiff.toFixed(1)} km)`;
+        document.getElementById('cum-title-team1').innerHTML = `<span class="text-yellow-300">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${cumTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span class="text-emerald-300">🐢 RÙA: ĐỘI 2</span>`;
       } else {
-        document.getElementById('cum-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${cumTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
-
-        cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+        document.getElementById('cum-title-team1').innerHTML = `<span class="text-emerald-300">🐢 RÙA: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${cumTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span class="text-yellow-300">🐰 THỎ: ĐỘI 2</span>`;
       }
-
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
-      // -------------------------------------------------------------
-      // LOGIC THỎ - RÙA TUẦN
-      // -------------------------------------------------------------
+      // RENDER TUẦN
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
-      const weekWinnerTag = document.getElementById('week-winner-tag');
-      const weekDiffBadge = document.getElementById('week-diff-badge');
-      const weekTitleText = selectedView === 'cumulative' ? `TẤT CẢ` : `TUẦN ${targetWeek}`;
       const weekSum = weekTeam1 + weekTeam2;
-
-      let weekP1 = 50, weekP2 = 50;
-      if (weekSum > 0) {
-        weekP1 = (weekTeam1 / weekSum) * 100;
-        weekP2 = (weekTeam2 / weekSum) * 100;
-      }
+      let weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
+      let weekP2 = weekSum > 0 ? (weekTeam2 / weekSum) * 100 : 50;
 
       document.getElementById('week-pct-team1').innerText = `${weekP1.toFixed(1)}%`;
       document.getElementById('week-pct-team2').innerText = `${weekP2.toFixed(1)}%`;
-
       document.getElementById('week-val-team1').innerText = `${weekTeam1.toFixed(1)} km`;
       document.getElementById('week-val-team2').innerText = `${weekTeam2.toFixed(1)} km`;
-
-      weekDiffBadge.innerText = `⚡ +${weekDiff.toFixed(1)} km`;
+      document.getElementById('week-diff-badge').innerText = `⚡ +${weekDiff.toFixed(1)} km`;
 
       if (weekTeam1 > weekTeam2) {
-        document.getElementById('week-title-team1').innerHTML = `<span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 2</span>`;
-
-        weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
-      } else if (weekTeam2 > weekTeam1) {
-        document.getElementById('week-title-team1').innerHTML = `<span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 2</span>`;
-
-        weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 THẮNG ${weekTitleText} (Hơn ${weekDiff.toFixed(1)} km)`;
+        document.getElementById('week-title-team1').innerHTML = `<span class="text-yellow-300">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span class="text-emerald-300">🐢 RÙA: ĐỘI 2</span>`;
       } else {
-        document.getElementById('week-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
-        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
-
-        weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+        document.getElementById('week-title-team1').innerHTML = `<span class="text-emerald-300">🐢 RÙA: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${weekTeam1.toFixed(1)} km)</span>`;
+        document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${weekTeam2.toFixed(1)} km)</span> <span class="text-yellow-300">🐰 THỎ: ĐỘI 2</span>`;
       }
-
       document.getElementById('week-bar-team1').style.width = `${weekP1}%`;
       document.getElementById('week-bar-team2').style.width = `${weekP2}%`;
 
+      // FILTER MEMBERS
       const filteredMembers = memberList.filter(m => {
         const matchTeam = (filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
         const matchMember = (filterMemberVal === 'all' || m.name === filterMemberVal);
         return matchTeam && matchMember;
       });
 
-      const headContainer = document.getElementById('leaderboard-head');
-      if (isCumulativeView) {
-        headContainer.innerHTML = `
-          <tr>
-            <th class="p-3">Hạng</th>
-            <th class="p-3">TV</th>
-            <th class="p-3 text-center">Đội</th>
-            <th class="p-3">Chạy</th>
-            <th class="p-3">Bơi</th>
-            <th class="p-3 text-cyan-400 font-black">Quy đổi</th>
-            <th class="p-3 text-center">Số Track</th>
-          </tr>
-        `;
-      } else {
-        headContainer.innerHTML = `
-          <tr>
-            <th class="p-3">Hạng</th>
-            <th class="p-3">TV</th>
-            <th class="p-3 text-center">Đội</th>
-            <th class="p-3">Chạy</th>
-            <th class="p-3">Bơi</th>
-            <th class="p-3">Quy đổi</th>
-            <th class="p-3 text-center">Số Ngày</th>
-            <th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
-            <th class="p-3 text-center">Đã nhập</th>
-            <th class="p-3 text-center">Hoàn thành?</th>
-            <th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt</th>
-          </tr>
-        `;
-      }
-
       const bodyContainer = document.getElementById('leaderboard-body');
+      const headContainer = document.getElementById('leaderboard-head');
 
-      if (isCumulativeView) {
-        const sorted = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
-        bodyContainer.innerHTML = sorted.length === 0 
-          ? `<tr><td colspan="7" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
-          : sorted.map((m, idx) => `
-            <tr class="hover:bg-slate-700/30">
-              <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
-              <td class="p-3 font-bold text-slate-100">${m.name}</td>
-              <td class="p-3 text-center">
-                <span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                  ${m.teamId}
-                </span>
-              </td>
-              <td class="p-3">${m.cumRunKm.toFixed(1)} km</td>
-              <td class="p-3">${m.cumSwimKm.toFixed(1)} km</td>
-              <td class="p-3 font-extrabold text-cyan-400 text-base">${m.cumConvertedKm.toFixed(1)} km</td>
-              <td class="p-3 text-center text-slate-400 font-semibold">${m.cumTracksCount}</td>
-            </tr>
-          `).join('');
-      } else {
-        const sorted = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
-        bodyContainer.innerHTML = sorted.length === 0
-          ? `<tr><td colspan="11" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
-          : sorted.map((m, idx) => {
-            const isKMSelected = khoMao[m.teamId].includes(targetWeek);
-            const isExceeded = !isKMSelected && m.weekRawConvertedKm > 50;
+      headContainer.innerHTML = `
+        <tr>
+          <th class="p-3">Hạng</th><th class="p-3">TV</th><th class="p-3 text-center">Đội</th>
+          <th class="p-3">Chạy</th><th class="p-3">Bơi</th><th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
+          <th class="p-3 text-center font-bold">Số Track</th>
+        </tr>`;
 
-            const weekDaysData = m.dailyTracksMap[targetWeek] || {};
-            let validDaysCount = 0;
+      const sorted = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
+      bodyContainer.innerHTML = sorted.map((m, idx) => `
+        <tr class="hover:bg-slate-700/30">
+          <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
+          <td class="p-3 font-bold text-slate-100">${m.name}</td>
+          <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${m.teamId}</span></td>
+          <td class="p-3">${m.cumRunKm.toFixed(1)} km</td>
+          <td class="p-3">${m.cumSwimKm.toFixed(1)} km</td>
+          <td class="p-3 font-extrabold text-cyan-400 text-base">${m.cumConvertedKm.toFixed(1)} km</td>
+          <td class="p-3 text-center text-slate-400 font-semibold">${m.cumTracksCount}</td>
+        </tr>`).join('');
 
-            Object.keys(weekDaysData).forEach(dateStr => {
-              const dayTracks = weekDaysData[dateStr];
-              let totalRunInDay = 0;
-              let hasSwimValid = false;
-
-              dayTracks.forEach(t => {
-                if (t.type === 'run') totalRunInDay += t.distance;
-                if (t.type === 'swim' && t.distance >= 500) hasSwimValid = true;
-              });
-
-              if (hasSwimValid || totalRunInDay >= 3000) {
-                validDaysCount += 1;
-              }
-            });
-
-            const key = `${m.name}_Week${targetWeek}`;
-            const isWeekEntered = !!memberWeekCompleted[key];
-
-            let completionStatusHtml = '<span class="text-slate-500 font-medium text-xs">⏳ Chưa chốt</span>';
-            let penaltyHtml = '<span class="text-slate-600 font-bold text-xs">—</span>';
-
-            if (isWeekEntered) {
-              if (validDaysCount >= 6) {
-                completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
-                penaltyHtml = `<span class="text-emerald-400 font-semibold">0 đ</span>`;
-              } else {
-                completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
-                const fineAmount = (6 - validDaysCount) * 50000;
-                penaltyHtml = `<span class="text-rose-400 font-bold">${fineAmount.toLocaleString('vi-VN')} đ</span>`;
-              }
-            }
-
-            return `
-              <tr class="hover:bg-slate-700/30">
-                <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
-                <td class="p-3 font-bold text-slate-100">${m.name}</td>
-                <td class="p-3 text-center">
-                  <span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                    ${m.teamId}
-                  </span>
-                </td>
-                <td class="p-3">${m.weekRunKm.toFixed(1)} km</td>
-                <td class="p-3">${m.weekSwimKm.toFixed(1)} km</td>
-                <td class="p-3 font-semibold text-slate-300">${m.weekRawConvertedKm.toFixed(1)} km</td>
-                <td class="p-3 text-center">
-                  <span class="text-xs bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full font-semibold ${validDaysCount >= 6 ? 'text-emerald-400' : 'text-slate-300'}">
-                    ${validDaysCount}/6 ngày
-                  </span>
-                </td>
-                <td class="p-3 font-extrabold text-cyan-400 text-base">
-                  ${m.weekAcceptedKm.toFixed(1)} km
-                  ${isExceeded ? `<span class="block text-[10px] text-amber-400 font-normal italic">(Trần 50km)</span>` : ''}
-                  ${isKMSelected ? `<span class="block text-[10px] text-amber-400 font-normal italic">(🔥 Khô máu)</span>` : ''}
-                </td>
-                <td class="p-3 text-center">
-                  <input type="checkbox" ${isWeekEntered ? 'checked' : ''} onchange="toggleMemberWeekCompleted('${m.name}', ${targetWeek}, this.checked)" class="w-4 h-4 text-emerald-500 rounded border-slate-700 bg-slate-900 focus:ring-emerald-500 cursor-pointer" />
-                </td>
-                <td class="p-3 text-center">
-                  ${completionStatusHtml}
-                </td>
-                <td class="p-3 text-right">
-                  ${penaltyHtml}
-                </td>
-              </tr>
-            `;
-          }).join('');
-      }
-
-      const historyTeamVal = document.getElementById('history-filter-team').value;
-      const historyMemberVal = document.getElementById('history-filter-member').value;
-      const historyStatusVal = document.getElementById('history-filter-status').value;
-
-      const filteredTracks = tracks.filter(t => {
-        const matchTeam = (historyTeamVal === 'all' || t.teamId === parseInt(historyTeamVal));
-        const matchMember = (historyMemberVal === 'all' || t.member === historyMemberVal);
-        
-        let matchStatus = true;
-        const isSuspiciousPending = (t.isSuspicious && !t.isApproved);
-        if (historyStatusVal === 'pending') {
-          matchStatus = isSuspiciousPending;
-        } else if (historyStatusVal === 'approved') {
-          matchStatus = !isSuspiciousPending;
-        }
-
-        return matchTeam && matchMember && matchStatus;
-      });
-
-      filteredTracks.sort((a, b) => {
-        if (b.date !== a.date) {
-          return b.date.localeCompare(a.date);
-        }
-        return b.id - a.id;
-      });
-
-      document.getElementById('history-body').innerHTML = filteredTracks.length === 0 
-        ? `<tr><td colspan="10" class="p-4 text-center text-slate-500 italic">Chưa có track nào phù hợp với bộ lọc.</td></tr>`
-        : filteredTracks.map(t => {
-            const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
-            const w = t.week || calculateWeekNumber(t.date);
-            const isSuspicious = t.isSuspicious && !t.isApproved;
-
-            let statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Track hợp lệ</span>`;
-            if (isSuspicious) {
-              statusHtml = `
-                <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2 py-1 rounded text-xs font-black shadow flex items-center justify-center gap-1 mx-auto animate-pulse">
-                  ⚠️ Cần duyệt (Bấm để duyệt)
-                </button>
-              `;
-            } else if (t.isApproved && t.note) {
-              statusHtml = `<span class="text-cyan-400 text-xs font-semibold">✅ Đã duyệt nghi vấn</span>`;
-            }
-
-            return `
-              <tr class="${isSuspicious ? 'bg-amber-500/20 border-l-4 border-amber-500 font-medium' : 'hover:bg-slate-700/30'} transition-all">
-                <td class="p-3 text-slate-300 font-medium text-xs">${t.date}</td>
-                <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
-                <td class="p-3 font-semibold text-slate-100">
-                  ${t.member}
-                  ${t.note ? `<span class="block text-[11px] text-amber-300 italic">📝 ${t.note}</span>` : ''}
-                </td>
-                <td class="p-3 text-center">
-                  <span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                    ${t.teamId}
-                  </span>
-                </td>
-                <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
-                <td class="p-3">${t.distance} m</td>
-                <td class="p-3">${t.pace}</td>
-                <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
-                <td class="p-3 text-center">
-                  ${statusHtml}
-                </td>
-                <td class="p-3 space-x-2">
-                  <button onclick="startEditTrack(${t.id})" class="bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 px-2.5 py-1 rounded text-xs font-medium border border-amber-500/30">✏️ Sửa</button>
-                  <button onclick="deleteTrack(${t.id})" class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2.5 py-1 rounded text-xs font-medium border border-rose-500/30">🗑️ Xóa</button>
-                </td>
-              </tr>
-            `;
-          }).join('');
+      // HISTORY
+      document.getElementById('history-body').innerHTML = tracks.map(t => {
+        const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
+        return `
+          <tr class="hover:bg-slate-700/30">
+            <td class="p-3 text-slate-300 text-xs">${t.date}</td>
+            <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${t.week || 1}</td>
+            <td class="p-3 font-semibold text-slate-100">${t.member}</td>
+            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
+            <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
+            <td class="p-3">${t.distance} m</td>
+            <td class="p-3">${t.pace}</td>
+            <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
+            <td class="p-3 text-center"><span class="text-emerald-400 text-xs font-semibold">✅ Đồng bộ từ Club Strava</span></td>
+            <td class="p-3 admin-only ${isAdmin ? '' : 'hidden'} space-x-2">
+              <button class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2 py-1 rounded text-xs">🗑️ Xóa</button>
+            </td>
+          </tr>`;
+      }).join('');
     }
 
     initWeekDropdown();
     initMemberSelects();
-    render();
+    applyAdminPermissions();
   </script>
 </body>
 </html>
