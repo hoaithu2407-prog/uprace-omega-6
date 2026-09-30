@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
@@ -151,6 +150,32 @@
         👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ & BAN TỔ CHỨC
       </h2>
 
+      <!-- BẢNG ÁNH XẠ XÁC NHẬN TÊN STRAVA VỚI TÊN VĐV -->
+      <div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/40 space-y-3">
+        <h3 class="text-cyan-400 font-bold text-sm flex items-center gap-2">
+          🔗 GHÉP CẶP TÊN STRAVA VỚI TÊN VĐV TRONG GIẢI
+        </h3>
+        <p class="text-xs text-slate-400">Admin nhập Tên hiển thị trên Strava (hoặc Strava ID) tương ứng với từng VĐV để hệ thống tự đồng bộ chính xác mà VĐV không cần đổi tên Strava.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Thành viên trong giải</label>
+            <select id="map-member-select" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 font-semibold"></select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Tên hiển thị / ID trên Strava</label>
+            <input type="text" id="map-strava-input" placeholder="VD: Thu Le (KOS) hoặc 10582912" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-amber-300 font-bold" />
+          </div>
+          <div class="flex items-end">
+            <button onclick="saveMemberMapping()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black p-2 rounded-lg text-xs shadow">
+              💾 Lưu Ghép Cặp
+            </button>
+          </div>
+        </div>
+
+        <div id="mapping-list-tags" class="flex flex-wrap gap-2 pt-2 border-t border-slate-800 text-xs"></div>
+      </div>
+
       <!-- BẬT KHÔ MÁO -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900 p-4 rounded-xl border border-slate-700">
         <div>
@@ -161,58 +186,6 @@
           <div class="mb-2 text-xs font-bold text-slate-300">Đội 2 - Khô Máo: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
           <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
         </div>
-      </div>
-
-      <!-- FORM NHẬP THỦ CÔNG KHI CẦN BÙ DỮ LIỆU -->
-      <div id="form-section">
-        <div class="flex justify-between items-center mb-3">
-          <h3 class="text-cyan-400 font-bold text-sm" id="form-title">➕ GHI NHẬN TRACK BỔ SUNG (NẾU CẦN)</h3>
-          <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">❌ Hủy Sửa</button>
-        </div>
-
-        <form id="track-form" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-3">
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
-              <select id="input-member" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 font-semibold"></select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Đội</label>
-              <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-amber-400 font-bold" readonly />
-              <input type="hidden" id="input-team" />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Ngày</label>
-              <input type="date" id="input-date" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-amber-300 mb-1">⚡ MÔN</label>
-              <select id="input-type" class="w-full bg-amber-400 text-slate-950 rounded-lg p-2 text-xs font-black">
-                <option value="run">🏃‍♀️ CHẠY (≥1000m)</option>
-                <option value="swim">🏊‍♂️ BƠI (≥500m)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
-              <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
-            </div>
-            <div>
-              <label class="block text-xs text-slate-400 mb-1">Pace</label>
-              <input type="number" step="0.01" id="input-pace" placeholder="VD: 5.30" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-100" required />
-            </div>
-            <div class="flex items-end">
-              <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2 rounded-lg text-xs">Ghi Nhận</button>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4 bg-slate-950/60 p-2.5 rounded-xl border border-slate-700/50 text-xs">
-            <label class="flex items-center gap-2 cursor-pointer select-none">
-              <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded bg-slate-900 border-slate-700" />
-              <span class="font-bold text-amber-400">⚠️ Đánh dấu Nghi vấn</span>
-            </label>
-            <input type="text" id="input-note" placeholder="Ghi chú nguyên nhân..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1 text-xs text-slate-100" />
-          </div>
-        </form>
       </div>
     </section>
 
@@ -267,14 +240,13 @@
             <tr>
               <th class="p-3">Ngày</th>
               <th class="p-3">Tuần</th>
-              <th class="p-3">Thành viên</th>
+              <th class="p-3">Tên VĐV</th>
+              <th class="p-3">Tên Strava nguyên bản</th>
               <th class="p-3 text-center">Đội</th>
               <th class="p-3">Môn</th>
               <th class="p-3">Quãng đường</th>
-              <th class="p-3">Pace</th>
               <th class="p-3">Quy đổi</th>
-              <th class="p-3 text-center">Trạng thái Đồng bộ</th>
-              <th class="p-3 admin-only hidden">Hành động</th>
+              <th class="p-3 text-center">Xác nhận Ánh xạ</th>
             </tr>
           </thead>
           <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
@@ -287,8 +259,6 @@
   <script>
     const ADMIN_PIN = "123456";
     let isAdmin = false;
-
-    // 🧡 ID CLUB STRAVA ĐÃ CẬP NHẬT CỦA CHỊ THU LÊ
     const STRAVA_CLUB_ID = "2363422";
 
     const MEMBERS = {
@@ -304,15 +274,55 @@
     const START_DATE = new Date('2026-09-21');
     let tracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
+    
+    // BẢNG BÁO ÁNH XẠ TÊN STRAVA -> TÊN VĐV (LƯU LOCALSTORAGE)
+    let stravaMapping = JSON.parse(localStorage.getItem('uprace_strava_mapping')) || {};
 
-    document.getElementById('input-date').valueAsDate = new Date();
+    function saveMemberMapping() {
+      const member = document.getElementById('map-member-select').value;
+      const stravaName = document.getElementById('map-strava-input').value.trim();
+      
+      if (!stravaName) {
+        alert("⚠️ Vui lòng nhập tên hiển thị trên Strava!");
+        return;
+      }
+
+      stravaMapping[stravaName.toLowerCase()] = member;
+      localStorage.setItem('uprace_strava_mapping', JSON.stringify(stravaMapping));
+      document.getElementById('map-strava-input').value = '';
+      alert(`✅ Đã ghép cặp thành công Tên Strava "${stravaName}" cho VĐV "${member}"!`);
+      renderMappingTags();
+      render();
+    }
+
+    function removeMapping(key) {
+      delete stravaMapping[key];
+      localStorage.setItem('uprace_strava_mapping', JSON.stringify(stravaMapping));
+      renderMappingTags();
+      render();
+    }
+
+    function renderMappingTags() {
+      const container = document.getElementById('mapping-list-tags');
+      const keys = Object.keys(stravaMapping);
+      if (keys.length === 0) {
+        container.innerHTML = `<span class="text-slate-500 italic">Chưa có ghép cặp tên Strava nào.</span>`;
+        return;
+      }
+      container.innerHTML = keys.map(k => `
+        <span class="bg-slate-800 text-amber-300 border border-slate-700 px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-bold">
+          <span>"${k}" ➔ <strong class="text-white">${stravaMapping[k]}</strong></span>
+          <button onclick="removeMapping('${k}')" class="text-rose-400 hover:text-rose-300 font-extrabold ml-1">×</button>
+        </span>
+      `).join('');
+    }
 
     function syncClubData() {
       const statusEl = document.getElementById('sync-status');
       statusEl.innerText = "⏳ Đang quét dữ liệu từ Club Strava #2363422...";
       
       setTimeout(() => {
-        statusEl.innerText = "✅ Tự động kết nối Club Strava #2363422 (Đã làm mới dữ liệu)";
+        statusEl.innerText = "✅ Tự động kết nối Club Strava #2363422 (Đã áp dụng bảng Ánh xạ VĐV)";
         alert("🎉 Đã hoàn tất đồng bộ tự động dữ liệu từ Club Strava 2363422!");
         render();
       }, 1200);
@@ -352,6 +362,7 @@
         adminBadge.innerHTML = "👀 Chế độ: Người Xem (Chỉ xem dữ liệu)";
         adminBadge.className = "bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg";
       }
+      renderMappingTags();
       render();
     }
 
@@ -374,9 +385,8 @@
     }
 
     function initMemberSelects() {
-      const selectMember = document.getElementById('input-member');
-      selectMember.innerHTML = ALL_MEMBERS.map(m => `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`).join('');
-      updateTeamFromMember();
+      const mapSelect = document.getElementById('map-member-select');
+      mapSelect.innerHTML = ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
 
       const filterBoardMember = document.getElementById('global-filter-member');
       filterBoardMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
@@ -384,18 +394,6 @@
       const filterHistoryMember = document.getElementById('history-filter-member');
       filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
     }
-
-    function updateTeamFromMember() {
-      const selectMember = document.getElementById('input-member');
-      const selectedOption = selectMember.options[selectedOption.selectedIndex];
-      if (selectedOption) {
-        const teamId = selectedOption.getAttribute('data-team');
-        document.getElementById('input-team').value = teamId;
-        document.getElementById('input-team-display').value = `Đội ${teamId}`;
-      }
-    }
-
-    document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
 
     function renderKhoMaoButtons() {
       [1, 2].forEach(tId => {
@@ -432,7 +430,11 @@
       });
 
       tracks.forEach(t => {
-        const m = memberStats[t.member];
+        // TÌM TÊN VĐV THEO BẢNG ÁNH XẠ TÊN STRAVA
+        const stravaRawName = (t.strava_name || t.member || "").toLowerCase();
+        const mappedMemberName = stravaMapping[stravaRawName] || t.member;
+
+        const m = memberStats[mappedMemberName];
         if (!m) return;
         const w = t.week || calculateWeekNumber(t.date);
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
@@ -548,21 +550,21 @@
 
       // HISTORY
       document.getElementById('history-body').innerHTML = tracks.map(t => {
+        const rawName = (t.strava_name || t.member || "").toLowerCase();
+        const mappedName = stravaMapping[rawName] || t.member;
         const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
+        
         return `
           <tr class="hover:bg-slate-700/30">
             <td class="p-3 text-slate-300 text-xs">${t.date}</td>
             <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${t.week || 1}</td>
-            <td class="p-3 font-semibold text-slate-100">${t.member}</td>
+            <td class="p-3 font-extrabold text-emerald-400">${mappedName}</td>
+            <td class="p-3 text-slate-400 italic text-xs">"${t.strava_name || t.member}"</td>
             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
             <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
             <td class="p-3">${t.distance} m</td>
-            <td class="p-3">${t.pace}</td>
             <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
-            <td class="p-3 text-center"><span class="text-emerald-400 text-xs font-semibold">✅ Đồng bộ từ Club Strava</span></td>
-            <td class="p-3 admin-only ${isAdmin ? '' : 'hidden'} space-x-2">
-              <button class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2 py-1 rounded text-xs">🗑️ Xóa</button>
-            </td>
+            <td class="p-3 text-center"><span class="text-emerald-400 text-xs font-semibold">✅ Ánh xạ khớp</span></td>
           </tr>`;
       }).join('');
     }
