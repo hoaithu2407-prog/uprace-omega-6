@@ -574,7 +574,7 @@
       document.getElementById('input-is-suspicious').checked = !!track.isSuspicious;
       document.getElementById('input-note').value = track.note || '';
 
-      document.getElementById('form-title').innerText = "✏️️ CHỈNH SỬA TRACK";
+      document.getElementById('form-title').innerText = "✏️ CHỈNH SỬA TRACK";
       document.getElementById('submit-btn').innerText = "Cập Nhật Track";
       document.getElementById('submit-btn').className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-500/20";
       document.getElementById('cancel-edit-btn').classList.remove('hidden');
@@ -933,12 +933,24 @@
         let t2KmText = `${t2Km.toFixed(1)} km`;
         let diffText = `${diff.toFixed(1)} km`;
 
+        // Kiểm tra xem tuần nầy đã được chốt (nhập xong) chưa
+        const isWeekClosed = ALL_MEMBERS.some(m => !!memberWeekCompleted[`${m.name}_Week${w}`]);
+
         if (w > currentActualWeek && t1Km === 0 && t2Km === 0) {
           t1Title = '<span class="text-slate-600 italic">—</span>';
           t2Title = '<span class="text-slate-600 italic">—</span>';
           t1KmText = '<span class="text-slate-600 italic">—</span>';
           t2KmText = '<span class="text-slate-600 italic">—</span>';
           diffText = '<span class="text-slate-600 italic">—</span>';
+        } else if (!isWeekClosed && w >= currentActualWeek) {
+          // Tuần đang diễn ra (chưa chốt) -> Căn cứ vào Đội dẫn đầu Lũy tiến tạm thời
+          if (cumTeam1 >= cumTeam2) {
+            t1Title = '<span class="text-yellow-300 font-bold animate-pulse">🐰 không ngơi nghỉ 🏃💨</span>';
+            t2Title = '<span class="text-emerald-400 font-bold animate-pulse">🐢 đang bứt tốc 🏃💨</span>';
+          } else {
+            t1Title = '<span class="text-emerald-400 font-bold animate-pulse">🐢 đang bứt tốc 🏃💨</span>';
+            t2Title = '<span class="text-yellow-300 font-bold animate-pulse">🐰 không ngơi nghỉ 🏃💨</span>';
+          }
         } else if (t1Km === 0 && t2Km === 0) {
           t1Title = '<span class="text-slate-500 italic">Chưa có dữ liệu</span>';
           t2Title = '<span class="text-slate-500 italic">Chưa có dữ liệu</span>';
@@ -946,6 +958,7 @@
           t2KmText = '<span class="text-slate-500 italic">0.0 km</span>';
           diffText = '<span class="text-slate-500 italic">0.0 km</span>';
         } else {
+          // Tuần đã được chốt xong -> Hiển thị Thỏ & Rùa chính thức
           if (t1Km > t2Km) {
             t1Title = '<span class="text-yellow-300 font-bold">🐰 Thỏ</span>';
             t2Title = '<span class="text-emerald-400 font-bold">🐢 Rùa</span>';
@@ -983,7 +996,7 @@
         cumT2Title = '<span class="text-yellow-300 font-black">🐰 Thỏ (Dẫn đầu)</span>';
       } else {
         cumT1Title = '<span class="text-slate-300 font-black">⚖️ Hòa</span>';
-        cumT2Title = '<span class="text-slate-300 font-black">⚖️️ Hòa</span>';
+        cumT2Title = '<span class="text-slate-300 font-black">⚖️ Hòa</span>';
       }
 
       summaryRowsHtml += `
