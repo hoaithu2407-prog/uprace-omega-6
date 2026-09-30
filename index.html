@@ -71,13 +71,13 @@
     <!-- BẢNG ĐIỀU KHIỂN CHỈ ADMIN MỚI THẤY: NHẬP BÀI TẬP TRỰC TIẾP -->
     <section class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-amber-500/50 shadow-2xl space-y-6">
       <h2 class="text-amber-400 font-black text-base flex items-center gap-2">
-        👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ - NHẬP / DUYỆT BÀI TẬP VĐV
+        👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ - NHẬP BÀI TẬP VĐV
       </h2>
 
       <!-- KHU VỰC NHẬP BÀI TẬP MỚI -->
       <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/40 space-y-4">
         <h3 class="text-emerald-400 font-bold text-sm flex items-center gap-2">
-          ⚡ NHẬP NHANH BÀI TẬP CHO VĐV (GHI THẲNG SUPABASE CLOUD)
+          ⚡ NHẬP THỦ CÔNG BÀI TẬP CHO VĐV (GHI THẲNG SUPABASE)
         </h3>
         
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -285,7 +285,7 @@
       const date = document.getElementById('add-date-input').value;
 
       if (dist <= 0) {
-        alert("⚠️️ Vui lòng nhập số mét hợp lệ!");
+        alert("⚠️ Vui lòng nhập số mét hợp lệ!");
         return;
       }
 
@@ -413,7 +413,6 @@
         const m = memberStats[t.member];
         if (!m) return;
 
-        // Ưu tiên lấy trực tiếp cột week từ Supabase
         const w = parseInt(t.week) || 1;
         const km = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
 
@@ -464,7 +463,7 @@
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
-      // TÍNH TOÁN THANH TUẦN ĐƯỢC CHỌN (CHUẨN XÁC 1 CHỮ SỐ THẬP PHÂN .toFixed(1))
+      // TÍNH TOÁN THANH TUẦN
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekSum = weekTeam1 + weekTeam2;
       let weekP1 = weekSum > 0 ? (weekTeam1 / weekSum) * 100 : 50;
