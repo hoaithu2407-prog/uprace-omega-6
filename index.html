@@ -9,41 +9,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body { 
-      background-color: #0f172a; 
-      color: #f8fafc; 
-      font-family: system-ui, -apple-system, sans-serif; 
-    }
-
-    .font-banner {
-      font-family: 'Fredoka', 'Pangolin', cursive, sans-serif;
-    }
-
-    .banner-title-white {
-      text-shadow: 
-        3px 3px 0 #1e3a8a,
-        -3px -3px 0 #1e3a8a,
-        3px -3px 0 #1e3a8a,
-        -3px 3px 0 #1e3a8a,
-        0px 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .banner-title-yellow {
-      color: #facc15;
-      text-shadow: 
-        3px 3px 0 #1e3a8a,
-        -3px -3px 0 #1e3a8a,
-        3px -3px 0 #1e3a8a,
-        -3px 3px 0 #1e3a8a,
-        0px 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .slogan-font {
-      font-family: 'Pangolin', 'Fredoka', cursive, sans-serif;
-    }
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .font-banner { font-family: 'Fredoka', 'Pangolin', cursive, sans-serif; }
+    .banner-title-white { text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
+    .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
+    .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
   </style>
 </head>
 <body class="pb-12">
+
   <!-- HEADER BANNER ARTWORK -->
   <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-12 shadow-2xl border-b-4 border-cyan-400">
     <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:16px_16px]"></div>
@@ -51,58 +25,55 @@
     <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-yellow-300 rounded-full blur-3xl opacity-40"></div>
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-      
-      <!-- MINH HỌA VẬN ĐỘNG VIÊN CHẠY BỘ -->
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">
-          🏃‍♀️
-        </div>
-        <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
-          Chạy Hết Sức
-        </span>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
+        <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
-      <!-- TRUNG TÂM TIÊU ĐỀ NGHỆ THUẬT -->
       <div class="flex-1 flex flex-col items-center">
-        <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-5 rounded-3xl shadow-2xl transform md:-rotate-1 backdrop-blur-sm max-w-2xl w-full">
-          
+        <div class="relative bg-blue-700/90 border-4 border-blue-900 px-8 py-5 rounded-3xl shadow-2xl transform md:-rotate-1 backdrop-blur-sm max-w-2xl w-full text-center">
           <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-wider uppercase font-banner flex flex-wrap justify-center items-center gap-x-3 gap-y-1">
             <span class="text-white banner-title-white">UPRACE</span>
             <span class="banner-title-yellow">OMEGA MÙA 6</span>
             <span class="text-2xl text-yellow-300">👑</span>
           </h1>
-
           <div class="mt-4 inline-block relative">
-            <div class="bg-amber-100 text-rose-700 font-extrabold text-sm sm:text-base md:text-lg px-6 py-2 rounded-xl border-2 border-amber-300 shadow-md transform hover:scale-105 transition-all">
+            <div class="bg-amber-100 text-rose-700 font-extrabold text-sm sm:text-base md:text-lg px-6 py-2 rounded-xl border-2 border-amber-300 shadow-md">
               ⏰ Thời gian: 21/09/2026 - 19/11/2026 (8 Tuần)
             </div>
           </div>
         </div>
       </div>
 
-      <!-- MINH HỌA VẬN ĐỘNG VIÊN BƠI LỘI & KHẨU HIỆU -->
       <div class="flex flex-col items-center gap-3">
         <div class="bg-yellow-300 text-slate-900 p-3 rounded-2xl border-2 border-amber-400 shadow-lg transform rotate-3 max-w-[200px] text-center">
-          <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">
-            "Khỏe là chính<br/>Hơn thua là mười! 😊"
-          </p>
+          <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
-
         <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
-          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">
-            🏊‍♂️
-          </div>
-          <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">
-            Bơi Hết Ga
-          </span>
+          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️</div>
+          <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Bơi Hết Ga</span>
         </div>
       </div>
-
     </div>
   </header>
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
-    
+
+    <!-- THANH TRẠNG THÁI KHÁCH / ADMIN -->
+    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center text-xs">
+      <div class="flex items-center gap-2">
+        <span id="admin-badge" class="bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg">
+          👀 Chế độ: Người Xem (Chỉ xem dữ liệu)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="auth-btn" onclick="toggleAdminAuth()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow">
+          🔑 Đăng Nhập Admin
+        </button>
+      </div>
+    </div>
+
     <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
     <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -114,52 +85,31 @@
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
       <div>
-        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
         <div class="flex justify-between items-center mb-1">
-          <div id="cum-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span>
-          </div>
-
+          <div id="cum-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span></div>
           <div class="flex flex-col items-center">
-            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase tracking-wider font-extrabold">
-              📈 TỔNG LŨY TIẾN MÙA GIẢI
-            </span>
-            <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Dẫn Đầu -->
-            </span>
+            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-500/30 px-3 py-0.5 rounded-full uppercase tracking-wider font-extrabold">📈 TỔNG LŨY TIẾN MÙA GIẢI</span>
+            <span id="cum-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow"></span>
           </div>
-
-          <div id="cum-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            <span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2
-          </div>
+          <div id="cum-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl"><span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2</div>
         </div>
 
-        <!-- CONTAINER THANH TIẾN TRÌNH THỎ RÙA -->
-        <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-visible flex p-1 border border-slate-700 shadow-inner mt-2">
-          <!-- Vạch cán cân trung tâm (50%) -->
-          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
+        <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow z-10 -translate-x-1/2"></div>
           
-          <!-- THANH ĐỘI 1 -->
-          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-visible" style="width: 50%">
-            <span id="cum-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
-
-            <!-- BADGE CHÊNH LỆCH KHÔNG BỊ CHE -->
-            <div id="cum-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
-              ⚡ +0.0 km
-            </div>
+          <div id="cum-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 flex items-center justify-start pl-3 relative" style="width: 50%">
+            <span id="cum-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
           </div>
 
-          <!-- THANH ĐỘI 2 -->
-          <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
-            <span id="cum-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
+          <div id="cum-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 flex items-center justify-end pr-3 relative" style="width: 50%">
+            <span id="cum-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
+          </div>
+
+          <div id="cum-diff-badge" class="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
+            ⚡ +0.0 km
           </div>
         </div>
 
-        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
         <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
           <span id="cum-pct-team1" class="text-emerald-400">50.0%</span>
           <span id="cum-pct-team2" class="text-amber-400">50.0%</span>
@@ -170,55 +120,36 @@
 
       <!-- THANH 2: KẾT QUẢ THEO TUẦN -->
       <div>
-        <!-- DÒNG THÔNG TIN PHÍA TRÊN BÊN NGOÀI THANH -->
         <div class="flex justify-between items-center mb-1">
-          <div id="week-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span>
-          </div>
+          <div id="week-title-team1" class="flex items-center gap-2 font-black text-lg sm:text-xl">🐢 RÙA: ĐỘI 1 <span class="text-xs font-semibold text-slate-300">(0.0 km)</span></div>
 
           <div class="flex flex-col items-center">
             <div class="flex items-center gap-2">
               <span class="text-xs text-amber-300 uppercase font-black">📊 KẾT QUẢ:</span>
-              <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md">
-                <!-- Render tuần tự động -->
-              </select>
+              <select id="header-select-week" class="bg-slate-900 border border-amber-500/50 text-amber-300 font-bold rounded-lg px-2.5 py-1 text-xs shadow-md"></select>
             </div>
-            <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow">
-              <!-- Render thông tin Đội Thắng Tuần -->
-            </span>
+            <span id="week-winner-tag" class="text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow"></span>
           </div>
 
-          <div id="week-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl">
-            <span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2
+          <div id="week-title-team2" class="flex items-center gap-2 font-black text-lg sm:text-xl"><span class="text-xs font-semibold text-slate-300">(0.0 km)</span> 🐰 THỎ: ĐỘI 2</div>
+        </div>
+
+        <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-hidden flex p-1 border border-slate-700 shadow-inner mt-2">
+          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow z-10 -translate-x-1/2"></div>
+
+          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 flex items-center justify-start pl-3 relative" style="width: 50%">
+            <span id="week-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
+          </div>
+
+          <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 flex items-center justify-end pr-3 relative" style="width: 50%">
+            <span id="week-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap">0.0 km</span>
+          </div>
+
+          <div id="week-diff-badge" class="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
+            ⚡ +0.0 km
           </div>
         </div>
 
-        <!-- CONTAINER THANH TIẾN TRÌNH TUẦN THỎ RÙA -->
-        <div class="relative w-full bg-slate-900 h-9 rounded-full overflow-visible flex p-1 border border-slate-700 shadow-inner mt-2">
-          <!-- Vạch cán cân trung tâm (50%) -->
-          <div class="absolute inset-y-0 left-1/2 w-0.5 bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] z-10 -translate-x-1/2"></div>
-
-          <!-- THANH ĐỘI 1 -->
-          <div id="week-bar-team1" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-l-full transition-all duration-500 relative flex items-center justify-start pl-3 overflow-visible" style="width: 50%">
-            <span id="week-val-team1" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
-
-            <!-- BADGE CHÊNH LỆCH KHÔNG BỊ CHE -->
-            <div id="week-diff-badge" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-slate-950 text-amber-300 border-2 border-amber-400 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shadow-2xl z-30 whitespace-nowrap">
-              ⚡ +0.0 km
-            </div>
-          </div>
-
-          <!-- THANH ĐỘI 2 -->
-          <div id="week-bar-team2" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-r-full transition-all duration-500 relative flex items-center justify-end pr-3 overflow-hidden" style="width: 50%">
-            <span id="week-val-team2" class="text-slate-950 font-black text-xs sm:text-sm whitespace-nowrap drop-shadow">
-              0.0 km
-            </span>
-          </div>
-        </div>
-
-        <!-- PHẦN PHẦN TRĂM TƯƠNG ỨNG TỈ LỆ KM -->
         <div class="flex justify-between items-center text-xs font-bold text-slate-300 mt-1.5 px-2">
           <span id="week-pct-team1" class="text-emerald-400">50.0%</span>
           <span id="week-pct-team2" class="text-amber-400">50.0%</span>
@@ -240,103 +171,100 @@
       </div>
     </section>
 
-    <!-- QUẢN LÝ TUẦN KHÔ MÁO -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
-      <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">
-        🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO (BỎ TRẦN 50KM)
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 1 - Đã kích hoạt: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
-          <div class="grid grid-cols-4 gap-2" id="btn-group-team1"></div>
+    <!-- KHU VỰC QUẢN LÝ VÀ NHẬP TRACK CHỈ DÀNH CHO ADMIN -->
+    <div class="admin-only hidden space-y-8">
+      
+      <!-- QUẢN LÝ TUẦN KHÔ MÁO -->
+      <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+        <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">
+          🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO (BỎ TRẦN 50KM)
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+            <div class="mb-3 text-sm font-bold">Đội 1 - Đã kích hoạt: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
+            <div class="grid grid-cols-4 gap-2" id="btn-group-team1"></div>
+          </div>
+          <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+            <div class="mb-3 text-sm font-bold">Đội 2 - Đã kích hoạt: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
+            <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
+          </div>
         </div>
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 2 - Đã kích hoạt: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
-          <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
+      </section>
+
+      <!-- FORM NHẬP / CHỈNH SỬA TRACK -->
+      <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700" id="form-section">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
+          <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">
+            ❌ Hủy Sửa
+          </button>
         </div>
-      </div>
-    </section>
 
-    <!-- FORM NHẬP / CHỈNH SỬA TRACK -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700" id="form-section">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
-        <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">
-          ❌ Hủy Sửa
-        </button>
-      </div>
+        <div id="toast-success" class="hidden mb-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 p-3 rounded-xl text-sm font-semibold flex items-center gap-2 animate-bounce">
+          <span>✅</span>
+          <span id="toast-message">Đã lưu thành công track!</span>
+        </div>
 
-      <div id="toast-success" class="hidden mb-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 p-3 rounded-xl text-sm font-semibold flex items-center gap-2 animate-bounce">
-        <span>✅</span>
-        <span id="toast-message">Đã lưu thành công track!</span>
-      </div>
+        <form id="track-form" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
+              <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Đội (Tự động)</label>
+              <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-400 font-bold" readonly />
+              <input type="hidden" id="input-team" />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
+              <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+            </div>
 
-      <form id="track-form" class="space-y-4">
-        <!-- HÀNG 1: THÔNG TIN CHÍNH -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
-            <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold"></select>
+            <div>
+              <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">⚡ MÔN THI ĐẤU</label>
+              <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg cursor-pointer">
+                <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
+                <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
+              <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Pace</label>
+              <input type="number" step="0.01" id="input-pace" placeholder="VD: 3.12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+            </div>
+            <div class="flex items-end">
+              <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
+                Ghi Nhận
+              </button>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Đội (Tự động)</label>
-            <input type="text" id="input-team-display" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-amber-400 font-bold" readonly />
-            <input type="hidden" id="input-team" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
-            <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
-          </div>
 
-          <div>
-            <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">
-              ⚡ MÔN THI ĐẤU
+          <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded border-slate-700 bg-slate-900" />
+              <span class="text-xs font-bold text-amber-400 flex items-center gap-1">⚠️ Đánh dấu Nghi vấn</span>
             </label>
-            <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer">
-              <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
-              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
-            </select>
-          </div>
 
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Quãng đường (m)</label>
-            <input type="number" id="input-distance" placeholder="VD: 5000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+            <div class="flex-1 w-full flex items-center gap-2">
+              <span class="text-xs text-slate-400 whitespace-nowrap">Ghi chú (Cần giải trình):</span>
+              <input type="text" id="input-note" placeholder="VD: Thiếu hình chụp Strava, Pace tăng đột biến..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500" />
+            </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Pace</label>
-            <input type="number" step="0.01" id="input-pace" placeholder="VD: 3.12" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
-          </div>
-          <div class="flex items-end">
-            <button type="submit" id="submit-btn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
-              Ghi Nhận
-            </button>
-          </div>
-        </div>
+        </form>
+      </section>
 
-        <!-- HÀNG 2: NGHI VẤN VÀ GHI CHÚ GIẢI TRÌNH -->
-        <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
-          <label class="flex items-center gap-2 cursor-pointer select-none">
-            <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded border-slate-700 bg-slate-900 focus:ring-amber-500 focus:ring-offset-slate-900" />
-            <span class="text-xs font-bold text-amber-400 flex items-center gap-1">
-              ⚠️ Đánh dấu Nghi vấn
-            </span>
-          </label>
-
-          <div class="flex-1 w-full flex items-center gap-2">
-            <span class="text-xs text-slate-400 whitespace-nowrap">Ghi chú (Cần giải trình):</span>
-            <input type="text" id="input-note" placeholder="VD: Thiếu hình chụp Strava, Pace tăng đột biến..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 placeholder-slate-500" />
-          </div>
-        </div>
-      </form>
-    </section>
+    </div>
 
     <!-- BẢNG XẾP HẠNG -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
-          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">
-            🏆 BẢNG XẾP HẠNG
-          </h2>
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG</h2>
           <p class="text-xs text-slate-400 mt-0.5" id="leaderboard-subtitle">Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m</p>
         </div>
 
@@ -357,15 +285,13 @@
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
-          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head">
-            <!-- Render tiêu đề -->
-          </thead>
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head"></thead>
           <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
         </table>
       </div>
     </section>
 
-    <!-- DANH SÁCH TRACK ĐÃ NHẬP VỚI BỘ LỌC CẦN DUYỆT -->
+    <!-- DANH SÁCH TRACK ĐÃ NHẬP -->
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
         <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
@@ -387,7 +313,7 @@
             <option value="approved">✅ Track hợp lệ</option>
           </select>
 
-          <button onclick="clearAllData()" class="bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-2.5 py-1 text-xs font-semibold">
+          <button onclick="clearAllData()" class="admin-only hidden bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 border border-rose-500/30 rounded-lg px-2.5 py-1 text-xs font-semibold">
             🗑️ Xóa Tất Cả
           </button>
         </div>
@@ -406,7 +332,7 @@
               <th class="p-3">Pace</th>
               <th class="p-3">Quy đổi</th>
               <th class="p-3 text-center">Xác nhận Track</th>
-              <th class="p-3">Hành động</th>
+              <th class="p-3 admin-only hidden">Hành động</th>
             </tr>
           </thead>
           <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
@@ -417,6 +343,9 @@
   </main>
 
   <script>
+    const ADMIN_PIN = "123456";
+    let isAdmin = false;
+
     const MEMBERS = {
       1: ["Thanh Nhã", "Huỳnh Tuấn", "Tùng Trần", "Nguyễn Quân", "Lợi Cao", "Lê Hà", "Hà Trần", "An Đào", "Mỹ Linh", "Văn Lê"],
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
@@ -439,11 +368,47 @@
 
     document.getElementById('input-date').valueAsDate = new Date();
 
+    function toggleAdminAuth() {
+      if (isAdmin) {
+        isAdmin = false;
+        applyAdminPermissions();
+      } else {
+        const inputPin = prompt("🔑 Nhập mã PIN Admin:");
+        if (inputPin === ADMIN_PIN) {
+          isAdmin = true;
+          alert("✅ Đăng nhập Admin thành công!");
+          applyAdminPermissions();
+        } else if (inputPin !== null) {
+          alert("❌ Sai mã PIN Admin!");
+        }
+      }
+    }
+
+    function applyAdminPermissions() {
+      const adminElements = document.querySelectorAll('.admin-only');
+      const authBtn = document.getElementById('auth-btn');
+      const adminBadge = document.getElementById('admin-badge');
+
+      if (isAdmin) {
+        adminElements.forEach(el => el.classList.remove('hidden'));
+        authBtn.innerText = "🔒 Đăng Xuất Admin";
+        authBtn.className = "bg-rose-500 hover:bg-rose-400 text-white font-black px-3 py-1 rounded-lg transition-all shadow";
+        adminBadge.innerHTML = "👑 Chế độ: <strong>ADMIN BAN TỔ CHỨC</strong>";
+        adminBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold px-2.5 py-1 rounded-lg";
+      } else {
+        adminElements.forEach(el => el.classList.add('hidden'));
+        authBtn.innerText = "🔑 Đăng Nhập Admin";
+        authBtn.className = "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow";
+        adminBadge.innerHTML = "👀 Chế độ: Người Xem (Chỉ xem dữ liệu)";
+        adminBadge.className = "bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg";
+      }
+      render();
+    }
+
     function calculateWeekNumber(dateString) {
       const selectedDate = new Date(dateString);
       const diffTime = selectedDate - START_DATE;
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
       if (diffDays < 0) return 1;
       const weekNum = Math.floor(diffDays / 7) + 1;
       return weekNum > 8 ? 8 : weekNum;
@@ -494,9 +459,9 @@
     document.getElementById('input-type').addEventListener('change', (e) => {
       const type = e.target.value;
       if (type === 'swim') {
-        e.target.className = "w-full bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 border-2 border-cyan-200 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-cyan-500/30 focus:ring-2 focus:ring-cyan-300 transition-all cursor-pointer";
+        e.target.className = "w-full bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 border-2 border-cyan-200 rounded-lg p-2.5 text-sm font-black shadow-lg focus:ring-2 focus:ring-cyan-300 transition-all cursor-pointer";
       } else {
-        e.target.className = "w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg shadow-amber-500/20 focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer";
+        e.target.className = "w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg p-2.5 text-sm font-black shadow-lg focus:ring-2 focus:ring-amber-400 transition-all cursor-pointer";
       }
     });
 
@@ -1111,7 +1076,7 @@
                 <td class="p-3 text-center">
                   ${statusHtml}
                 </td>
-                <td class="p-3 space-x-2">
+                <td class="p-3 space-x-2 admin-only hidden">
                   <button onclick="startEditTrack(${t.id})" class="bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 px-2.5 py-1 rounded text-xs font-medium border border-amber-500/30">✏️ Sửa</button>
                   <button onclick="deleteTrack(${t.id})" class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2.5 py-1 rounded text-xs font-medium border border-rose-500/30">🗑️ Xóa</button>
                 </td>
@@ -1122,7 +1087,7 @@
 
     initWeekDropdown();
     initMemberSelects();
-    render();
+    applyAdminPermissions();
   </script>
 </body>
 </html>
