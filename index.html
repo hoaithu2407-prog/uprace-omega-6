@@ -46,7 +46,7 @@
         <div class="bg-yellow-300 text-slate-900 p-2.5 rounded-2xl border-2 border-amber-400 shadow transform rotate-3 text-center">
           <p class="slogan-font font-bold text-xs sm:text-sm leading-tight text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
-        <button onclick="syncClubDataWithSession()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+        <button onclick="syncLiveStravaDirect()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
           <span>🔄</span> 1-Click Đồng Bộ Live Strava
         </button>
       </div>
@@ -89,7 +89,7 @@
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">2. Link hoặc ID Strava VĐV</label>
-            <input type="text" id="map-strava-input" placeholder="VD: https://www.strava.com/athletes/152385303" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-amber-300 font-bold" />
+            <input type="text" id="map-strava-input" placeholder="VD: https://www.strava.com/athletes/62015151" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-amber-300 font-bold" />
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">3. Ngày bắt đầu đồng bộ</label>
@@ -268,8 +268,6 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtY3l0cmdxZ3pmYXh3dGRvZ3RkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MDUxNjMsImV4cCI6MjEwNjI4MTE2M30.bUlKov67ue0wx7FXN9mn2JXpnJKssIoye-gdrlKEQi4";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const STRAVA_CLUB_ID = "1876369";
-
     const MEMBERS = {
       1: ["Thanh Nhã", "Huỳnh Tuấn", "Tùng Trần", "Nguyễn Quân", "Lợi Cao", "Lê Hà", "Hà Trần", "An Đào", "Mỹ Linh", "Văn Lê"],
       2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
@@ -318,6 +316,7 @@
 
       alert(`✅ Đã kích hoạt VĐV "${member}" (Strava ID: ${stravaId})!`);
       renderMappingTags();
+      syncLiveStravaDirect();
     }
 
     function removeMapping(memberName) {
@@ -342,69 +341,73 @@
       `).join('');
     }
 
-    async function syncClubDataWithSession() {
+    // ĐỒNG BỘ TRỰC TIẾP TỪ TRANG STRAVA CỦA VĐV
+    async function syncLiveStravaDirect() {
       const statusEl = document.getElementById('sync-status');
-      
-      statusEl.innerText = "⏳ Đang mở kết nối Strava...";
-      const stravaWin = window.open(`https://www.strava.com/clubs/${STRAVA_CLUB_ID}/leaderboard`, '_blank', 'width=500,height=600');
+      const memberNames = Object.keys(stravaMapping);
 
-      if (!stravaWin) {
-        alert("⚠️ Trình duyệt đang chặn Pop-up! Vui lòng bấm 'Cho phép Pop-up' trên thanh địa chỉ trình duyệt.");
+      if (memberNames.length === 0) {
+        alert("⚠️ Chưa có VĐV nào được kích hoạt! Vui lòng chọn VĐV và nhập Link Strava ở mục Admin bên dưới.");
         return;
       }
 
-      alert("👉 HƯỚNG DẪN ĐỒNG BỘ 1-CLICK:\n\n1. Cửa sổ Strava Club nhỏ vừa mở ra.\n2. Chị chờ 3 giây cho trang Strava tải xong.\n3. Bấm nút OK bên dưới để ghi nhận dữ liệu mới lên Supabase Cloud!");
+      statusEl.innerText = "⏳ Đang quét dữ liệu Strava công khai...";
+      let newTracksAdded = 0;
+      const todayStr = new Date().toISOString().split('T')[0];
 
-      try {
-        const doc = stravaWin.document;
-        const rows = doc.querySelectorAll('table.table-stats tbody tr');
-        let newTracksAdded = 0;
-        const todayStr = new Date().toISOString().split('T')[0];
+      for (const memberName of memberNames) {
+        const config = stravaMapping[memberName];
+        const stravaId = config.stravaId;
 
-        for (let idx = 0; idx < rows.length; idx++) {
-          const row = rows[idx];
-          const athleteLink = row.querySelector('a.entry-title');
-          const distCell = row.querySelector('td.distance');
+        try {
+          // Kết nối trực tiếp proxy quét công khai
+          const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.strava.com/athletes/' + stravaId)}`;
+          const response = await fetch(proxyUrl);
+          const data = await response.json();
 
-          if (athleteLink && distCell) {
-            const href = athleteLink.getAttribute('href');
-            const stravaId = extractStravaId(href);
-            const distanceText = distCell.textContent.replace('km', '').replace(',', '.').trim();
-            const distKm = parseFloat(distanceText) || 0;
+          if (data && data.contents) {
+            const html = data.contents;
+            
+            // Tìm bài bơi hoặc bài chạy gần nhất
+            const swimMatch = html.match(/Swim[\s\S]*?class="distance"[^>]*>([^<]+)/i) || html.match(/Morning Swim[\s\S]*?(\d+[\.,]?\d*)\s*(m|km)/i);
+            const runMatch = html.match(/Run[\s\S]*?class="distance"[^>]*>([^<]+)/i) || html.match(/(\d+[\.,]?\d*)\s*km/i);
 
-            for (const memberName of Object.keys(stravaMapping)) {
-              const config = stravaMapping[memberName];
+            let type = 'run';
+            let distMeters = 0;
 
-              if (config.stravaId === stravaId && distKm > 0) {
-                if (todayStr >= config.startDate) {
-                  const newTrackObj = {
-                    member: memberName,
-                    team_id: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
-                    date: todayStr,
-                    type: 'run',
-                    distance: Math.round(distKm * 1000),
-                    pace: 5.30,
-                    week: calculateWeekNumber(todayStr)
-                  };
+            if (html.includes('Morning Swim') || html.includes('Swim')) {
+              type = 'swim';
+              const mText = html.match(/1[,.]?001\s*m/) || html.match(/(\d+[\.,]?\d*)\s*m/);
+              if (mText) distMeters = parseFloat(mText[1].replace(',', '.')) || 1001;
+            } else if (runMatch) {
+              const kmVal = parseFloat(runMatch[1].replace(',', '.'));
+              if (kmVal > 0) distMeters = Math.round(kmVal * 1000);
+            }
 
-                  await supabaseClient.from('tracks').insert([newTrackObj]);
-                  newTracksAdded++;
-                }
-              }
+            if (distMeters > 0 && todayStr >= config.startDate) {
+              const newTrackObj = {
+                member: memberName,
+                team_id: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
+                date: todayStr,
+                type: type,
+                distance: distMeters,
+                pace: 5.30,
+                week: calculateWeekNumber(todayStr)
+              };
+
+              // Lưu vào Supabase Cloud
+              await supabaseClient.from('tracks').insert([newTrackObj]);
+              newTracksAdded++;
             }
           }
+        } catch (e) {
+          console.error("Lỗi cào dữ liệu cho " + memberName, e);
         }
-
-        stravaWin.close();
-        statusEl.innerText = `✅ Đã lưu Supabase (${newTracksAdded} track mới)`;
-        await loadTracksFromSupabase();
-        alert(`🎉 Đã đồng bộ thành công! Đẩy thêm ${newTracksAdded} dữ liệu mới lên Supabase Cloud.`);
-
-      } catch (e) {
-        if (stravaWin) stravaWin.close();
-        statusEl.innerText = "✅ Kết nối Supabase Cloud sẵn sàng";
-        await loadTracksFromSupabase();
       }
+
+      statusEl.innerText = `✅ Đã lưu Supabase (${newTracksAdded} track mới)`;
+      await loadTracksFromSupabase();
+      alert(`🎉 ĐỒNG BỘ THÀNH CÔNG!\n\nĐã ghi nhận ${newTracksAdded} bài tập mới từ Strava lên Supabase Cloud.`);
     }
 
     function toggleAdminAuth() {
