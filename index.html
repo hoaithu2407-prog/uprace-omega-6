@@ -26,7 +26,7 @@
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️️</div>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
         <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
@@ -264,8 +264,12 @@
     <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
-          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG</h2>
-          <p class="text-xs text-slate-400 mt-0.5" id="leaderboard-subtitle">Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m</p>
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN 1</h2>
+          
+          <div class="text-xs text-slate-300 mt-1 space-y-1" id="leaderboard-subtitle">
+            <p>• Yêu cầu hợp lệ: Mỗi tuần tối thiểu <b class="text-amber-400 underline">6 ngày khác nhau</b> có 1 track chạy ≥ 3.000m HOẶC 1 track bơi ≥ 500m</p>
+            <p class="text-slate-400">• Track được ghi nhận: Chạy ≥ 1.000m Pace ≤ 12, Bơi ≥ 500m Pace ≤ 6 (không giới hạn số track)</p>
+          </div>
         </div>
 
         <div class="flex flex-wrap items-center gap-2.5">
@@ -697,8 +701,7 @@
       let targetWeek = isCumulativeView ? currentActualWeek : (selectedView === 'current' ? currentActualWeek : parseInt(selectedView));
 
       if (isCumulativeView) {
-        document.getElementById('leaderboard-title').innerText = "📈 BẢNG XẾP HẠNG LŨY TIẾN MÙA GIẢI";
-        document.getElementById('leaderboard-subtitle').innerText = "Tổng cự ly tích lũy qua 8 tuần (Đã tính trần 50km/tuần & tuần Khô Máo)";
+        document.getElementById('leaderboard-title').innerText = "📈 BẢNG XẾP HẠNG CÁ NHÂN - TỔNG LŨY TIẾN MÙA GIẢI";
         
         const t1KMList = khoMao[1].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
         const t2KMList = khoMao[2].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
@@ -709,8 +712,7 @@
           <span class="text-amber-400 font-bold">Đội 2 (${t2KMList})</span>
         `;
       } else {
-        document.getElementById('leaderboard-title').innerText = `📅 BẢNG XẾP HẠNG TUẦN ${targetWeek}`;
-        document.getElementById('leaderboard-subtitle').innerText = "Yêu cầu hợp lệ ngày: Chạy tổng ngày ≥ 3.000m HOẶC Bơi ≥ 500m";
+        document.getElementById('leaderboard-title').innerText = `🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN ${targetWeek}`;
 
         const t1KM = khoMao[1].includes(targetWeek);
         const t2KM = khoMao[2].includes(targetWeek);
@@ -823,7 +825,7 @@
         document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
 
         cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        cumWinnerTag.innerHTML = `⚖️️ TỶ SỐ HÒA NHAU`;
+        cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
       }
 
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
