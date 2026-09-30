@@ -46,8 +46,8 @@
         <div class="bg-yellow-300 text-slate-900 p-2.5 rounded-2xl border-2 border-amber-400 shadow transform rotate-3 text-center">
           <p class="slogan-font font-bold text-xs sm:text-sm leading-tight text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
-        <button onclick="syncClubData()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
-          <span>🔄</span> Tự Động Đồng Bộ Strava & Supabase
+        <button onclick="syncClubDataWithSession()" class="mt-1 bg-orange-600 hover:bg-orange-500 text-white font-black text-xs px-3.5 py-1.5 rounded-xl border border-orange-400 shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+          <span>🔄</span> 1-Click Đồng Bộ Live Strava
         </button>
       </div>
     </div>
@@ -64,7 +64,7 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <span class="text-slate-400">Database: <strong id="sync-status" class="text-emerald-400">Đã nối Supabase Cloud</strong></span>
+        <span class="text-slate-400">Database: <strong id="sync-status" class="text-emerald-400">Đã kết nối Supabase Cloud</strong></span>
         <button id="auth-btn" onclick="toggleAdminAuth()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow">
           🔑 Đăng Nhập Admin
         </button>
@@ -77,7 +77,6 @@
         👑 BẢNG ĐIỀU KHIỂN CẢNH SÁT THU LÊ - KÍCH HOẠT VĐV
       </h2>
 
-      <!-- KHU VỰC THIẾT LẬP GHÉP CẶP VĐV STRAVA + NGÀY BẮT ĐẦU -->
       <div class="bg-slate-900 p-4 rounded-xl border border-cyan-500/40 space-y-4">
         <h3 class="text-cyan-400 font-bold text-sm flex items-center gap-2">
           ⚙️ BƯỚC GHÉP CẶP ID STRAVA VỚI VĐV ĐỂ ĐỒNG BỘ NGUYÊN BẢN
@@ -90,7 +89,7 @@
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">2. Link hoặc ID Strava VĐV</label>
-            <input type="text" id="map-strava-input" placeholder="VD: 152385303" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-amber-300 font-bold" />
+            <input type="text" id="map-strava-input" placeholder="VD: https://www.strava.com/athletes/152385303" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-amber-300 font-bold" />
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">3. Ngày bắt đầu đồng bộ</label>
@@ -265,12 +264,11 @@
     const ADMIN_PIN = "123456";
     let isAdmin = false;
 
-    // 🔗 CẤU HÌNH ĐÃ HOÀN THIỆN SUPABASE VÀ GOOGLE SCRIPT
     const SUPABASE_URL = "https://hmcytrgqgzfaxwtdogtd.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtY3l0cmdxZ3pmYXh3dGRvZ3RkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MDUxNjMsImV4cCI6MjEwNjI4MTE2M30.bUlKov67ue0wx7FXN9mn2JXpnJKssIoye-gdrlKEQi4";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const GOOGLE_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyrIPliKkNZBeyv2OOdC8WxyoMGBT4dfUi5eE5hWGNdBGyD35YDj1endaoMbFhfS3NC/exec";
+    const STRAVA_CLUB_ID = "2363422";
 
     const MEMBERS = {
       1: ["Thanh Nhã", "Huỳnh Tuấn", "Tùng Trần", "Nguyễn Quân", "Lợi Cao", "Lê Hà", "Hà Trần", "An Đào", "Mỹ Linh", "Văn Lê"],
@@ -320,7 +318,6 @@
 
       alert(`✅ Đã kích hoạt VĐV "${member}" (Strava ID: ${stravaId})!`);
       renderMappingTags();
-      syncClubData();
     }
 
     function removeMapping(memberName) {
@@ -345,60 +342,66 @@
       `).join('');
     }
 
-    async function syncClubData() {
+    async function syncClubDataWithSession() {
       const statusEl = document.getElementById('sync-status');
-      statusEl.innerText = "⏳ Đang cào dữ liệu Strava & lưu vào Supabase...";
+      
+      statusEl.innerText = "⏳ Đang mở kết nối Strava...";
+      const stravaWin = window.open(`https://www.strava.com/clubs/${STRAVA_CLUB_ID}/leaderboard`, '_blank', 'width=500,height=600');
+
+      if (!stravaWin) {
+        alert("⚠️ Trình duyệt đang chặn Pop-up! Vui lòng bấm 'Cho phép Pop-up' trên thanh địa chỉ trình duyệt.");
+        return;
+      }
+
+      alert("👉 HƯỚNG DẪN ĐỒNG BỘ 1-CLICK:\n\n1. Cửa sổ Strava Club nhỏ vừa mở ra.\n2. Chị chờ 3 giây cho trang Strava tải xong.\n3. Bấm nút OK bên dưới để ghi nhận dữ liệu mới lên Supabase Cloud!");
 
       try {
-        const response = await fetch(GOOGLE_SCRIPT_WEBAPP_URL);
-        const htmlText = await response.text();
+        const doc = stravaWin.document;
+        const rows = doc.querySelectorAll('table.table-stats tbody tr');
+        let newTracksAdded = 0;
+        const todayStr = new Date().toISOString().split('T')[0];
 
-        if (htmlText) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, 'text/html');
-          
-          const rows = doc.querySelectorAll('table.table-stats tbody tr');
-          let newTracksAdded = 0;
+        for (let idx = 0; idx < rows.length; idx++) {
+          const row = rows[idx];
+          const athleteLink = row.querySelector('a.entry-title');
+          const distCell = row.querySelector('td.distance');
 
-          for (let idx = 0; idx < rows.length; idx++) {
-            const row = rows[idx];
-            const athleteLink = row.querySelector('a.entry-title');
-            const distCell = row.querySelector('td.distance');
+          if (athleteLink && distCell) {
+            const href = athleteLink.getAttribute('href');
+            const stravaId = extractStravaId(href);
+            const distanceText = distCell.textContent.replace('km', '').replace(',', '.').trim();
+            const distKm = parseFloat(distanceText) || 0;
 
-            if (athleteLink && distCell) {
-              const href = athleteLink.getAttribute('href');
-              const stravaId = extractStravaId(href);
-              const distanceText = distCell.textContent.replace('km', '').replace(',', '.').trim();
-              const distKm = parseFloat(distanceText) || 0;
+            for (const memberName of Object.keys(stravaMapping)) {
+              const config = stravaMapping[memberName];
 
-              for (const memberName of Object.keys(stravaMapping)) {
-                const config = stravaMapping[memberName];
-                if (config.stravaId === stravaId && distKm > 0) {
-                  const todayStr = new Date().toISOString().split('T')[0];
+              if (config.stravaId === stravaId && distKm > 0) {
+                if (todayStr >= config.startDate) {
+                  const newTrackObj = {
+                    member: memberName,
+                    team_id: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
+                    date: todayStr,
+                    type: 'run',
+                    distance: Math.round(distKm * 1000),
+                    pace: 5.30,
+                    week: calculateWeekNumber(todayStr)
+                  };
 
-                  if (todayStr >= config.startDate) {
-                    const newTrackObj = {
-                      member: memberName,
-                      team_id: ALL_MEMBERS.find(m => m.name === memberName)?.teamId || 1,
-                      date: todayStr,
-                      type: 'run',
-                      distance: Math.round(distKm * 1000),
-                      pace: 5.30,
-                      week: calculateWeekNumber(todayStr)
-                    };
-
-                    await supabaseClient.from('tracks').insert([newTrackObj]);
-                    newTracksAdded++;
-                  }
+                  await supabaseClient.from('tracks').insert([newTrackObj]);
+                  newTracksAdded++;
                 }
               }
             }
           }
-
-          statusEl.innerText = `✅ Đã lưu thành công vào Supabase Cloud (${newTracksAdded} track mới)`;
-          await loadTracksFromSupabase();
         }
-      } catch (err) {
+
+        stravaWin.close();
+        statusEl.innerText = `✅ Đã lưu Supabase (${newTracksAdded} track mới)`;
+        await loadTracksFromSupabase();
+        alert(`🎉 Đã đồng bộ thành công! Đẩy thêm ${newTracksAdded} dữ liệu mới lên Supabase Cloud.`);
+
+      } catch (e) {
+        if (stravaWin) stravaWin.close();
         statusEl.innerText = "✅ Kết nối Supabase Cloud sẵn sàng";
         await loadTracksFromSupabase();
       }
