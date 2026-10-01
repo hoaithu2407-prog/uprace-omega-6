@@ -15,15 +15,15 @@
     .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
     .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
 
-    /* THỨ TỰ CHO ADMIN (khi bật admin mode) */
+    /* THỨ TỰ KHI LÀ ADMIN */
     body.is-admin #sec-compare { order: 1; }
     body.is-admin #sec-form { order: 2; }
-    body.is-admin #sec-khomao { order: 3; }
-    body.is-admin #sec-team-board { order: 4; }
-    body.is-admin #sec-indiv-board { order: 5; }
-    body.is-admin #sec-history { order: 6; }
+    body.is-admin #sec-history { order: 3; }
+    body.is-admin #sec-khomao { order: 4; }
+    body.is-admin #sec-team-board { order: 5; }
+    body.is-admin #sec-indiv-board { order: 6; }
 
-    /* THỨ TỰ CHO NGƯỜI XEM / VĐV (mặc định) */
+    /* THỨ TỰ KHI LÀ NGƯỜI XEM (VĐV) */
     body:not(.is-admin) #sec-compare { order: 1; }
     body:not(.is-admin) #sec-team-board { order: 2; }
     body:not(.is-admin) #sec-indiv-board { order: 3; }
@@ -410,6 +410,7 @@
     let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
     let lastUpdated = localStorage.getItem('uprace_last_updated') || null;
     let editingId = null;
+    let lastSelectedMember = localStorage.getItem('uprace_last_selected_member') || null;
 
     document.getElementById('input-date').valueAsDate = new Date();
 
@@ -494,6 +495,11 @@
       selectMember.innerHTML = `<option value="" disabled selected>-- Chọn thành viên --</option>` + ALL_MEMBERS.map(m => 
         `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`
       ).join('');
+
+      if (lastSelectedMember) {
+        selectMember.value = lastSelectedMember;
+      }
+
       updateTeamFromMember();
 
       const filterBoardMember = document.getElementById('global-filter-member');
@@ -539,6 +545,9 @@
       localStorage.setItem('uprace_tracks', JSON.stringify(tracks));
       localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
       localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
+      if (lastSelectedMember) {
+        localStorage.setItem('uprace_last_selected_member', lastSelectedMember);
+      }
     }
 
     function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
@@ -613,7 +622,13 @@
     function cancelEdit() {
       editingId = null;
       document.getElementById('track-form').reset();
-      document.getElementById('input-member').value = '';
+      
+      if (lastSelectedMember) {
+        document.getElementById('input-member').value = lastSelectedMember;
+      } else {
+        document.getElementById('input-member').value = '';
+      }
+      
       document.getElementById('input-date').valueAsDate = new Date();
       document.getElementById('input-is-suspicious').checked = false;
       document.getElementById('input-note').value = '';
@@ -657,6 +672,8 @@
         alert("⚠️ Vui lòng chọn thành viên!");
         return;
       }
+
+      lastSelectedMember = member;
 
       const date = document.getElementById('input-date').value;
       const teamId = parseInt(document.getElementById('input-team').value);
@@ -740,12 +757,15 @@
         submitBtn.className = originalClass;
       }, 2500);
 
-      document.getElementById('input-member').value = '';
-      updateTeamFromMember();
       document.getElementById('input-distance').value = '';
       document.getElementById('input-pace').value = '';
       document.getElementById('input-is-suspicious').checked = false;
       document.getElementById('input-note').value = '';
+      
+      // Giữ nguyên tên thành viên vừa chọn
+      document.getElementById('input-member').value = lastSelectedMember;
+      updateTeamFromMember();
+      
       render();
     });
 
@@ -901,7 +921,7 @@
         document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(cumTeam2)})</span> <span>⚖️ ĐỘI 2</span>`;
 
         cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+        cumWinnerTag.innerHTML = `⚖️️ TỶ SỐ HÒA NHAU`;
       }
 
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
