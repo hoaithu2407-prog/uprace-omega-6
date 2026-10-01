@@ -50,7 +50,7 @@
           <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
         <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
-          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️</div>
+          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️️</div>
           <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Bơi Hết Ga</span>
         </div>
       </div>
@@ -299,8 +299,8 @@
           <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN 1</h2>
           
           <div class="text-xs text-slate-300 mt-1 space-y-1" id="leaderboard-subtitle">
-            <p>• Yêu cầu hợp lệ: Mỗi tuần tối thiểu <b class="text-amber-400 underline">6 ngày khác nhau</b> có 1 track chạy ≥ 3.000m HOẶC 1 track bơi ≥ 500m</p>
-            <p class="text-slate-400">• Track được ghi nhận: Chạy ≥ 1.000m Pace ≤ 12, Bơi ≥ 500m Pace ≤ 6 (không giới hạn số track)</p>
+            <p>• Tối thiểu: Mỗi tuần có <b class="text-amber-400 underline">6 ngày khác nhau</b> có 1 track chạy ≥ 3.000m HOẶC 1 track bơi ≥ 500m</p>
+            <p class="text-slate-400">• Track: Chạy ≥ 1.000m Pace ≤ 12, Bơi ≥ 500m Pace ≤ 6 (không giới hạn số track)</p>
           </div>
         </div>
 
@@ -403,6 +403,15 @@
     let editingId = null;
 
     document.getElementById('input-date').valueAsDate = new Date();
+
+    function formatDateVN(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+      return dateStr;
+    }
 
     function toggleAdminAuth() {
       if (isAdmin) {
@@ -865,7 +874,7 @@
         document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${cumTeam2.toFixed(1)} km)</span> <span>⚖️ ĐỘI 2</span>`;
 
         cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        cumWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
+        cumWinnerTag.innerHTML = `⚖️️ TỶ SỐ HÒA NHAU`;
       }
 
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
@@ -1045,7 +1054,7 @@
             <th class="p-3">Quy đổi</th>
             <th class="p-3 text-center">Số Ngày</th>
             <th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
-            <th class="p-3 text-center">Đã nhập</th>
+            <th class="p-3 text-center admin-only hidden">Đã nhập</th>
             <th class="p-3 text-center">Hoàn thành?</th>
             <th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt</th>
           </tr>
@@ -1102,7 +1111,7 @@
             const key = `${m.name}_Week${targetWeek}`;
             const isWeekEntered = !!memberWeekCompleted[key];
 
-            let completionStatusHtml = '<span class="text-slate-500 font-medium text-xs">⏳ Chưa chốt</span>';
+            let completionStatusHtml = '<span class="text-amber-400 text-base" title="Chưa chốt tuần">⏳</span>';
             let penaltyHtml = '<span class="text-slate-600 font-bold text-xs">—</span>';
 
             if (isWeekEntered) {
@@ -1138,7 +1147,7 @@
                   ${isExceeded ? `<span class="block text-[10px] text-amber-400 font-normal italic">(Trần 50km)</span>` : ''}
                   ${isKMSelected ? `<span class="block text-[10px] text-amber-400 font-normal italic">(🔥 Khô máu)</span>` : ''}
                 </td>
-                <td class="p-3 text-center">
+                <td class="p-3 text-center admin-only hidden">
                   <input type="checkbox" ${isWeekEntered ? 'checked' : ''} onchange="toggleMemberWeekCompleted('${m.name}', ${targetWeek}, this.checked)" class="w-4 h-4 text-emerald-500 rounded border-slate-700 bg-slate-900 focus:ring-emerald-500 cursor-pointer" />
                 </td>
                 <td class="p-3 text-center">
@@ -1185,6 +1194,10 @@
             const w = t.week || calculateWeekNumber(t.date);
             const isSuspicious = t.isSuspicious && !t.isApproved;
 
+            const formattedDate = formatDateVN(t.date);
+            const formattedDistance = t.distance.toLocaleString('vi-VN');
+            const formattedConverted = converted.toFixed(2).replace('.', ',') + ' km';
+
             let statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Track hợp lệ</span>`;
             if (isSuspicious) {
               statusHtml = `
@@ -1198,7 +1211,7 @@
 
             return `
               <tr class="${isSuspicious ? 'bg-amber-500/20 border-l-4 border-amber-500 font-medium' : 'hover:bg-slate-700/30'} transition-all">
-                <td class="p-3 text-slate-300 font-medium text-xs">${t.date}</td>
+                <td class="p-3 text-slate-300 font-medium text-xs">${formattedDate}</td>
                 <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
                 <td class="p-3 font-semibold text-slate-100">
                   ${t.member}
@@ -1210,9 +1223,9 @@
                   </span>
                 </td>
                 <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
-                <td class="p-3">${t.distance} m</td>
+                <td class="p-3">${formattedDistance} m</td>
                 <td class="p-3">${t.pace}</td>
-                <td class="p-3 font-bold text-cyan-400">${converted.toFixed(1)} km</td>
+                <td class="p-3 font-bold text-cyan-400">${formattedConverted}</td>
                 <td class="p-3 text-center">
                   ${statusHtml}
                 </td>
