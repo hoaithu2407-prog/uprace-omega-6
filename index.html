@@ -14,6 +14,20 @@
     .banner-title-white { text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
     .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
     .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
+
+    /* THỨ TỰ CHO ADMIN (khi bật admin mode) */
+    body.is-admin #sec-compare { order: 1; }
+    body.is-admin #sec-form { order: 2; }
+    body.is-admin #sec-khomao { order: 3; }
+    body.is-admin #sec-team-board { order: 4; }
+    body.is-admin #sec-indiv-board { order: 5; }
+    body.is-admin #sec-history { order: 6; }
+
+    /* THỨ TỰ CHO NGƯỜI XEM / VĐV (mặc định) */
+    body:not(.is-admin) #sec-compare { order: 1; }
+    body:not(.is-admin) #sec-team-board { order: 2; }
+    body:not(.is-admin) #sec-indiv-board { order: 3; }
+    body:not(.is-admin) #sec-history { order: 4; }
   </style>
 </head>
 <body class="pb-12">
@@ -50,17 +64,17 @@
           <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
         <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
-          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️️</div>
+          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️</div>
           <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Bơi Hết Ga</span>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8">
+  <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8 flex flex-col">
 
     <!-- THANH TRẠNG THÁI KHÁCH / ADMIN -->
-    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center text-xs">
+    <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center text-xs order-none">
       <div class="flex items-center gap-2">
         <span id="admin-badge" class="bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg">
           👀 Chế độ: Người Xem (Chỉ xem dữ liệu)
@@ -75,13 +89,13 @@
     </div>
 
     <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
-    <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
+    <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1 order-none">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu mới</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- 1. THANH SONG ĐẤU THỎ VÀ RÙA -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
+    <!-- THANH SONG ĐẤU THỎ VÀ RÙA -->
+    <section id="sec-compare" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       
       <!-- THANH 1: TỔNG LŨY TIẾN MÙA GIẢI -->
       <div>
@@ -171,8 +185,8 @@
       </div>
     </section>
 
-    <!-- 2. GHI NHẬN TRACK MỚI (CHỈ ADMIN THẤY) -->
-    <section class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl" id="form-section">
+    <!-- FORM NHẬP TRACK MỚI (CHỈ ADMIN THẤY) -->
+    <section id="sec-form" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
         <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">
@@ -238,8 +252,92 @@
       </form>
     </section>
 
-    <!-- 3. DANH SÁCH TRACK ĐÃ NHẬP -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
+    <!-- KÍCH HOẠT TUẦN KHÔ MÁO (CHỈ ADMIN THẤY) -->
+    <section id="sec-khomao" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
+      <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">
+        🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO (BỎ TRẦN 50KM)
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+          <div class="mb-3 text-sm font-bold">Đội 1 - Đã kích hoạt: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
+          <div class="grid grid-cols-4 gap-2" id="btn-group-team1"></div>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+          <div class="mb-3 text-sm font-bold">Đội 2 - Đã kích hoạt: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
+          <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BẢNG XẾP HẠNG ĐỘI - RÙA VÀ THỎ -->
+    <section id="sec-team-board" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
+      <div class="mb-4">
+        <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
+          🏆 BẢNG XẾP HẠNG ĐỘI - RÙA VÀ THỎ
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Tổng hợp kết quả thi đấu từng tuần và chung cuộc giữa Đội 1 & Đội 2</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-center text-sm border-collapse border border-slate-700/80 whitespace-nowrap">
+          <thead>
+            <tr class="bg-slate-900 text-slate-300 font-bold text-xs uppercase">
+              <th rowspan="2" class="border border-slate-700 p-2.5 w-16">TUẦN</th>
+              <th colspan="2" class="border border-slate-700 p-1.5 bg-emerald-950/40 text-emerald-400">ĐỘI 1</th>
+              <th colspan="2" class="border border-slate-700 p-1.5 bg-amber-950/40 text-amber-400">ĐỘI 2</th>
+              <th rowspan="2" class="border border-slate-700 p-2.5 text-cyan-400 min-w-[110px]">CHÊNH LỆCH</th>
+            </tr>
+            <tr class="bg-slate-900/80 text-slate-400 text-xs font-semibold">
+              <th class="border border-slate-700 p-1.5 min-w-[140px]">DANH HIỆU</th>
+              <th class="border border-slate-700 p-1.5 min-w-[100px]">SỐ KM</th>
+              <th class="border border-slate-700 p-1.5 min-w-[140px]">DANH HIỆU</th>
+              <th class="border border-slate-700 p-1.5 min-w-[100px]">SỐ KM</th>
+            </tr>
+          </thead>
+          <tbody id="team-summary-body" class="divide-y divide-slate-700/50 text-xs sm:text-sm font-medium">
+            <!-- Render từ JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BẢNG XẾP HẠNG CÁ NHÂN -->
+    <section id="sec-indiv-board" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
+        <div>
+          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN 1</h2>
+          
+          <div class="text-xs text-slate-300 mt-1 space-y-1" id="leaderboard-subtitle">
+            <p>• Tối thiểu: Mỗi tuần có <b class="text-amber-400 underline">6 ngày khác nhau</b> có 1 track chạy ≥ 3.000m HOẶC 1 track bơi ≥ 500m</p>
+            <p class="text-slate-400">• Track: Chạy ≥ 1.000m Pace ≤ 12, Bơi ≥ 500m Pace ≤ 6 (không giới hạn số track)</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <select id="global-filter-team" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
+            <option value="all">Lọc Đội: Tất cả</option>
+            <option value="1">Lọc Đội: Đội 1</option>
+            <option value="2">Lọc Đội: Đội 2</option>
+          </select>
+
+          <select id="global-filter-member" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-amber-300 font-semibold">
+            <option value="all">👤 Lọc Tên: Tất cả</option>
+          </select>
+
+          <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300"></div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head"></thead>
+          <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DANH SÁCH TRACK ĐÃ NHẬP -->
+    <section id="sec-history" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
         <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
         
@@ -283,90 +381,6 @@
             </tr>
           </thead>
           <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 4. KÍCH HOẠT TUẦN KHÔ MÁO (CHỈ ADMIN THẤY) -->
-    <section class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
-      <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">
-        🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO (BỎ TRẦN 50KM)
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 1 - Đã kích hoạt: <span id="count-khomao-1" class="text-amber-400">0/2 tuần</span></div>
-          <div class="grid grid-cols-4 gap-2" id="btn-group-team1"></div>
-        </div>
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-          <div class="mb-3 text-sm font-bold">Đội 2 - Đã kích hoạt: <span id="count-khomao-2" class="text-amber-400">0/2 tuần</span></div>
-          <div class="grid grid-cols-4 gap-2" id="btn-group-team2"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. BẢNG XẾP HẠNG ĐỘI - RÙA VÀ THỎ -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
-      <div class="mb-4">
-        <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
-          🏆 BẢNG XẾP HẠNG ĐỘI - RÙA VÀ THỎ
-        </h2>
-        <p class="text-xs text-slate-400 mt-0.5">Tổng hợp kết quả thi đấu từng tuần và chung cuộc giữa Đội 1 & Đội 2</p>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-center text-sm border-collapse border border-slate-700/80 whitespace-nowrap">
-          <thead>
-            <tr class="bg-slate-900 text-slate-300 font-bold text-xs uppercase">
-              <th rowspan="2" class="border border-slate-700 p-2.5 w-16">TUẦN</th>
-              <th colspan="2" class="border border-slate-700 p-1.5 bg-emerald-950/40 text-emerald-400">ĐỘI 1</th>
-              <th colspan="2" class="border border-slate-700 p-1.5 bg-amber-950/40 text-amber-400">ĐỘI 2</th>
-              <th rowspan="2" class="border border-slate-700 p-2.5 text-cyan-400 min-w-[110px]">CHÊNH LỆCH</th>
-            </tr>
-            <tr class="bg-slate-900/80 text-slate-400 text-xs font-semibold">
-              <th class="border border-slate-700 p-1.5 min-w-[140px]">DANH HIỆU</th>
-              <th class="border border-slate-700 p-1.5 min-w-[100px]">SỐ KM</th>
-              <th class="border border-slate-700 p-1.5 min-w-[140px]">DANH HIỆU</th>
-              <th class="border border-slate-700 p-1.5 min-w-[100px]">SỐ KM</th>
-            </tr>
-          </thead>
-          <tbody id="team-summary-body" class="divide-y divide-slate-700/50 text-xs sm:text-sm font-medium">
-            <!-- Render từ JS -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 6. BẢNG XẾP HẠNG CÁ NHÂN -->
-    <section class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
-        <div>
-          <h2 class="text-amber-400 font-bold text-base flex items-center gap-2" id="leaderboard-title">🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN 1</h2>
-          
-          <div class="text-xs text-slate-300 mt-1 space-y-1" id="leaderboard-subtitle">
-            <p>• Tối thiểu: Mỗi tuần có <b class="text-amber-400 underline">6 ngày khác nhau</b> có 1 track chạy ≥ 3.000m HOẶC 1 track bơi ≥ 500m</p>
-            <p class="text-slate-400">• Track: Chạy ≥ 1.000m Pace ≤ 12, Bơi ≥ 500m Pace ≤ 6 (không giới hạn số track)</p>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-2.5">
-          <select id="global-filter-team" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
-            <option value="all">Lọc Đội: Tất cả</option>
-            <option value="1">Lọc Đội: Đội 1</option>
-            <option value="2">Lọc Đội: Đội 2</option>
-          </select>
-
-          <select id="global-filter-member" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-amber-300 font-semibold">
-            <option value="all">👤 Lọc Tên: Tất cả</option>
-          </select>
-
-          <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300"></div>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
-          <thead class="bg-slate-900 text-slate-400 uppercase text-xs" id="leaderboard-head"></thead>
-          <tbody id="leaderboard-body" class="divide-y divide-slate-700/50"></tbody>
         </table>
       </div>
     </section>
@@ -435,12 +449,14 @@
       const adminBadge = document.getElementById('admin-badge');
 
       if (isAdmin) {
+        document.body.classList.add('is-admin');
         adminElements.forEach(el => el.classList.remove('hidden'));
         authBtn.innerText = "🔒 Đăng Xuất Admin";
         authBtn.className = "bg-rose-500 hover:bg-rose-400 text-white font-black px-3 py-1 rounded-lg transition-all shadow";
         adminBadge.innerHTML = "👑 Chế độ: <strong>ADMIN BAN TỔ CHỨC</strong>";
         adminBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold px-2.5 py-1 rounded-lg";
       } else {
+        document.body.classList.remove('is-admin');
         adminElements.forEach(el => el.classList.add('hidden'));
         authBtn.innerText = "🔑 Đăng Nhập Admin";
         authBtn.className = "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg transition-all shadow";
@@ -591,7 +607,7 @@
       document.getElementById('submit-btn').className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2.5 rounded-lg text-sm transition-all shadow-lg shadow-amber-500/20";
       document.getElementById('cancel-edit-btn').classList.remove('hidden');
 
-      window.scrollTo({ top: document.getElementById('form-section').offsetTop - 20, behavior: 'smooth' });
+      window.scrollTo({ top: document.getElementById('sec-form').offsetTop - 20, behavior: 'smooth' });
     }
 
     function cancelEdit() {
