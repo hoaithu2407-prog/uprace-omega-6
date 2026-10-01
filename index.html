@@ -15,6 +15,21 @@
     .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
     .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
 
+    /* CẤU HÌNH ICON LỊCH SÁNG VÀ DỄ BẤM */
+    input[type="date"] {
+      color-scheme: dark;
+      cursor: pointer;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1) opacity(0.9);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
     /* THỨ TỰ KHI LÀ ADMIN */
     body.is-admin #sec-compare { order: 1; }
     body.is-admin #sec-form { order: 2; }
@@ -40,7 +55,7 @@
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️️</div>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
         <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
@@ -212,7 +227,7 @@
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Ngày chạy/bơi</label>
-            <input type="date" id="input-date" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100" required />
+            <input type="date" id="input-date" onclick="this.showPicker && this.showPicker()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold" required />
           </div>
 
           <div>
@@ -510,7 +525,6 @@
       filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
         ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
 
-      // Nếu đã có tên lưu gần nhất, tự động đồng bộ lọc danh sách track đã nhập
       if (lastSelectedMember) {
         filterHistoryMember.value = lastSelectedMember;
       }
@@ -524,7 +538,6 @@
         document.getElementById('input-team').value = teamId;
         document.getElementById('input-team-display').value = `Đội ${teamId}`;
         
-        // TỰ ĐỘNG ĐỒNG BỘ LỌC DANH SÁCH TRACK ĐÃ NHẬP BÊN DƯỚI
         const filterHistoryMember = document.getElementById('history-filter-member');
         if (filterHistoryMember) {
           filterHistoryMember.value = selectedOption.value;
@@ -944,13 +957,14 @@
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
       // -------------------------------------------------------------
-      // LOGIC THỎ - RÙA TUẦN
+      // LOGIC THỎ - RÙA TUẦN (PHÂN BIỆT TUẦN ĐANG DiỄN RA VÀ TUẦN ĐÃ KẾT THÚC)
       // -------------------------------------------------------------
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekWinnerTag = document.getElementById('week-winner-tag');
       const weekDiffBadge = document.getElementById('week-diff-badge');
-      const weekTitleText = selectedView === 'cumulative' ? `TẤT CẢ` : `TUẦN ${targetWeek}`;
       const weekSum = weekTeam1 + weekTeam2;
+
+      let isCurrentWeekActive = (selectedView === 'current' || parseInt(selectedView) === currentActualWeek);
 
       let weekP1 = 50, weekP2 = 50;
       if (weekSum > 0) {
@@ -966,18 +980,20 @@
 
       weekDiffBadge.innerText = `⚡ +${formatKmVN(weekDiff)}`;
 
+      const statusPrefix = isCurrentWeekActive ? "TẠM DẪN" : "THẮNG";
+
       if (weekTeam1 > weekTeam2) {
         document.getElementById('week-title-team1').innerHTML = `<span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam2)})</span> <span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 2</span>`;
 
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 THẮNG ${weekTitleText} (Hơn ${formatKmVN(weekDiff)})`;
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 ${statusPrefix} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else if (weekTeam2 > weekTeam1) {
         document.getElementById('week-title-team1').innerHTML = `<span class="text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]">🐢 RÙA: ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam2)})</span> <span class="text-yellow-300 drop-shadow-[0_0_8px_rgba(253,224,71,0.6)]">🐰 THỎ: ĐỘI 2</span>`;
 
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 THẮNG ${weekTitleText} (Hơn ${formatKmVN(weekDiff)})`;
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 ${statusPrefix} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else {
         document.getElementById('week-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam2)})</span> <span>⚖️ ĐỘI 2</span>`;
@@ -990,7 +1006,7 @@
       document.getElementById('week-bar-team2').style.width = `${weekP2}%`;
 
       // -------------------------------------------------------------
-      // LOGIC RENDER BẢNG XẾP HẠNG ĐỘI (RÙA VÀ THỎ TỪNG TUẦN & CHUNG CUỘC)
+      // LOGIC RENDER BẢNG XẾP HẠNG ĐỘI (CHỈ GIỮ BỎ CHỮ VÀ BIỂU TƯỢNG RÙA THỎ Ở TUẦN HIỆN TẠI)
       // -------------------------------------------------------------
       const teamSummaryBody = document.getElementById('team-summary-body');
       let summaryRowsHtml = '';
@@ -1005,7 +1021,6 @@
         let t2KmText = formatKmVN(t2Km);
         let diffText = formatKmVN(diff);
 
-        // Kiểm tra xem tuần nầy đã được chốt (nhập xong) chưa
         const isWeekClosed = ALL_MEMBERS.some(m => !!memberWeekCompleted[`${m.name}_Week${w}`]);
 
         if (w > currentActualWeek && t1Km === 0 && t2Km === 0) {
@@ -1015,14 +1030,9 @@
           t2KmText = '<span class="text-slate-600 italic">—</span>';
           diffText = '<span class="text-slate-600 italic">—</span>';
         } else if (!isWeekClosed && w >= currentActualWeek) {
-          // Tuần đang diễn ra (chưa chốt) -> Căn cứ vào Đội dẫn đầu Lũy tiến tạm thời
-          if (cumTeam1 >= cumTeam2) {
-            t1Title = '<span class="text-yellow-300 font-bold animate-pulse">🐰 không ngơi nghỉ 🏃💨</span>';
-            t2Title = '<span class="text-emerald-400 font-bold animate-pulse">🐢 đang bứt tốc 🏃💨</span>';
-          } else {
-            t1Title = '<span class="text-emerald-400 font-bold animate-pulse">🐢 đang bứt tốc 🏃💨</span>';
-            t2Title = '<span class="text-yellow-300 font-bold animate-pulse">🐰 không ngơi nghỉ 🏃💨</span>';
-          }
+          // TUẦN ĐANG DiỄN RA: BỎ BỎ BIỂU TƯỢNG RÙA / THỎ VÀ CHỮ, CHỈ ĐỂ ĐANG CHẠY / BƠI VÀ XÌ KHÓI
+          t1Title = '<span class="text-emerald-400 font-bold animate-pulse">🏃‍♂️💨 🏊‍♂️💨</span>';
+          t2Title = '<span class="text-amber-400 font-bold animate-pulse">🏃‍♂️💨 🏊‍♂️💨</span>';
         } else if (t1Km === 0 && t2Km === 0) {
           t1Title = '<span class="text-slate-500 italic">Chưa có dữ liệu</span>';
           t2Title = '<span class="text-slate-500 italic">Chưa có dữ liệu</span>';
@@ -1030,7 +1040,7 @@
           t2KmText = '<span class="text-slate-500 italic">0,00 km</span>';
           diffText = '<span class="text-slate-500 italic">0,00 km</span>';
         } else {
-          // Tuần đã được chốt xong -> Hiển thị Thỏ & Rùa chính thức
+          // TUẦN ĐÃ KẾT THÚC CHÍNH THỨC: HIỂN THỊ DANH HIỆU THỎ & RÙA
           if (t1Km > t2Km) {
             t1Title = '<span class="text-yellow-300 font-bold">🐰 Thỏ</span>';
             t2Title = '<span class="text-emerald-400 font-bold">🐢 Rùa</span>';
@@ -1285,7 +1295,7 @@
                     ${t.teamId}
                   </span>
                 </td>
-                <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
+                <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️️ Bơi' : '🏃‍♀️ Chạy'}</td>
                 <td class="p-3">${formattedDistance} m</td>
                 <td class="p-3">${t.pace}</td>
                 <td class="p-3 font-bold text-cyan-400">${formattedConverted}</td>
