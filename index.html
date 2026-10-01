@@ -40,7 +40,7 @@
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️️</div>
         <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
@@ -509,6 +509,11 @@
       const filterHistoryMember = document.getElementById('history-filter-member');
       filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
         ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
+
+      // Nếu đã có tên lưu gần nhất, tự động đồng bộ lọc danh sách track đã nhập
+      if (lastSelectedMember) {
+        filterHistoryMember.value = lastSelectedMember;
+      }
     }
 
     function updateTeamFromMember() {
@@ -518,10 +523,22 @@
         const teamId = selectedOption.getAttribute('data-team');
         document.getElementById('input-team').value = teamId;
         document.getElementById('input-team-display').value = `Đội ${teamId}`;
+        
+        // TỰ ĐỘNG ĐỒNG BỘ LỌC DANH SÁCH TRACK ĐÃ NHẬP BÊN DƯỚI
+        const filterHistoryMember = document.getElementById('history-filter-member');
+        if (filterHistoryMember) {
+          filterHistoryMember.value = selectedOption.value;
+        }
       } else {
         document.getElementById('input-team').value = '';
         document.getElementById('input-team-display').value = '';
+
+        const filterHistoryMember = document.getElementById('history-filter-member');
+        if (filterHistoryMember) {
+          filterHistoryMember.value = 'all';
+        }
       }
+      render();
     }
 
     document.getElementById('input-member').addEventListener('change', updateTeamFromMember);
@@ -547,6 +564,8 @@
       localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
       if (lastSelectedMember) {
         localStorage.setItem('uprace_last_selected_member', lastSelectedMember);
+      } else {
+        localStorage.removeItem('uprace_last_selected_member');
       }
     }
 
@@ -623,11 +642,8 @@
       editingId = null;
       document.getElementById('track-form').reset();
       
-      if (lastSelectedMember) {
-        document.getElementById('input-member').value = lastSelectedMember;
-      } else {
-        document.getElementById('input-member').value = '';
-      }
+      lastSelectedMember = null;
+      document.getElementById('input-member').value = '';
       
       document.getElementById('input-date').valueAsDate = new Date();
       document.getElementById('input-is-suspicious').checked = false;
@@ -921,7 +937,7 @@
         document.getElementById('cum-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(cumTeam2)})</span> <span>⚖️ ĐỘI 2</span>`;
 
         cumWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
-        cumWinnerTag.innerHTML = `⚖️️ TỶ SỐ HÒA NHAU`;
+        cumWinnerTag.innerHTML = `⚖ TỶ SỐ HÒA NHAU`;
       }
 
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
