@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- THƯ VIỆN SUPABASE REALTIME -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,19 +16,8 @@
     .banner-title-yellow { color: #facc15; text-shadow: 3px 3px 0 #1e3a8a, -3px -3px 0 #1e3a8a, 3px -3px 0 #1e3a8a, -3px 3px 0 #1e3a8a; }
     .slogan-font { font-family: 'Pangolin', 'Fredoka', cursive, sans-serif; }
 
-    input[type="date"] {
-      color-scheme: dark;
-      cursor: pointer;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(1) opacity(0.9);
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 4px;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+    input[type="date"] { color-scheme: dark; cursor: pointer; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacity(0.9); cursor: pointer; padding: 4px; border-radius: 4px; }
 
     body.is-admin #sec-compare { order: 1; }
     body.is-admin #sec-form { order: 2; }
@@ -98,7 +86,7 @@
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Đang tải dữ liệu...</strong> <span class="text-slate-400 italic">(Đợi cảnh sát Thu Lê cập nhật thêm khi rảnh nhé)</span></span>
     </div>
 
-    <!-- BẢNG SO SÁNH TỔNG QUAN -->
+    <!-- BẢNG SO SÁNH -->
     <section id="sec-compare" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       <div>
         <div class="flex justify-between items-center mb-1">
@@ -172,7 +160,7 @@
       </div>
     </section>
 
-    <!-- FORM NHẬP TRACK (CHỈ ADMIN) -->
+    <!-- FORM NHẬP TRACK -->
     <section id="sec-form" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK MỚI</h2>
@@ -296,7 +284,6 @@
   </main>
 
   <script>
-    // 🟢 ĐÃ ĐIỀN CHUẨN XÁC 100% CỦA CHỊ:
     const SUPABASE_URL = 'https://zcsxvruunhdewuceahfm.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpjc3h2cnV1bmhkZXd1Y2VhaGZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4ODI3NjgsImV4cCI6MjEwNjQ1ODc2OH0.eXtey9Ow-IxpahCpol3VS9V0sdHyOBOAdVM-Ql2LuaY';
 
@@ -334,10 +321,34 @@
       return weekNum > 8 ? 8 : weekNum;
     }
 
-    const currentActualWeek = calculateWeekNumber(new Date().toISOString().split('T')[0]);
+    // ĐỒNG BỘ TỰ ĐỘNG TRACK CŨ TRÊN MÁY LÊN SUPABASE
+    async function syncLocalTracksToSupabase() {
+      const localTracks = JSON.parse(localStorage.getItem('uprace_tracks')) || [];
+      if (localTracks.length > 0) {
+        const payload = localTracks.map(t => ({
+          id: t.id || Date.now(),
+          date: t.date,
+          team_id: t.teamId,
+          member: t.member,
+          type: t.type,
+          distance: t.distance,
+          pace: t.pace,
+          week: t.week || calculateWeekNumber(t.date),
+          is_suspicious: !!t.isSuspicious,
+          note: t.note || '',
+          is_approved: t.isApproved !== undefined ? t.isApproved : true
+        }));
 
-    // LẤY DỮ LIỆU CƠ SỞ DỮ LIỆU SUPABASE
+        const { error } = await supabaseClient.from('tracks').upsert(payload);
+        if (!error) {
+          localStorage.removeItem('uprace_tracks'); // Đã tải lên Supabase thành công!
+        }
+      }
+    }
+
     async function fetchTracksFromSupabase() {
+      await syncLocalTracksToSupabase();
+
       const { data, error } = await supabaseClient.from('tracks').select('*').order('id', { ascending: false });
       if (error) {
         console.error("Lỗi lấy dữ liệu:", error);
@@ -360,7 +371,6 @@
       }
     }
 
-    // TỰ ĐỘNG LẮNG NGHE ĐỒNG BỘ REALTIME
     supabaseClient.channel('tracks_realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tracks' }, () => {
         fetchTracksFromSupabase();
