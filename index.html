@@ -53,7 +53,7 @@
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️️</div>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
         <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
@@ -227,7 +227,7 @@
             <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">⚡ MÔN THI ĐẤU</label>
             <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg px-2 py-2.5 text-xs sm:text-sm font-black shadow-lg cursor-pointer">
               <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
-              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️️ BƠI (≥500m)</option>
+              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
             </select>
           </div>
 
@@ -328,7 +328,12 @@
             <option value="all">👤 Lọc Tên: Tất cả</option>
           </select>
 
-          <div id="week-mode-badge" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-300"></div>
+          <!-- BỔ SUNG BỘ LỌC HOÀN THÀNH / CHƯA HOÀN THÀNH -->
+          <select id="global-filter-completion" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-emerald-400 font-semibold">
+            <option value="all">🎯 Lọc Trạng Thái: Tất cả</option>
+            <option value="completed">✅ Đã hoàn thành</option>
+            <option value="incomplete">❌ Chưa hoàn thành</option>
+          </select>
         </div>
       </div>
 
@@ -686,7 +691,7 @@
       document.getElementById('input-is-suspicious').checked = !!track.isSuspicious;
       document.getElementById('input-note').value = track.note || '';
 
-      document.getElementById('form-title').innerText = "✏️️ CHỈNH SỬA TRACK";
+      document.getElementById('form-title').innerText = "✏ CHỈNH SỬA TRACK";
       document.getElementById('submit-btn').innerText = "Cập Nhật Track";
       document.getElementById('cancel-edit-btn').classList.remove('hidden');
 
@@ -793,6 +798,7 @@
     document.getElementById('header-select-week').addEventListener('change', render);
     document.getElementById('global-filter-team').addEventListener('change', render);
     document.getElementById('global-filter-member').addEventListener('change', render);
+    document.getElementById('global-filter-completion').addEventListener('change', render);
     document.getElementById('history-filter-team').addEventListener('change', render);
     document.getElementById('history-filter-member').addEventListener('change', render);
     document.getElementById('history-filter-status').addEventListener('change', render);
@@ -805,27 +811,15 @@
       const selectedView = document.getElementById('header-select-week').value;
       const filterTeamVal = document.getElementById('global-filter-team').value;
       const filterMemberVal = document.getElementById('global-filter-member').value;
+      const filterCompletionVal = document.getElementById('global-filter-completion').value;
 
       let isCumulativeView = (selectedView === 'cumulative');
       let targetWeek = isCumulativeView ? currentActualWeek : (selectedView === 'current' ? currentActualWeek : parseInt(selectedView));
 
       if (isCumulativeView) {
         document.getElementById('leaderboard-title').innerText = "📈 BẢNG XẾP HẠNG CÁ NHÂN - TỔNG LŨY TIẾN MÙA GIẢI";
-        const t1KMList = khoMao[1].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
-        const t2KMList = khoMao[2].sort().map(w => `Tuần ${w}`).join(', ') || 'Chưa dùng';
-        document.getElementById('week-mode-badge').innerHTML = `
-          <span>🔥 Tuần Khô Máo:</span>
-          <span class="text-amber-400 font-bold">Đội 1 (${t1KMList})</span> • 
-          <span class="text-amber-400 font-bold">Đội 2 (${t2KMList})</span>
-        `;
       } else {
         document.getElementById('leaderboard-title').innerText = `🏆 BẢNG XẾP HẠNG CÁ NHÂN - TUẦN ${targetWeek}`;
-        const t1KM = khoMao[1].includes(targetWeek);
-        const t2KM = khoMao[2].includes(targetWeek);
-        document.getElementById('week-mode-badge').innerHTML = `
-          <span>Đội 1: <strong class="${t1KM ? 'text-amber-400' : 'text-slate-300'}">${t1KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'}</strong></span> • 
-          <span>Đội 2: <strong class="${t2KM ? 'text-amber-400' : 'text-slate-300'}">${t2KM ? '🔥 Khô máu' : '🧘 Dưỡng sức'}</strong></span>
-        `;
       }
 
       const memberStats = {};
@@ -976,7 +970,7 @@
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
         weekWinnerTag.innerHTML = `🎉 ĐỘI 2 ${statusPrefix} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else {
-        document.getElementById('week-title-team1').innerHTML = `<span>⚖️️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
+        document.getElementById('week-title-team1').innerHTML = `<span>⚖ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam2)})</span> <span>⚖️ ĐỘI 2</span>`;
         weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
         weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
@@ -1074,7 +1068,28 @@
       const filteredMembers = memberList.filter(m => {
         const matchTeam = (filterTeamVal === 'all' || m.teamId === parseInt(filterTeamVal));
         const matchMember = (filterMemberVal === 'all' || m.name === filterMemberVal);
-        return matchTeam && matchMember;
+
+        // ÁP DỤNG BỘ LỌC HOÀN THÀNH / CHƯA HOÀN THÀNH
+        let matchCompletion = true;
+        if (filterCompletionVal !== 'all') {
+          const weekDaysData = m.dailyTracksMap[targetWeek] || {};
+          let validDaysCount = 0;
+          Object.keys(weekDaysData).forEach(dateStr => {
+            const dayTracks = weekDaysData[dateStr];
+            const hasSingleValidTrack = dayTracks.some(t => {
+              const isPaceValid = (t.type === 'swim' && t.pace <= 6.0) || (t.type === 'run' && t.pace <= 12.0);
+              if (!isPaceValid) return false;
+              return (t.type === 'run' && t.distance >= 3000) || (t.type === 'swim' && t.distance >= 500);
+            });
+            if (hasSingleValidTrack) validDaysCount += 1;
+          });
+
+          const isCompleted = (validDaysCount >= 6);
+          if (filterCompletionVal === 'completed') matchCompletion = isCompleted;
+          if (filterCompletionVal === 'incomplete') matchCompletion = !isCompleted;
+        }
+
+        return matchTeam && matchMember && matchCompletion;
       });
 
       const headContainer = document.getElementById('leaderboard-head');
@@ -1088,6 +1103,7 @@
             <th class="p-3">Bơi</th>
             <th class="p-3 text-cyan-400 font-black">Quy đổi</th>
             <th class="p-3 text-center">Số Track</th>
+            <th class="p-3 text-right text-rose-400 font-bold">Tổng Phạt</th>
           </tr>
         `;
       } else {
@@ -1113,22 +1129,52 @@
       if (isCumulativeView) {
         const sorted = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
         bodyContainer.innerHTML = sorted.length === 0 
-          ? `<tr><td colspan="7" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
-          : sorted.map((m, idx) => `
-            <tr class="hover:bg-slate-700/30">
-              <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
-              <td class="p-3 font-bold text-slate-100">${m.name}</td>
-              <td class="p-3 text-center">
-                <span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                  ${m.teamId}
-                </span>
-              </td>
-              <td class="p-3">${formatKmVN(m.cumRunKm)}</td>
-              <td class="p-3">${formatKmVN(m.cumSwimKm)}</td>
-              <td class="p-3 font-extrabold text-cyan-400 text-base">${formatKmVN(m.cumConvertedKm)}</td>
-              <td class="p-3 text-center text-slate-400 font-semibold">${m.cumTracksCount}</td>
-            </tr>
-          `).join('');
+          ? `<tr><td colspan="8" class="p-4 text-center text-slate-500 italic">Không tìm thấy thành viên phù hợp.</td></tr>`
+          : sorted.map((m, idx) => {
+            /* TÍNH TỔNG TIỀN PHẠT QUA TẤT CẢ CÁC TUẦN CỦA THÀNH VIÊN */
+            let totalPenalty = 0;
+            for (let w = 1; w <= currentActualWeek; w++) {
+              const weekKey = `${m.name}_Week${w}`;
+              const isEntered = !!memberWeekCompleted[weekKey];
+              if (isEntered) {
+                const weekDaysData = m.dailyTracksMap[w] || {};
+                let validDays = 0;
+                Object.keys(weekDaysData).forEach(dateStr => {
+                  const dayTracks = weekDaysData[dateStr];
+                  const hasSingleValidTrack = dayTracks.some(t => {
+                    const isPaceValid = (t.type === 'swim' && t.pace <= 6.0) || (t.type === 'run' && t.pace <= 12.0);
+                    if (!isPaceValid) return false;
+                    return (t.type === 'run' && t.distance >= 3000) || (t.type === 'swim' && t.distance >= 500);
+                  });
+                  if (hasSingleValidTrack) validDays += 1;
+                });
+                if (validDays < 6) {
+                  totalPenalty += (6 - validDays) * 50000;
+                }
+              }
+            }
+
+            return `
+              <tr class="hover:bg-slate-700/30">
+                <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
+                <td class="p-3 font-bold text-slate-100">${m.name}</td>
+                <td class="p-3 text-center">
+                  <span class="inline-block px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
+                    ${m.teamId}
+                  </span>
+                </td>
+                <td class="p-3">${formatKmVN(m.cumRunKm)}</td>
+                <td class="p-3">${formatKmVN(m.cumSwimKm)}</td>
+                <td class="p-3 font-extrabold text-cyan-400 text-base">${formatKmVN(m.cumConvertedKm)}</td>
+                <td class="p-3 text-center text-slate-400 font-semibold">${m.cumTracksCount}</td>
+                <td class="p-3 text-right">
+                  <span class="${totalPenalty > 0 ? 'text-rose-400 font-bold' : 'text-emerald-400 font-semibold'}">
+                    ${totalPenalty > 0 ? totalPenalty.toLocaleString('vi-VN') + ' đ' : '0 đ'}
+                  </span>
+                </td>
+              </tr>
+            `;
+          }).join('');
       } else {
         const sorted = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
         bodyContainer.innerHTML = sorted.length === 0
@@ -1140,7 +1186,6 @@
             const weekDaysData = m.dailyTracksMap[targetWeek] || {};
             let validDaysCount = 0;
 
-            /* XÉT ĐIỀU KIỆN TÍNH NGÀY: PHẢI CÓ ÍT NHẤT 1 TRACK ĐẠT MIN (CHẠY >= 3000M HOẶC BƠI >= 500M) */
             Object.keys(weekDaysData).forEach(dateStr => {
               const dayTracks = weekDaysData[dateStr];
               
