@@ -53,7 +53,7 @@
 
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
-        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
+        <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️️</div>
         <span class="mt-2 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Chạy Hết Sức</span>
       </div>
 
@@ -227,7 +227,7 @@
             <label class="block text-xs font-black text-amber-300 mb-1 flex items-center gap-1">⚡ MÔN THI ĐẤU</label>
             <select id="input-type" class="w-full bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 border-2 border-amber-300 rounded-lg px-2 py-2.5 text-xs sm:text-sm font-black shadow-lg cursor-pointer">
               <option value="run" class="bg-slate-900 text-slate-100 font-bold">🏃‍♀️ CHẠY (≥1000m)</option>
-              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️ BƠI (≥500m)</option>
+              <option value="swim" class="bg-slate-900 text-slate-100 font-bold">🏊‍♂️️ BƠI (≥500m)</option>
             </select>
           </div>
 
@@ -424,7 +424,6 @@
       return dateStr;
     }
 
-    /* HIỂN THỊ THÔNG BÁO HỆ THỐNG CỦA ADMIN */
     function showAlert(msg, isSuccess = true) {
       const alertEl = document.getElementById('form-alert');
       if (!alertEl) return;
@@ -437,7 +436,6 @@
       }, 4000);
     }
 
-    /* ĐỊNH DẠNG THỜI GIAN NHẬP TRACK CỦA ADMIN DẠNG: 10:07 - Ngày 02/10/2026 */
     function formatFullDateTimeVN(isoOrDateStr) {
       if (!isoOrDateStr) return null;
       const d = new Date(isoOrDateStr);
@@ -547,7 +545,6 @@
         document.getElementById('input-team').value = teamId;
         document.getElementById('input-team-display').value = `Đội ${teamId}`;
 
-        /* TỰ ĐỘNG ĐỒNG BỘ SANG BỘ LỌC DANH SÁCH TRACK ĐÃ NHẬP */
         const filterHistoryMember = document.getElementById('history-filter-member');
         if (filterHistoryMember) {
           filterHistoryMember.value = mName;
@@ -581,7 +578,6 @@
           createdAt: item.created_at
         }));
 
-        /* LẤY MỐC THỜI GIAN NHẬP TRACK MỚI NHẤT CỦA ADMIN */
         if (data && data.length > 0) {
           const latestTrack = data[0];
           if (latestTrack.created_at) {
@@ -690,7 +686,7 @@
       document.getElementById('input-is-suspicious').checked = !!track.isSuspicious;
       document.getElementById('input-note').value = track.note || '';
 
-      document.getElementById('form-title').innerText = "✏️ CHỈNH SỬA TRACK";
+      document.getElementById('form-title').innerText = "✏️️ CHỈNH SỬA TRACK";
       document.getElementById('submit-btn').innerText = "Cập Nhật Track";
       document.getElementById('cancel-edit-btn').classList.remove('hidden');
 
@@ -739,6 +735,38 @@
       let isSuspicious = document.getElementById('input-is-suspicious').checked;
       let note = document.getElementById('input-note').value.trim();
 
+      /* BỘ QUY TẮC KIỂM TRA PACE TỰ ĐỘNG & CẢNH BÁO */
+      let paceWarningMsg = '';
+      if (type === 'swim') {
+        if (pace > 6.0) {
+          paceWarningMsg = `⚠️ Môn BƠI có Pace = ${pace} (> 6.0).\nChị có chắc chắn muốn ghi nhận không?`;
+        } else if (pace < 1.0) {
+          paceWarningMsg = `⚠️ Môn BƠI có Pace = ${pace} (< 1.0).\nChị có chắc chắn muốn ghi nhận không?`;
+        }
+      } else if (type === 'run') {
+        if (pace < 5.0) {
+          paceWarningMsg = `⚠️ Môn CHẠY có Pace = ${pace} (< 5.0).\nChị có chắc chắn muốn ghi nhận không?`;
+        }
+      }
+
+      if (paceWarningMsg !== '') {
+        const confirmResult = confirm(paceWarningMsg);
+        if (!confirmResult) {
+          return;
+        }
+        isSuspicious = true;
+        document.getElementById('input-is-suspicious').checked = true;
+        if (!note) {
+          note = `Pace ${pace} bất thường (${type === 'swim' ? 'bơi' : 'chạy'})`;
+        }
+      }
+
+      const isPaceValidByRule = (type === 'swim' && pace <= 6.0) || (type === 'run' && pace <= 12.0);
+      if (!isPaceValidByRule && !isSuspicious) {
+        isSuspicious = true;
+        document.getElementById('input-is-suspicious').checked = true;
+      }
+
       const week = calculateWeekNumber(date);
       const trackPayload = {
         id: editingId ? editingId : Date.now(),
@@ -772,7 +800,6 @@
     function render() {
       renderKhoMaoButtons();
 
-      /* HIỂN THỊ CẬP NHẬT MỚI NHẤT */
       document.getElementById('last-updated-time').innerText = lastUpdatedFormatted ? lastUpdatedFormatted : "Chưa có track được ghi nhận";
 
       const selectedView = document.getElementById('header-select-week').value;
@@ -814,7 +841,8 @@
       });
 
       tracks.forEach(t => {
-        if (t.isSuspicious && !t.isApproved) return;
+        const isPaceValid = (t.type === 'swim' && t.pace <= 6.0) || (t.type === 'run' && t.pace <= 12.0);
+        if ((t.isSuspicious && !t.isApproved) || !isPaceValid) return;
 
         const m = memberStats[t.member];
         if (!m) return;
@@ -948,7 +976,7 @@
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full shadow-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
         weekWinnerTag.innerHTML = `🎉 ĐỘI 2 ${statusPrefix} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else {
-        document.getElementById('week-title-team1').innerHTML = `<span>⚖️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
+        document.getElementById('week-title-team1').innerHTML = `<span>⚖️️ ĐỘI 1</span> <span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam1)})</span>`;
         document.getElementById('week-title-team2').innerHTML = `<span class="text-xs font-semibold text-slate-300">(${formatKmVN(weekTeam2)})</span> <span>⚖️ ĐỘI 2</span>`;
         weekWinnerTag.className = "text-xs font-black mt-1 px-2.5 py-0.5 rounded-md shadow bg-slate-700 text-slate-300";
         weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
@@ -1112,17 +1140,20 @@
             const weekDaysData = m.dailyTracksMap[targetWeek] || {};
             let validDaysCount = 0;
 
+            /* XÉT ĐIỀU KIỆN TÍNH NGÀY: PHẢI CÓ ÍT NHẤT 1 TRACK ĐẠT MIN (CHẠY >= 3000M HOẶC BƠI >= 500M) */
             Object.keys(weekDaysData).forEach(dateStr => {
               const dayTracks = weekDaysData[dateStr];
-              let totalRunInDay = 0;
-              let hasSwimValid = false;
+              
+              const hasSingleValidTrack = dayTracks.some(t => {
+                const isPaceValid = (t.type === 'swim' && t.pace <= 6.0) || (t.type === 'run' && t.pace <= 12.0);
+                if (!isPaceValid) return false;
 
-              dayTracks.forEach(t => {
-                if (t.type === 'run') totalRunInDay += t.distance;
-                if (t.type === 'swim' && t.distance >= 500) hasSwimValid = true;
+                if (t.type === 'run' && t.distance >= 3000) return true;
+                if (t.type === 'swim' && t.distance >= 500) return true;
+                return false;
               });
 
-              if (hasSwimValid || totalRunInDay >= 3000) {
+              if (hasSingleValidTrack) {
                 validDaysCount += 1;
               }
             });
@@ -1217,6 +1248,8 @@
             const formattedDistance = t.distance.toLocaleString('vi-VN');
             const formattedConverted = formatKmVN(converted);
 
+            const isPaceValid = (t.type === 'swim' && t.pace <= 6.0) || (t.type === 'run' && t.pace <= 12.0);
+
             let statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Track hợp lệ</span>`;
             if (isSuspicious) {
               statusHtml = `
@@ -1224,6 +1257,8 @@
                   ⚠️ Cần duyệt (Bấm để duyệt)
                 </button>
               `;
+            } else if (!isPaceValid) {
+              statusHtml = `<span class="text-rose-400 text-xs font-bold" title="Pace vượt quá giới hạn quy định">❌ Không tính km (Pace phạm quy)</span>`;
             } else if (t.isApproved && t.note) {
               statusHtml = `<span class="text-cyan-400 text-xs font-semibold">✅ Đã duyệt</span>`;
             }
@@ -1243,7 +1278,7 @@
                 </td>
                 <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
                 <td class="p-3">${formattedDistance} m</td>
-                <td class="p-3">${t.pace}</td>
+                <td class="p-3 font-semibold ${!isPaceValid ? 'text-rose-400 font-bold' : ''}">${t.pace}</td>
                 <td class="p-3 font-bold text-cyan-400">${formattedConverted}</td>
                 <td class="p-3 text-center">
                   ${statusHtml}
