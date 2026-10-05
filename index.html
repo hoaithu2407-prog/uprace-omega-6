@@ -257,6 +257,9 @@
             <input type="text" id="input-note" placeholder="VD: Thiếu hình chụp Strava..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100" />
           </div>
         </div>
+
+        <!-- THÔNG BÁO HỆ THỐNG SAU KHI NHẬP TRACK -->
+        <div id="form-alert" class="hidden p-3 rounded-xl text-xs font-bold transition-all shadow-md mt-2"></div>
       </form>
     </section>
 
@@ -421,6 +424,19 @@
       return dateStr;
     }
 
+    /* HIỂN THỊ THÔNG BÁO HỆ THỐNG CỦA ADMIN */
+    function showAlert(msg, isSuccess = true) {
+      const alertEl = document.getElementById('form-alert');
+      if (!alertEl) return;
+      alertEl.className = `p-3 rounded-xl text-xs font-bold transition-all shadow-md mt-2 ${isSuccess ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'}`;
+      alertEl.innerText = msg;
+      alertEl.classList.remove('hidden');
+
+      setTimeout(() => {
+        alertEl.classList.add('hidden');
+      }, 4000);
+    }
+
     /* ĐỊNH DẠNG THỜI GIAN NHẬP TRACK CỦA ADMIN DẠNG: 10:07 - Ngày 02/10/2026 */
     function formatFullDateTimeVN(isoOrDateStr) {
       if (!isoOrDateStr) return null;
@@ -510,7 +526,6 @@
       ).join('');
 
       if (lastSelectedMember) selectMember.value = lastSelectedMember;
-      updateTeamFromMember();
 
       const filterBoardMember = document.getElementById('global-filter-member');
       filterBoardMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
@@ -520,16 +535,23 @@
       filterHistoryMember.innerHTML = `<option value="all">👤 Lọc Tên: Tất cả</option>` + 
         ALL_MEMBERS.map(m => `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`).join('');
 
-      if (lastSelectedMember) filterHistoryMember.value = lastSelectedMember;
+      updateTeamFromMember();
     }
 
     function updateTeamFromMember() {
       const selectMember = document.getElementById('input-member');
       const selectedOption = selectMember.options[selectMember.selectedIndex];
       if (selectedOption && selectedOption.value) {
+        const mName = selectedOption.value;
         const teamId = selectedOption.getAttribute('data-team');
         document.getElementById('input-team').value = teamId;
         document.getElementById('input-team-display').value = `Đội ${teamId}`;
+
+        /* TỰ ĐỘNG ĐỒNG BỘ SANG BỘ LỌC DANH SÁCH TRACK ĐÃ NHẬP */
+        const filterHistoryMember = document.getElementById('history-filter-member');
+        if (filterHistoryMember) {
+          filterHistoryMember.value = mName;
+        }
       } else {
         document.getElementById('input-team').value = '';
         document.getElementById('input-team-display').value = '';
@@ -605,6 +627,7 @@
     async function deleteTrackFromSupabase(id) {
       if (confirm("Bạn có chắc chắn muốn xóa track này khỏi hệ thống online?")) {
         await supabaseClient.from('tracks').delete().eq('id', id);
+        showAlert("🗑️ Đã xóa track thành công!", true);
         fetchTracksFromSupabase();
       }
     }
@@ -647,6 +670,7 @@
         track.isSuspicious = false;
         track.isApproved = true;
         await saveTrackToSupabase(track);
+        showAlert(`✅ Đã duyệt track cho ${track.member}!`, true);
         fetchTracksFromSupabase();
       }
     }
@@ -704,6 +728,7 @@
       const member = document.getElementById('input-member').value;
       if (!member) return;
 
+      const isEditMode = !!editingId;
       lastSelectedMember = member;
 
       const date = document.getElementById('input-date').value;
@@ -725,6 +750,8 @@
 
       await saveTrackToSupabase(trackPayload);
       
+      showAlert(isEditMode ? `✏️ Đã cập nhật track thành công cho ${member}!` : `✅ Đã ghi nhận track thành công cho ${member}!`, true);
+
       document.getElementById('input-distance').value = '';
       document.getElementById('input-pace').value = '';
       document.getElementById('input-is-suspicious').checked = false;
