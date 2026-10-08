@@ -40,9 +40,6 @@
 
   <header class="relative w-full overflow-hidden bg-gradient-to-b from-sky-400 via-cyan-300 to-blue-600 pt-8 pb-12 shadow-2xl border-b-4 border-cyan-400">
     <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_2px,transparent_2px)] [background-size:16px_16px]"></div>
-    <div class="absolute -top-12 -left-12 w-40 h-40 bg-emerald-300 rounded-full blur-3xl opacity-50"></div>
-    <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-yellow-300 rounded-full blur-3xl opacity-40"></div>
-
     <div class="max-w-5xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
       <div class="hidden lg:flex flex-col items-center transform -rotate-3 hover:scale-105 transition-transform duration-300">
         <div class="w-28 h-28 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-5xl">🏃‍♀️</div>
@@ -68,10 +65,6 @@
         <div class="bg-yellow-300 text-slate-900 p-3 rounded-2xl border-2 border-amber-400 shadow-lg transform rotate-3 max-w-[200px] text-center">
           <p class="slogan-font font-bold text-sm sm:text-base leading-snug text-slate-900">"Khỏe là chính<br/>Hơn thua là mười! 😊"</p>
         </div>
-        <div class="hidden lg:flex flex-col items-center transform rotate-3 hover:scale-105 transition-transform duration-300">
-          <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full border-4 border-white flex items-center justify-center shadow-lg text-4xl">🏊‍♂️</div>
-          <span class="mt-1 bg-blue-900/80 text-white font-bold text-xs px-3 py-1 rounded-full shadow border border-cyan-300">Bơi Hết Ga</span>
-        </div>
       </div>
     </div>
   </header>
@@ -87,7 +80,7 @@
     <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
     <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Chưa có dữ liệu track</strong></span>
+      <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Đang tải...</strong></span>
     </div>
 
     <!-- THANH SONG ĐẤU THỎ VÀ RÙA -->
@@ -185,14 +178,13 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     <section id="sec-form" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK ĐƠN LẺ (THỦ CÔNG)</h2>
-        <button id="cancel-edit-btn" onclick="cancelEdit()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-lg">❌ Hủy Sửa</button>
       </div>
 
-      <form id="track-form" class="space-y-4">
+      <form id="track-form" onsubmit="handleManualSubmit(event)" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
           <div>
             <label class="block text-xs text-slate-400 mb-1">Thành viên</label>
-            <select id="input-member" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold" required></select>
+            <select id="input-member" onchange="autoFillTeam()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-100 font-semibold" required></select>
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Đội</label>
@@ -318,266 +310,4 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     </section>
 
     <!-- DANH SÁCH TRACK ĐÃ NHẬP -->
-    <section id="sec-history" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-        <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
-        
-        <div class="flex flex-wrap items-center gap-2">
-          <select id="history-filter-team" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1 text-xs text-slate-200">
-            <option value="all">Lọc Đội: Tất cả</option>
-            <option value="1">Đội 1</option>
-            <option value="2">Đội 2</option>
-          </select>
-          <select id="history-filter-member" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1 text-xs text-amber-300 font-semibold">
-            <option value="all">👤 Lọc Tên: Tất cả</option>
-          </select>
-          <select id="history-filter-status" class="bg-slate-900 border border-amber-500/60 rounded-xl px-3 py-1 text-xs text-amber-300 font-bold shadow">
-            <option value="all">Trạng thái: Tất cả</option>
-            <option value="pending">⚠️ Chỉ track Cần lưu ý / Chưa duyệt</option>
-            <option value="approved">✅ Track hợp lệ / Đã duyệt</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-300 whitespace-nowrap">
-          <thead class="bg-slate-900 text-slate-400 uppercase text-xs">
-            <tr>
-              <th class="p-3">Ngày</th>
-              <th class="p-3">Tuần</th>
-              <th class="p-3">Thành viên</th>
-              <th class="p-3 text-center">Đội</th>
-              <th class="p-3">Môn</th>
-              <th class="p-3">Quãng đường</th>
-              <th class="p-3">Pace</th>
-              <th class="p-3">Quy đổi</th>
-              <th class="p-3 text-center">Xác nhận Track</th>
-              <th class="p-3 text-center admin-only hidden">Hành động</th>
-            </tr>
-          </thead>
-          <tbody id="history-body" class="divide-y divide-slate-700/50"></tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    const SUPABASE_URL = 'https://zcsxvruunhdewuceahfm.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpjc3h2cnV1bmhkZXd1Y2VhaGZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4ODI3NjgsImV4cCI6MjEwNjQ1ODc2OH0.eXtey9Ow-IxpahCpol3VS9V0sdHyOBOAdVM-Ql2LuaY';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const ADMIN_PIN = "123456";
-    let isAdmin = false;
-
-    const MEMBERS = {
-      1: ["Thanh Nhã", "Huỳnh Tuấn", "Tùng Trần", "Nguyễn Quân", "Lợi Cao", "Lê Hà", "Hà Trần", "An Đào", "Mỹ Linh", "Văn Lê"],
-      2: ["Lê Lợi", "Danh Nguyễn", "Khánh Hòa", "Lê Thương", "Hưng Nguyễn", "Vũ Hậu", "Tùng Tiger", "Quỳnh Anh", "Bảo Việt", "Trâm Lê"]
-    };
-
-    const ALL_MEMBERS = [];
-    Object.keys(MEMBERS).forEach(tId => {
-      MEMBERS[tId].forEach(name => ALL_MEMBERS.push({ name, teamId: parseInt(tId) }));
-    });
-
-    const MEMBERS_MAP = {};
-    ALL_MEMBERS.forEach(m => MEMBERS_MAP[m.name] = m.teamId);
-
-    const START_DATE = new Date('2026-09-21');
-    let tracks = [];
-    let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
-    let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
-    let lastUpdatedFormatted = null;
-
-    function formatDateVN(dateStr) {
-      if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateStr;
-    }
-
-    function formatKmVN(val) {
-      if (val === undefined || val === null || isNaN(val)) return '0,00 km';
-      return val.toFixed(2).replace('.', ',') + ' km';
-    }
-
-    function formatFullDateTimeVN(isoOrDateStr) {
-      if (!isoOrDateStr) return null;
-      const d = new Date(isoOrDateStr);
-      if (isNaN(d.getTime())) return null;
-      const hours = String(d.getHours()).padStart(2, '0');
-      const minutes = String(d.getMinutes()).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
-      return `${hours}:${minutes} - Ngày ${day}/${month}/${year}`;
-    }
-
-    function toggleAdminAuth() {
-      if (isAdmin) {
-        isAdmin = false;
-      } else {
-        const pin = prompt("🔑 Nhập PIN Admin:");
-        if (pin === ADMIN_PIN) isAdmin = true;
-      }
-      applyAdminPermissions();
-    }
-
-    function applyAdminPermissions() {
-      const adminElements = document.querySelectorAll('.admin-only');
-      const authBtn = document.getElementById('auth-btn');
-      const adminBadge = document.getElementById('admin-badge');
-
-      if (isAdmin) {
-        document.body.classList.add('is-admin');
-        adminElements.forEach(el => el.classList.remove('hidden'));
-        authBtn.innerText = "🔒 Đăng Xuất Admin";
-        authBtn.className = "bg-rose-500 hover:bg-rose-400 text-white font-black px-3 py-1 rounded-lg shadow";
-        adminBadge.innerHTML = "👑 Chế độ: <strong>ADMIN</strong>";
-        adminBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold px-2.5 py-1 rounded-lg";
-      } else {
-        document.body.classList.remove('is-admin');
-        adminElements.forEach(el => el.classList.add('hidden'));
-        authBtn.innerText = "🔑 Đăng Nhập Admin";
-        authBtn.className = "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg shadow";
-        adminBadge.innerHTML = "👀 Chế độ: Người Xem";
-        adminBadge.className = "bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg";
-      }
-      render();
-    }
-
-    function calculateWeekNumber(dateString) {
-      const selectedDate = new Date(dateString);
-      const diffTime = selectedDate - START_DATE;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      if (diffDays < 0) return 1;
-      const weekNum = Math.floor(diffDays / 7) + 1;
-      return weekNum > 8 ? 8 : weekNum;
-    }
-
-    const currentActualWeek = calculateWeekNumber(new Date().toISOString().split('T')[0]);
-
-    function initWeekDropdown() {
-      const select = document.getElementById('header-select-week');
-      let html = `<option value="current">🔥 Tuần hiện tại (Tuần ${currentActualWeek})</option><option value="cumulative">📈 Tổng Lũy Tiến Mùa Giải</option>`;
-      for (let w = 1; w <= 8; w++) html += `<option value="${w}">Tuần ${w}</option>`;
-      select.innerHTML = html;
-    }
-
-    async function fetchTracksFromSupabase() {
-      const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
-      if (!error) {
-        tracks = (data || []).map(item => ({
-          id: item.id, date: item.date, teamId: item.team_id, member: item.member,
-          type: item.type, distance: item.distance, pace: item.pace, week: item.week,
-          isSuspicious: item.is_suspicious, note: item.note, isApproved: item.is_approved, createdAt: item.created_at
-        }));
-        if (data && data.length > 0) {
-          lastUpdatedFormatted = formatFullDateTimeVN(data[0].created_at);
-        }
-        render();
-      }
-    }
-
-    async function approveTrack(id) {
-      const track = tracks.find(t => t.id === id);
-      if (track) {
-        track.isSuspicious = false;
-        track.isApproved = true;
-        await supabaseClient.from('tracks').upsert([{
-          id: track.id, date: track.date, team_id: track.teamId, member: track.member,
-          type: track.type, distance: track.distance, pace: track.pace, week: track.week,
-          is_suspicious: false, note: track.note, is_approved: true
-        }]);
-        fetchTracksFromSupabase();
-      }
-    }
-
-    async function deleteTrackFromSupabase(id) {
-      if (confirm("Xóa track này?")) {
-        await supabaseClient.from('tracks').delete().eq('id', id);
-        fetchTracksFromSupabase();
-      }
-    }
-
-    function saveToStorage() {
-      localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
-      localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
-    }
-
-    function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
-      memberWeekCompleted[`${memberName}_Week${weekNum}`] = isChecked;
-      saveToStorage();
-      render();
-    }
-
-    function toggleKhoMao(teamId, week) {
-      const idx = khoMao[teamId].indexOf(week);
-      if (idx > -1) khoMao[teamId].splice(idx, 1);
-      else {
-        if (khoMao[teamId].length >= 2) return alert(`Đội ${teamId} đã dùng tối đa 2 tuần Khô Máo!`);
-        khoMao[teamId].push(week);
-      }
-      saveToStorage();
-      render();
-    }
-
-    function clearPasteText() {
-      document.getElementById('paste-input').value = '';
-      document.getElementById('paste-log-output').classList.add('hidden');
-    }
-
-    // KIỂM TRA ĐIỀU KIỆN HỢP LỆ THEO QUY ĐỊNH (QUÃNG ĐƯỜNG & PACE)
-    function checkTrackValidity(type, distance, pace) {
-      if (type === 'swim') {
-        const isDistValid = distance >= 500;
-        const isPaceValid = pace >= 1.0 && pace <= 6.0;
-        return isDistValid && isPaceValid;
-      } else if (type === 'run') {
-        const isDistValid = distance >= 1000;
-        const isPaceValid = pace >= 5.0 && pace <= 12.0;
-        return isDistValid && isPaceValid;
-      }
-      return false;
-    }
-
-    async function processPastedData() {
-      const text = document.getElementById('paste-input').value.trim();
-      const logOutput = document.getElementById('paste-log-output');
-
-      if (!text) return alert("⚠️ Vui lòng dán đoạn chữ vào ô nhé!");
-
-      logOutput.className = "p-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 mt-2 block";
-      logOutput.innerText = "⏳ Đang nạp dữ liệu lên hệ thống...";
-
-      const lines = text.split('\n');
-      const payloads = [];
-      let addedCount = 0;
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line || line.startsWith('Thành viên')) continue;
-
-        const parts = line.split(',');
-        if (parts.length < 5) continue;
-
-        const memberName = parts[0].trim();
-        const rawDate = parts[1].trim();
-        const rawType = parts[2].trim().toLowerCase();
-        const distance = parseFloat(parts[3]);
-        const pace = parseFloat(parts[4]);
-
-        const teamId = MEMBERS_MAP[memberName];
-        if (!teamId) continue;
-
-        const type = (rawType.includes('bơi') || rawType === 'swim') ? 'swim' : 'run';
-        const week = calculateWeekNumber(rawDate);
-
-        // KIỂM TRA QUY ĐỊNH BƠI/CHẠY TỰ ĐỘNG
-        const isValid = checkTrackValidity(type, distance, pace);
-
-        payloads.push({
-          id: Date.now() + i, date: rawDate, team_id: teamId, member: memberName,
-          type: type, distance: distance, pace: pace, week: week,
-          is_suspicious: !isValid,
-          note: isValid ? "Nạp từ ảnh Strava" : "Không đạt quy định Pace/Quãng đường",
-          is_approved: false, // Để Admin chủ động theo dõi hoặc xác nhận
+    <section id="sec-history" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow
