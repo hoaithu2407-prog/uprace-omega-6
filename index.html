@@ -619,7 +619,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('paste-log-output').classList.add('hidden');
     }
 
-    // ĐỐI SOÁT TRÙNG LẶP 100%: CHỈ GHI LƯU Ý: TRÙNG TRACK
+    // ĐỐI SOÁT TRÙNG LẶP 100%: LƯU GHI CHÚ NGẮN GỌN "Lưu ý: Có thể trùng track"
     function findDuplicateReasons(newTrack, existingTracks) {
       for (let old of existingTracks) {
         if (old.id === newTrack.id) continue;
@@ -629,7 +629,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         const isExactDistance = (old.distance === newTrack.distance);
 
         if (isSameMember && isSameDate && isExactDistance) {
-          return `Lưu ý: Trùng Track`;
+          return `Lưu ý: Có thể trùng track`;
         }
       }
       return null;
@@ -1103,7 +1103,12 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
         }
 
-        const noteHtml = t.note ? `<span class="block text-[11px] text-amber-300 italic">⚠️ ${t.note}</span>` : '';
+        // Xử lý hiển thị ghi chú gọn gàng (nếu note chứa icon hoặc chưa có icon thì tự động format sạch đẹp)
+        let noteTextDisplay = t.note || '';
+        if (noteTextDisplay.startsWith('⚠️')) {
+          noteTextDisplay = noteTextDisplay.replace(/^⚠️\s*/, '');
+        }
+        const noteHtml = noteTextDisplay ? `<span class="block text-[11px] text-amber-300 italic">⚠️ ${noteTextDisplay}</span>` : '';
 
         return `
           <tr class="${rowClass}">
