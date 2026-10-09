@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UPRACE OMEGA MÙA 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- THƯ VIỆN SUPABASE REALTIME -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,16 +71,19 @@
 
   <main class="max-w-6xl mx-auto px-4 mt-6 space-y-8 flex flex-col">
 
+    <!-- THANH TRẠNG THÁI KHÁCH / ADMIN -->
     <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-3 flex justify-between items-center text-xs">
       <span id="admin-badge" class="bg-slate-700 text-slate-300 font-bold px-2.5 py-1 rounded-lg">👀 Chế độ: Người Xem</span>
       <button id="auth-btn" onclick="toggleAdminAuth()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-3 py-1 rounded-lg shadow">🔑 Đăng Nhập Admin</button>
     </div>
 
+    <!-- DÒNG CẬP NHẬT MỚI NHẤT -->
     <div class="flex justify-end items-center text-xs text-slate-300 gap-2 pr-1">
       <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
       <span>Cập nhật mới nhất: <strong id="last-updated-time" class="text-cyan-400">Đang tải...</strong></span>
     </div>
 
+    <!-- THANH SONG ĐẤU THỎ VÀ RÙA -->
     <section id="sec-compare" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl space-y-6">
       <div>
         <div class="flex justify-between items-center mb-1">
@@ -145,6 +149,7 @@
       </div>
     </section>
 
+    <!-- KHU VỰC DÁN DỮ LIỆU BÓC TÁCH TỪ ẢNH (CHỈ ADMIN THẤY) -->
     <section id="sec-paste" class="admin-only hidden bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl space-y-3">
       <div class="flex justify-between items-center">
         <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
@@ -169,6 +174,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       <div id="paste-log-output" class="hidden p-3 rounded-xl text-xs font-bold transition-all shadow-md mt-2"></div>
     </section>
 
+    <!-- FORM NHẬP / SỬA TRACK (CHỈ ADMIN THẤY) -->
     <section id="sec-form" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-cyan-400 font-bold text-base" id="form-title">➕ GHI NHẬN TRACK ĐƠN LẺ (THỦ CÔNG)</h2>
@@ -227,6 +233,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       </form>
     </section>
 
+    <!-- KÍCH HOẠT TUẦN KHÔ MÁO (CHỈ ADMIN THẤY) -->
     <section id="sec-khomao" class="admin-only hidden bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <h2 class="text-amber-400 font-bold mb-4 flex items-center gap-2 text-base">🔥 CẢNH SÁT THU LÊ - QUẢN LÝ TUẦN KHÔ MÁO</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -241,6 +248,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       </div>
     </section>
 
+    <!-- BẢNG XẾP HẠNG ĐỘI - RÙA VÀ THỎ -->
     <section id="sec-team-board" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="mb-4">
         <h2 class="text-amber-400 font-bold text-base flex items-center gap-2">
@@ -270,6 +278,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       </div>
     </section>
 
+    <!-- BẢNG XẾP HẠNG CÁ NHÂN -->
     <section id="sec-indiv-board" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
         <div>
@@ -303,6 +312,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       </div>
     </section>
 
+    <!-- DANH SÁCH TRACK ĐÃ NHẬP -->
     <section id="sec-history" class="bg-slate-800 rounded-2xl p-6 border border-slate-700 shadow-xl">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
         <h2 class="text-cyan-400 font-bold text-base">📝 DANH SÁCH TRACK ĐÃ NHẬP</h2>
@@ -484,7 +494,23 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       }
     }
 
-    // TÍNH NĂNG SỬA TRACK
+    // TÍNH NĂNG TỰ ĐỘNG LỌC VĐV KHI CHỌN TÊN Ở FORM GHI NHẬN
+    function autoFillTeam() {
+      const memberName = document.getElementById('input-member').value;
+      const teamId = MEMBERS_MAP[memberName];
+      if (teamId) {
+        document.getElementById('input-team-display').value = `Đội ${teamId}`;
+        document.getElementById('input-team').value = teamId;
+
+        // Cập nhật ô "Lọc Tên" ở bảng Danh sách track và render lại
+        const historyMemberFilter = document.getElementById('history-filter-member');
+        if (historyMemberFilter) {
+          historyMemberFilter.value = memberName;
+          render();
+        }
+      }
+    }
+
     function editTrack(id) {
       const track = tracks.find(t => t.id === id);
       if (!track) return;
@@ -537,15 +563,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       }
       saveToStorage();
       render();
-    }
-
-    function autoFillTeam() {
-      const memberName = document.getElementById('input-member').value;
-      const teamId = MEMBERS_MAP[memberName];
-      if (teamId) {
-        document.getElementById('input-team-display').value = `Đội ${teamId}`;
-        document.getElementById('input-team').value = teamId;
-      }
     }
 
     async function handleManualSubmit(e) {
@@ -627,7 +644,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           type: type, distance: distance, pace: pace, week: week,
           is_suspicious: !isValid,
           note: isValid ? "Nạp từ ảnh Strava" : "Không đạt quy định Pace/Quãng đường",
-          is_approved: false, // Để nguyên chờ xem hoặc tự hợp lệ
+          is_approved: false,
           created_at: new Date().toISOString()
         });
 
@@ -983,7 +1000,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         }).join('');
       }
 
-      // LỊCH SỬ TRACK VÀ TRẠNG THÁI HIỂN THỊ MỚI
+      // LỊCH SỬ TRACK VÀ TRẠNG THÁI HIỂN THỊ
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
       const historyStatusVal = document.getElementById('history-filter-status').value;
