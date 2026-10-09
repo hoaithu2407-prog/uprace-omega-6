@@ -494,7 +494,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     async function approveTrack(id) {
-      if (!isAdmin) return; // Bảo vệ chỉ Admin mới thực thi
+      if (!isAdmin) return;
       const track = tracks.find(t => t.id === id);
       if (track) {
         track.isSuspicious = false;
@@ -864,7 +864,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
-      // TUẦN BAR
+      // TUẦN BAR (XỬ LÝ DẪN ĐẦU / TẠM DẪN NẾU LÀ TUẦN HIỆN TẠI)
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekWinnerTag = document.getElementById('week-winner-tag');
       const weekDiffBadge = document.getElementById('week-diff-badge');
@@ -878,12 +878,15 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('week-val-team2').innerText = formatKmVN(weekTeam2);
       weekDiffBadge.innerText = `⚡ +${formatKmVN(weekDiff)}`;
 
+      const isCurrentWeekSelected = (targetWeek >= currentActualWeek);
+      const actionText = isCurrentWeekSelected ? "TẠM DẪN" : "THẮNG";
+
       if (weekTeam1 > weekTeam2) {
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 THẮNG TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 1 ${actionText} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else if (weekTeam2 > weekTeam1) {
         weekWinnerTag.className = "text-xs font-black mt-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse";
-        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 THẮNG TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
+        weekWinnerTag.innerHTML = `🎉 ĐỘI 2 ${actionText} TUẦN ${targetWeek} (Hơn ${formatKmVN(weekDiff)})`;
       } else {
         weekWinnerTag.innerHTML = `⚖️ TỶ SỐ HÒA NHAU`;
       }
@@ -1097,7 +1100,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           rowClass = "bg-rose-500/10 border-l-4 border-rose-500/60";
           statusHtml = `<span class="text-rose-400 text-xs font-bold">❌ Không hợp lệ</span>`;
         } else if (t.isSuspicious) {
-          // PHÂN BIỆT CHẾ ĐỘ VIEW vs ADMIN
           if (isAdmin) {
             statusHtml = `
               <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
