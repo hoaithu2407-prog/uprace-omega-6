@@ -619,17 +619,17 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('paste-log-output').classList.add('hidden');
     }
 
-    // KHÔNG TRỪ HAO: CHỈ BÁO KHI TRÙNG NGUYÊN BẢN 100% CẢ 3 YẾU TỐ (THÀNH VIÊN + NGÀY + QUÃNG ĐƯỜNG)
+    // ĐỐI SOÁT TRÙNG LẶP 100%: CHỈ GHI LƯU Ý: TRÙNG TRACK
     function findDuplicateReasons(newTrack, existingTracks) {
       for (let old of existingTracks) {
         if (old.id === newTrack.id) continue;
         
         const isSameMember = (old.member === newTrack.member);
         const isSameDate = (old.date === newTrack.date);
-        const isExactDistance = (old.distance === newTrack.distance); // Trùng khớp 100% từng mét
+        const isExactDistance = (old.distance === newTrack.distance);
 
         if (isSameMember && isSameDate && isExactDistance) {
-          return `⚠️ Lưu ý (Trùng Thành viên, Ngày, Quãng đường)`;
+          return `Lưu ý: Trùng Track`;
         }
       }
       return null;
@@ -1096,14 +1096,14 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         } else if (t.isSuspicious) {
           statusHtml = `
             <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
-              ⚠️ Chờ duyệt (${t.note || 'Lưu ý'})
+              ⚠️ Chờ duyệt
             </button>
           `;
         } else {
           statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
         }
 
-        const noteHtml = t.note ? `<span class="block text-[11px] text-amber-300 italic">📝 ${t.note}</span>` : '';
+        const noteHtml = t.note ? `<span class="block text-[11px] text-amber-300 italic">⚠️ ${t.note}</span>` : '';
 
         return `
           <tr class="${rowClass}">
