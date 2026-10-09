@@ -458,7 +458,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       select.innerHTML = html;
     }
 
-    // KIỂM TRA HỢP LỆ CHI TIẾT TỪNG YẾU TỐ
     function validateTrackDetails(type, distance, pace) {
       let isDistanceValid = true;
       let isPaceValid = true;
@@ -495,6 +494,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     async function approveTrack(id) {
+      if (!isAdmin) return; // Bảo vệ chỉ Admin mới thực thi
       const track = tracks.find(t => t.id === id);
       if (track) {
         track.isSuspicious = false;
@@ -509,6 +509,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     async function deleteTrackFromSupabase(id) {
+      if (!isAdmin) return;
       if (confirm("⚠️ Chị chắc chắn muốn xóa track này?")) {
         await supabaseClient.from('tracks').delete().eq('id', id);
         fetchTracksFromSupabase();
@@ -531,6 +532,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     function editTrack(id) {
+      if (!isAdmin) return;
       const track = tracks.find(t => t.id === id);
       if (!track) return;
 
@@ -568,12 +570,14 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
+      if (!isAdmin) return;
       memberWeekCompleted[`${memberName}_Week${weekNum}`] = isChecked;
       saveToStorage();
       render();
     }
 
     function toggleKhoMao(teamId, week) {
+      if (!isAdmin) return;
       const idx = khoMao[teamId].indexOf(week);
       if (idx > -1) khoMao[teamId].splice(idx, 1);
       else {
@@ -586,6 +590,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
     async function handleManualSubmit(e) {
       e.preventDefault();
+      if (!isAdmin) return;
       const editingId = document.getElementById('editing-track-id').value;
       const memberName = document.getElementById('input-member').value;
       const teamId = parseInt(document.getElementById('input-team').value);
@@ -619,7 +624,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('paste-log-output').classList.add('hidden');
     }
 
-    // ĐỐI SOÁT TRÙNG LẶP 100%: LƯU GHI CHÚ NGẮN GỌN "Lưu ý: Có thể trùng track"
     function findDuplicateReasons(newTrack, existingTracks) {
       for (let old of existingTracks) {
         if (old.id === newTrack.id) continue;
@@ -636,6 +640,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     }
 
     async function processPastedData() {
+      if (!isAdmin) return;
       const text = document.getElementById('paste-input').value.trim();
       const logOutput = document.getElementById('paste-log-output');
 
@@ -1062,7 +1067,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         return matchTeam && matchMember && matchStatus;
       });
 
-      // Sắp xếp ngày mới nhất lên đầu
       filteredTracks.sort((a, b) => {
         if (b.date !== a.date) return b.date.localeCompare(a.date);
         return b.id - a.id;
@@ -1078,7 +1082,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         let rowClass = "hover:bg-slate-700/30";
         let displayKmText = formatKmVN(converted);
 
-        // Tô đỏ ô vi phạm cụ thể
         const distanceCellHtml = isDistanceValid 
           ? `${t.distance.toLocaleString('vi-VN')} m` 
           : `<span class="bg-rose-500/20 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/50 line-through">${t.distance.toLocaleString('vi-VN')} m</span>`;
@@ -1094,16 +1097,24 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           rowClass = "bg-rose-500/10 border-l-4 border-rose-500/60";
           statusHtml = `<span class="text-rose-400 text-xs font-bold">❌ Không hợp lệ</span>`;
         } else if (t.isSuspicious) {
-          statusHtml = `
-            <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
-              ⚠️ Chờ duyệt
-            </button>
-          `;
+          // PHÂN BIỆT CHẾ ĐỘ VIEW vs ADMIN
+          if (isAdmin) {
+            statusHtml = `
+              <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
+                ⚠️ Chờ duyệt
+              </button>
+            `;
+          } else {
+            statusHtml = `
+              <span class="inline-block bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded text-xs font-bold shadow-sm">
+                ⚠️ Chờ duyệt
+              </span>
+            `;
+          }
         } else {
           statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
         }
 
-        // Xử lý hiển thị ghi chú gọn gàng (nếu note chứa icon hoặc chưa có icon thì tự động format sạch đẹp)
         let noteTextDisplay = t.note || '';
         if (noteTextDisplay.startsWith('⚠️')) {
           noteTextDisplay = noteTextDisplay.replace(/^⚠️\s*/, '');
