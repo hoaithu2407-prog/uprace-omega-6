@@ -227,7 +227,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           </label>
           <div class="flex-1 flex items-center gap-2">
             <span class="text-xs text-slate-400">Ghi chú:</span>
-            <input type="text" id="input-note" placeholder="VD: Nạp từ ảnh Strava..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100" />
+            <input type="text" id="input-note" placeholder="VD: Admin nhập..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100" />
           </div>
         </div>
       </form>
@@ -542,7 +542,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('input-distance').value = track.distance;
       document.getElementById('input-pace').value = track.pace;
       document.getElementById('input-is-suspicious').checked = track.isSuspicious;
-      document.getElementById('input-note').value = track.note || 'Nạp từ ảnh Strava';
+      document.getElementById('input-note').value = track.note || 'Admin nhập';
 
       document.getElementById('form-title').innerText = `✏️ SỬA TRACK #${track.id}`;
       document.getElementById('submit-btn').innerText = "Cập Nhật Track";
@@ -604,7 +604,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         date: rawDate, team_id: teamId, member: memberName,
         type: type, distance: distance, pace: pace, week: week,
         is_suspicious: isSuspicious || !isValid,
-        note: note || "Nạp từ ảnh Strava",
+        note: note || "Admin nhập",
         is_approved: !isSuspicious && isValid,
         created_at: new Date().toISOString()
       };
@@ -684,7 +684,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
         if (isDuplicate) duplicateFlagCount++;
 
-        // LUÔN GIỮ GHI CHÚ LÀ "Nạp từ ảnh Strava" (HOẶC NẾU TRÙNG THÌ GHI RÕ TRÙNG)
         let noteText = isDuplicate ? dupReason : "Nạp từ ảnh Strava";
         const isSuspicious = !isValid || isDuplicate;
 
@@ -1049,7 +1048,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         }).join('');
       }
 
-      // LỊCH SỬ TRACK (GIỮ NẠP TỪ ẢNH STRAVA + HIỂN THỊ KHÔNG HỢP LỆ NGẮN GỌN)
+      // LỊCH SỬ TRACK (HIỂN THỊ CHÍNH XÁC GHI CHÚ GỐC TỪ DATABASE)
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
       const historyStatusVal = document.getElementById('history-filter-status').value;
@@ -1096,7 +1095,6 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         } else if (!isValid) {
           displayKmText = `<span class="text-slate-500 line-through">0,00 km</span>`;
           rowClass = "bg-rose-500/10 border-l-4 border-rose-500/60";
-          // Bỏ chữ trong ngoặc đơn, chỉ ghi Không hợp lệ
           statusHtml = `<span class="text-rose-400 text-xs font-bold">❌ Không hợp lệ</span>`;
         } else if (t.isSuspicious) {
           statusHtml = `
@@ -1108,8 +1106,8 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
         }
 
-        // Luôn hiển thị Nạp từ ảnh Strava (hoặc ghi chú nghi vấn trùng) dưới tên
-        const noteText = (t.note && t.note.includes('trùng')) ? t.note : 'Nạp từ ảnh Strava';
+        // Chỉ hiển thị ghi chú nếu trong Database có ghi chú
+        const noteHtml = t.note ? `<span class="block text-[11px] text-amber-300 italic">📝 ${t.note}</span>` : '';
 
         return `
           <tr class="${rowClass}">
@@ -1117,7 +1115,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
             <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
             <td class="p-3 font-semibold text-slate-100">
               ${t.member}
-              <span class="block text-[11px] text-amber-300 italic">📝 ${noteText}</span>
+              ${noteHtml}
             </td>
             <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
             <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
