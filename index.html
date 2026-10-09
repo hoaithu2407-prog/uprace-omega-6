@@ -223,7 +223,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         <div class="pt-2 border-t border-slate-700/60 flex items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
           <label class="flex items-center gap-2 cursor-pointer select-none">
             <input type="checkbox" id="input-is-suspicious" class="w-4 h-4 text-amber-500 rounded border-slate-700 bg-slate-900" />
-            <span class="text-xs font-bold text-amber-400">⚠️ Cần lưu ý</span>
+            <span class="text-xs font-bold text-amber-400">⚠️ Lưu ý</span>
           </label>
           <div class="flex-1 flex items-center gap-2">
             <span class="text-xs text-slate-400">Ghi chú:</span>
@@ -619,20 +619,17 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('paste-log-output').classList.add('hidden');
     }
 
-    // NHẬN DIỆN TRÙNG LẶP HÀNG LOẠT (TRÙNG >= 2 YẾU TỐ)
+    // KHÔNG TRỪ HAO: CHỈ BÁO KHI TRÙNG NGUYÊN BẢN 100% CẢ 3 YẾU TỐ (THÀNH VIÊN + NGÀY + QUÃNG ĐƯỜNG)
     function findDuplicateReasons(newTrack, existingTracks) {
       for (let old of existingTracks) {
         if (old.id === newTrack.id) continue;
-        let matchedFactors = [];
+        
+        const isSameMember = (old.member === newTrack.member);
+        const isSameDate = (old.date === newTrack.date);
+        const isExactDistance = (old.distance === newTrack.distance); // Trùng khớp 100% từng mét
 
-        if (old.member === newTrack.member) matchedFactors.push("Thành viên");
-        if (old.date === newTrack.date) matchedFactors.push("Ngày");
-        if (Math.abs(old.distance - newTrack.distance) < 50) matchedFactors.push("Quãng đường");
-        if (old.type === newTrack.type) matchedFactors.push("Môn");
-        if (Math.abs(old.pace - newTrack.pace) < 0.05) matchedFactors.push("Pace");
-
-        if (matchedFactors.length >= 2) {
-          return `⚠️ Nghi vấn trùng track (${matchedFactors.join(', ')})`;
+        if (isSameMember && isSameDate && isExactDistance) {
+          return `⚠️ Lưu ý (Trùng Thành viên, Ngày, Quãng đường)`;
         }
       }
       return null;
@@ -706,7 +703,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           logOutput.innerText = `❌ Lỗi nạp Supabase: ${error.message}`;
         } else {
           logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
-          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS! ${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track nghi vấn trùng lặp -> Chuyển sang Cần Duyệt)` : ''}`;
+          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS! ${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track trùng -> Chuyển sang Cần Duyệt)` : ''}`;
           document.getElementById('paste-input').value = '';
           await fetchTracksFromSupabase();
         }
@@ -1048,7 +1045,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         }).join('');
       }
 
-      // LỊCH SỬ TRACK (HIỂN THỊ CHÍNH XÁC GHI CHÚ GỐC TỪ DATABASE)
+      // LỊCH SỬ TRACK
       const historyTeamVal = document.getElementById('history-filter-team').value;
       const historyMemberVal = document.getElementById('history-filter-member').value;
       const historyStatusVal = document.getElementById('history-filter-status').value;
@@ -1099,14 +1096,13 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         } else if (t.isSuspicious) {
           statusHtml = `
             <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
-              ⚠️ Chờ duyệt (${t.note || 'Trùng track'})
+              ⚠️ Chờ duyệt (${t.note || 'Lưu ý'})
             </button>
           `;
         } else {
           statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
         }
 
-        // Chỉ hiển thị ghi chú nếu trong Database có ghi chú
         const noteHtml = t.note ? `<span class="block text-[11px] text-amber-300 italic">📝 ${t.note}</span>` : '';
 
         return `
