@@ -785,9 +785,9 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       });
 
       tracks.forEach(t => {
-        const { isValid } = validateTrackDetails(t.type, t.distance, t.pace);
-        const canCount = (isValid && !t.isSuspicious) || t.isApproved;
-        if (!canCount) return;
+        // ĐIỀU KIỆN CHUẨN: Chỉ tính các track đã được duyệt (isApproved === true).
+        // Tránh hoàn toàn track pending hoặc bị nghi ngờ trùng lặp chưa duyệt.
+        if (!t.isApproved) return;
 
         const m = memberStats[t.member];
         if (!m) return;
@@ -864,7 +864,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       document.getElementById('cum-bar-team1').style.width = `${cumP1}%`;
       document.getElementById('cum-bar-team2').style.width = `${cumP2}%`;
 
-      // TUẦN BAR (XỬ LÝ DẪN ĐẦU / TẠM DẪN NẾU LÀ TUẦN HIỆN TẠI)
+      // TUẦN BAR
       const weekDiff = Math.abs(weekTeam1 - weekTeam2);
       const weekWinnerTag = document.getElementById('week-winner-tag');
       const weekDiffBadge = document.getElementById('week-diff-badge');
@@ -960,7 +960,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           const weekDaysData = m.dailyTracksMap[targetWeek] || {};
           let validDaysCount = 0;
           Object.keys(weekDaysData).forEach(dateStr => {
-            const hasValid = weekDaysData[dateStr].some(t => validateTrackDetails(t.type, t.distance, t.pace).isValid);
+            const hasValid = weekDaysData[dateStr].some(t => t.isApproved);
             if (hasValid) validDaysCount++;
           });
           const isCompleted = (validDaysCount >= 6);
@@ -994,7 +994,14 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
       const bodyContainer = document.getElementById('leaderboard-body');
       if (isCumulativeView) {
-        const sorted = [...filteredMembers].sort((a, b) => b.cumConvertedKm - a.cumConvertedKm);
+        // SẮP XẾP CÓ TIÊU CHÍ PHỤ: Nếu trùng tổng quy đổi, sắp xếp theo tên để ổn định thứ hạng
+        const sorted = [...filteredMembers].sort((a, b) => {
+          if (b.cumConvertedKm !== a.cumConvertedKm) {
+            return b.cumConvertedKm - a.cumConvertedKm;
+          }
+          return a.name.localeCompare(b.name);
+        });
+
         bodyContainer.innerHTML = sorted.map((m, idx) => `
           <tr class="hover:bg-slate-700/30">
             <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
@@ -1008,13 +1015,23 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           </tr>
         `).join('');
       } else {
-        const sorted = [...filteredMembers].sort((a, b) => b.weekAcceptedKm - a.weekAcceptedKm);
+        // SẮP XẾP CÓ TIÊU CHÍ PHỤ: Nếu trùng quy đổi tuần, sắp xếp tiếp theo tổng lũy tích chung cuộc (cumConvertedKm), sau đó đến tên
+        const sorted = [...filteredMembers].sort((a, b) => {
+          if (b.weekAcceptedKm !== a.weekAcceptedKm) {
+            return b.weekAcceptedKm - a.weekAcceptedKm;
+          }
+          if (b.cumConvertedKm !== a.cumConvertedKm) {
+            return b.cumConvertedKm - a.cumConvertedKm;
+          }
+          return a.name.localeCompare(b.name);
+        });
+
         bodyContainer.innerHTML = sorted.map((m, idx) => {
           const weekDaysData = m.dailyTracksMap[targetWeek] || {};
           let validDaysCount = 0;
 
           Object.keys(weekDaysData).forEach(dateStr => {
-            const hasValid = weekDaysData[dateStr].some(t => validateTrackDetails(t.type, t.distance, t.pace).isValid);
+            const hasValid = weekDaysData[dateStr].some(t => t.isApproved);
             if (hasValid) validDaysCount++;
           });
 
