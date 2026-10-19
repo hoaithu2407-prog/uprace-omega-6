@@ -734,7 +734,7 @@
       if (payloads.length > 0) {
         await supabaseClient.from('tracks').upsert(payloads);
         logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
-        logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS CHO${selectedMember}!`;
+        logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS CHO ${selectedMember}!`;
         clearPasteText();
         await fetchTracksFromSupabase();
       } else {
@@ -777,7 +777,7 @@
         let html = '';
         for (let w = 1; w <= 8; w++) {
           const active = khoMao[tId].includes(w);
-          html += `<button onclick="toggleKhoMao(${tId},${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w}${active ? '🔥' : ''}</button>`;
+          html += `<button onclick="toggleKhoMao(${tId}, ${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w} ${active ? '🔥' : ''}</button>`;
         }
         container.innerHTML = html;
       });
@@ -957,7 +957,7 @@
 
         summaryRowsHtml += `
           <tr class="${isCurrentRow ? 'bg-amber-500/10 border-l-4 border-amber-400' : 'hover:bg-slate-700/30'}">
-            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w}${isCurrentRow ? '🔥' : ''}</td>
+            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w} ${isCurrentRow ? '🔥' : ''}</td>
             <td class="border border-slate-700 p-2">${t1Title}</td>
             <td class="border border-slate-700 p-2 font-semibold text-emerald-300">${t1KmText}</td>
             <td class="border border-slate-700 p-2">${t2Title}</td>
@@ -1111,7 +1111,7 @@
               completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
             }
 
-            const editBtnHtml = isAdmin ? `<button onclick="editCustomPenalty('${m.name}', ${targetWeek},${currentPenaltyAmount})" class="ml-1 text-[10px] bg-slate-700 hover:bg-slate-600 text-amber-300 px-1.5 py-0.5 rounded" title="Sửa tiền phạt / Miễn phạt">✏️ Sửa</button>` : '';
+            const editBtnHtml = isAdmin ? `<button onclick="editCustomPenalty('${m.name}', ${targetWeek}, ${currentPenaltyAmount})" class="ml-1 text-[10px] bg-slate-700 hover:bg-slate-600 text-amber-300 px-1.5 py-0.5 rounded" title="Sửa tiền phạt / Miễn phạt">✏️ Sửa</button>` : '';
 
             penaltyHtml = currentPenaltyAmount > 0
               ? `<span class="text-rose-400 font-bold">${currentPenaltyAmount.toLocaleString('vi-VN')} đ</span> ${editBtnHtml}`
@@ -1122,4 +1122,121 @@
             <tr class="hover:bg-slate-700/30">
               <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
               <td class="p-3 font-bold text-slate-100">${m.name}</td>
-              <td class="p-3 text-center"><span class="px
+              <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${m.teamId}</span></td>
+              <td class="p-3">${formatKmVN(m.weekRunKm)}</td>
+              <td class="p-3">${formatKmVN(m.weekSwimKm)}</td>
+              <td class="p-3 font-semibold text-slate-300">${formatKmVN(m.weekRawConvertedKm)}</td>
+              <td class="p-3 text-center"><span class="text-xs bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full ${validDaysCount >= 6 ? 'text-emerald-400' : 'text-slate-300'}">${validDaysCount}/6 ngày</span></td>
+              <td class="p-3 font-extrabold text-cyan-400 text-base">${formatKmVN(m.weekAcceptedKm)}</td>
+              <td class="p-3 text-center admin-only ${isAdmin ? '' : 'hidden'}">
+                <input type="checkbox" ${isWeekEntered ? 'checked' : ''} onchange="toggleMemberWeekCompleted('${m.name}', ${targetWeek}, this.checked)" class="w-4 h-4 text-emerald-500 rounded bg-slate-900 cursor-pointer" />
+              </td>
+              <td class="p-3 text-center">${completionStatusHtml}</td>
+              <td class="p-3 text-right">${penaltyHtml}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // LỊCH SỬ TRACK
+      const historyTeamVal = document.getElementById('history-filter-team').value;
+      const historyMemberVal = document.getElementById('history-filter-member').value;
+      const historyStatusVal = document.getElementById('history-filter-status').value;
+
+      const filteredTracks = tracks.filter(t => {
+        const matchTeam = (historyTeamVal === 'all' || t.teamId === parseInt(historyTeamVal));
+        const matchMember = (historyMemberVal === 'all' || t.member === historyMemberVal);
+        const { isValid } = validateTrackDetails(t.type, t.distance, t.pace);
+        const isPending = (t.isSuspicious || !isValid) && !t.isApproved;
+
+        let matchStatus = true;
+        if (historyStatusVal === 'pending') matchStatus = isPending;
+        else if (historyStatusVal === 'approved') matchStatus = !isPending;
+        return matchTeam && matchMember && matchStatus;
+      });
+
+      filteredTracks.sort((a, b) => {
+        if (b.date !== a.date) return b.date.localeCompare(a.date);
+        return b.id - a.id;
+      });
+
+      document.getElementById('history-body').innerHTML = filteredTracks.map(t => {
+        const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
+        const w = t.week || calculateWeekNumber(t.date);
+        
+        const { isValid, isDistanceValid, isPaceValid } = validateTrackDetails(t.type, t.distance, t.pace);
+
+        let statusHtml = "";
+        let rowClass = "hover:bg-slate-700/30";
+        let displayKmText = formatKmVN(converted);
+
+        const distanceCellHtml = isDistanceValid 
+          ? `${t.distance.toLocaleString('vi-VN')} m` 
+          : `<span class="bg-rose-500/20 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/50 line-through">${t.distance.toLocaleString('vi-VN')} m</span>`;
+
+        const paceCellHtml = isPaceValid 
+          ? t.pace 
+          : `<span class="bg-rose-500/20 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/50 line-through">${t.pace}</span>`;
+
+        if (t.isApproved) {
+          statusHtml = `<span class="text-cyan-400 text-xs font-semibold">✅ Đã duyệt (Admin)</span>`;
+        } else if (!isValid) {
+          displayKmText = `<span class="text-slate-500 line-through">0,00 km</span>`;
+          rowClass = "bg-rose-500/10 border-l-4 border-rose-500/60";
+          statusHtml = `<span class="text-rose-400 text-xs font-bold">❌ Không hợp lệ</span>`;
+        } else if (t.isSuspicious) {
+          if (isAdmin) {
+            statusHtml = `
+              <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
+                ⚠️ Chờ duyệt
+              </button>
+            `;
+          } else {
+            statusHtml = `
+              <span class="inline-block bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded text-xs font-bold shadow-sm">
+                ⚠️ Chờ duyệt
+              </span>
+            `;
+          }
+        } else {
+          statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
+        }
+
+        let noteTextDisplay = t.note || '';
+        if (noteTextDisplay.startsWith('⚠️')) {
+          noteTextDisplay = noteTextDisplay.replace(/^⚠️\s*/, '');
+        }
+        const noteHtml = noteTextDisplay ? `<span class="block text-[11px] text-amber-300 italic">⚠️ ${noteTextDisplay}</span>` : '';
+
+        return `
+          <tr class="${rowClass}">
+            <td class="p-3 text-slate-300 text-xs font-bold">${formatDateVN(t.date)}</td>
+            <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
+            <td class="p-3 font-semibold text-slate-100">
+              ${t.member}
+              ${noteHtml}
+            </td>
+            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
+            <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
+            <td class="p-3 font-bold">${distanceCellHtml}</td>
+            <td class="p-3 font-bold">${paceCellHtml}</td>
+            <td class="p-3 font-bold text-cyan-400">${displayKmText}</td>
+            <td class="p-3 text-center">${statusHtml}</td>
+            <td class="p-3 text-center admin-only ${isAdmin ? '' : 'hidden'}">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="editTrack(${t.id})" class="bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 px-2.5 py-1 rounded text-xs font-semibold border border-amber-500/30">✏️ Sửa</button>
+                <button onclick="deleteTrackFromSupabase(${t.id})" class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2.5 py-1 rounded text-xs font-semibold border border-rose-500/30">🗑 Xóa</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    initWeekDropdown();
+    initMemberSelects();
+    applyAdminPermissions();
+    fetchTracksFromSupabase();
+  </script>
+</body>
+</html>
