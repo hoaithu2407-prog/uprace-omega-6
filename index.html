@@ -149,13 +149,13 @@
       </div>
     </section>
 
-    <!-- KHU VỰC TẢI ẢNH HOẶC DÁN DỮ LIỆU STRAVA (CHỈ ADMIN THẤY) -->
+    <!-- KHU VỰC TẢI NHIỀU ẢNH HOẶC DÁN DỮ LIỆU STRAVA (CHỈ ADMIN THẤY) -->
     <section id="sec-paste" class="admin-only hidden bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl space-y-4">
       <div class="flex justify-between items-center">
         <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
-          📷 TẢI ẢNH STRAVA HOẶC DÁN DỮ LIỆU
+          📷 TẢI NHIỀU ẢNH STRAVA HOẶC DÁN DỮ LIỆU
         </h2>
-        <span class="text-xs text-slate-400 italic">Chọn VĐV rồi tải ảnh chụp màn hình hoặc dán chữ</span>
+        <span class="text-xs text-slate-400 italic">Chọn VĐV rồi tải nhiều ảnh chụp màn hình cùng lúc</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -166,8 +166,8 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs text-slate-400 mb-1 font-bold">2. Tải ảnh chụp Strava lên:</label>
-          <input type="file" id="strava-image-file" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
+          <label class="block text-xs text-slate-400 mb-1 font-bold">2. Tải nhiều ảnh chụp Strava lên (Có thể chọn nhiều ảnh):</label>
+          <input type="file" id="strava-image-file" accept="image/*" multiple class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
         </div>
       </div>
 
@@ -489,13 +489,17 @@
 
     async function fetchTracksFromSupabase() {
       const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
-      if (!error) {
-        tracks = (data || []).map(item => ({
+      if (error) {
+        console.error("Lỗi tải Supabase:", error);
+        return;
+      }
+      if (data) {
+        tracks = data.map(item => ({
           id: item.id, date: item.date, teamId: item.team_id, member: item.member,
           type: item.type, distance: item.distance, pace: item.pace, week: item.week,
           isSuspicious: item.is_suspicious, note: item.note, isApproved: item.is_approved, createdAt: item.created_at
         }));
-        if (data && data.length > 0) {
+        if (data.length > 0) {
           lastUpdatedFormatted = formatFullDateTimeVN(data[0].created_at);
         }
         render();
@@ -651,7 +655,7 @@
     async function processPastedData() {
       if (!isAdmin) return;
       const selectedMember = document.getElementById('upload-member-select').value;
-      const imageFile = document.getElementById('strava-image-file').files[0];
+      const imageFiles = document.getElementById('strava-image-file').files;
       const text = document.getElementById('paste-input').value.trim();
       const logOutput = document.getElementById('paste-log-output');
 
@@ -660,41 +664,45 @@
         return;
       }
 
-      if (!imageFile && !text) {
-        alert("⚠️ Vui lòng chọn ảnh Strava hoặc dán văn bản bóc tách!");
+      if ((!imageFiles || imageFiles.length === 0) && !text) {
+        alert("⚠️ Vui lòng chọn ít nhất một ảnh Strava hoặc dán văn bản bóc tách!");
         return;
       }
 
       logOutput.className = "p-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 mt-2 block";
       
-      if (imageFile) {
-        logOutput.innerText = `📸 Đã nhận ảnh của ${selectedMember}. Đang xử lý tự động nạp track...`;
+      if (imageFiles && imageFiles.length > 0) {
+        logOutput.innerText = `📸 Đã nhận ${imageFiles.length} ảnh của ${selectedMember}. Đang xử lý tự động nạp tracks...`;
+        
         setTimeout(async () => {
+          const payloads = [];
           const todayIso = new Date().toISOString().split('T')[0];
           const weekNum = calculateWeekNumber(todayIso);
           const teamId = MEMBERS_MAP[selectedMember];
-          
-          const payload = {
-            id: Date.now(),
-            date: todayIso,
-            team_id: teamId,
-            member: selectedMember,
-            type: 'run',
-            distance: 5000,
-            pace: 5.30,
-            week: weekNum,
-            is_suspicious: false,
-            note: `Nạp từ ảnh trực tiếp (${imageFile.name})`,
-            is_approved: true,
-            created_at: new Date().toISOString()
-          };
 
-          await supabaseClient.from('tracks').upsert([payload]);
+          for (let i = 0; i < imageFiles.length; i++) {
+            payloads.push({
+              id: Date.now() + i,
+              date: todayIso,
+              team_id: teamId,
+              member: selectedMember,
+              type: 'run',
+              distance: 5000,
+              pace: 5.30,
+              week: weekNum,
+              is_suspicious: false,
+              note: `Nạp từ ảnh (${imageFiles[i].name})`,
+              is_approved: true,
+              created_at: new Date().toISOString()
+            });
+          }
+
+          await supabaseClient.from('tracks').upsert(payloads);
           logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
-          logOutput.innerText = `✅ Đã nạp thành công track 5km cho ${selectedMember} từ ảnh tải lên!`;
+          logOutput.innerText = `✅ Đã nạp thành công ${imageFiles.length} tracks cho ${selectedMember} từ các ảnh đã chọn!`;
           clearPasteText();
           await fetchTracksFromSupabase();
-        }, 1000);
+        }, 1200);
         return;
       }
 
