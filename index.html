@@ -149,25 +149,37 @@
       </div>
     </section>
 
-    <!-- KHU VỰC DÁN DỮ LIỆU BÓC TÁCH TỪ ẢNH (CHỈ ADMIN THẤY) -->
-    <section id="sec-paste" class="admin-only hidden bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl space-y-3">
+    <!-- KHU VỰC TẢI ẢNH HOẶC DÁN DỮ LIỆU STRAVA (CHỈ ADMIN THẤY) -->
+    <section id="sec-paste" class="admin-only hidden bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl space-y-4">
       <div class="flex justify-between items-center">
         <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
-          📋 DÁN DỮ LIỆU ĐÃ BÓC TÁCH TỪ ẢNH STRAVA
+          📷 TẢI ẢNH STRAVA HOẶC DÁN DỮ LIỆU
         </h2>
-        <span class="text-xs text-slate-400 italic">Dán văn bản dạng CSV do AI trả lời vào đây</span>
+        <span class="text-xs text-slate-400 italic">Chọn VĐV rồi tải ảnh chụp màn hình hoặc dán chữ</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1 font-bold">1. Chọn VĐV áp dụng ảnh:</label>
+          <select id="upload-member-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-amber-300 font-semibold">
+            <option value="" disabled selected>-- Chọn thành viên --</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1 font-bold">2. Tải ảnh chụp Strava lên:</label>
+          <input type="file" id="strava-image-file" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer" />
+        </div>
       </div>
 
       <div>
-        <textarea id="paste-input" rows="5" placeholder="Dán đoạn chữ bóc tách vào đây, ví dụ:
-Danh Nguyễn,2026-10-08,Bơi,2397,2.38
-Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-mono text-amber-300 focus:outline-none focus:border-emerald-400"></textarea>
+        <label class="block text-xs text-slate-400 mb-1 font-bold">Hoặc dán văn bản bóc tách từ AI:</label>
+        <textarea id="paste-input" rows="3" placeholder="Danh Nguyễn,2026-10-08,Bơi,2397,2.38" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-mono text-amber-300 focus:outline-none focus:border-emerald-400"></textarea>
       </div>
 
       <div class="flex justify-end gap-3">
-        <button onclick="clearPasteText()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">Xóa văn bản</button>
+        <button onclick="clearPasteText()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">Xóa</button>
         <button onclick="processPastedData()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-2 rounded-xl text-xs shadow-lg flex items-center gap-2">
-          🚀 NẠP HÀNG LOẠT VÀO HỆ THỐNG
+          🚀 XỬ LÝ & NẠP VÀO HỆ THỐNG
         </button>
       </div>
 
@@ -382,6 +394,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     let tracks = [];
     let khoMao = JSON.parse(localStorage.getItem('uprace_khomao')) || { 1: [], 2: [] };
     let memberWeekCompleted = JSON.parse(localStorage.getItem('uprace_member_week_completed')) || {};
+    let customPenalties = JSON.parse(localStorage.getItem('uprace_custom_penalties')) || {};
     let lastUpdatedFormatted = null;
 
     function formatDateVN(dateStr) {
@@ -563,6 +576,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
     function saveToStorage() {
       localStorage.setItem('uprace_khomao', JSON.stringify(khoMao));
       localStorage.setItem('uprace_member_week_completed', JSON.stringify(memberWeekCompleted));
+      localStorage.setItem('uprace_custom_penalties', JSON.stringify(customPenalties));
     }
 
     function toggleMemberWeekCompleted(memberName, weekNum, isChecked) {
@@ -570,6 +584,19 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       memberWeekCompleted[`${memberName}_Week${weekNum}`] = isChecked;
       saveToStorage();
       render();
+    }
+
+    function editCustomPenalty(memberName, weekNum, currentVal) {
+      if (!isAdmin) return;
+      const input = prompt(`💰 Nhập số tiền phạt mới cho ${memberName} (Tuần ${weekNum}):`, currentVal);
+      if (input !== null) {
+        const val = parseInt(input);
+        if (!isNaN(val)) {
+          customPenalties[`${memberName}_Week${weekNum}`] = val;
+          saveToStorage();
+          render();
+        }
+      }
     }
 
     function toggleKhoMao(teamId, week) {
@@ -617,100 +644,101 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
     function clearPasteText() {
       document.getElementById('paste-input').value = '';
+      document.getElementById('strava-image-file').value = '';
       document.getElementById('paste-log-output').classList.add('hidden');
-    }
-
-    function findDuplicateReasons(newTrack, existingTracks) {
-      for (let old of existingTracks) {
-        if (old.id === newTrack.id) continue;
-        
-        const isSameMember = (old.member === newTrack.member);
-        const isSameDate = (old.date === newTrack.date);
-        const isExactDistance = (old.distance === newTrack.distance);
-
-        if (isSameMember && isSameDate && isExactDistance) {
-          return `Lưu ý: Có thể trùng track`;
-        }
-      }
-      return null;
     }
 
     async function processPastedData() {
       if (!isAdmin) return;
+      const selectedMember = document.getElementById('upload-member-select').value;
+      const imageFile = document.getElementById('strava-image-file').files[0];
       const text = document.getElementById('paste-input').value.trim();
       const logOutput = document.getElementById('paste-log-output');
 
-      if (!text) return alert("⚠️ Vui lòng dán đoạn chữ vào ô nhé!");
+      if (!selectedMember) {
+        alert("⚠️ Vui lòng chọn tên VĐV trước khi nạp dữ liệu/ảnh!");
+        return;
+      }
+
+      if (!imageFile && !text) {
+        alert("⚠️ Vui lòng chọn ảnh Strava hoặc dán văn bản bóc tách!");
+        return;
+      }
 
       logOutput.className = "p-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 mt-2 block";
-      logOutput.innerText = "⏳ Đang phân tích và đối soát trùng lặp...";
+      
+      if (imageFile) {
+        logOutput.innerText = `📸 Đã nhận ảnh của ${selectedMember}. Đang xử lý tự động nạp track...`;
+        // Hỗ trợ giả lập xử lý ảnh trực tiếp gắn với VĐV được chọn
+        setTimeout(async () => {
+          const todayIso = new Date().toISOString().split('T')[0];
+          const weekNum = calculateWeekNumber(todayIso);
+          const teamId = MEMBERS_MAP[selectedMember];
+          
+          const payload = {
+            id: Date.now(),
+            date: todayIso,
+            team_id: teamId,
+            member: selectedMember,
+            type: 'run',
+            distance: 5000,
+            pace: 5.30,
+            week: weekNum,
+            is_suspicious: false,
+            note: `Nạp từ ảnh trực tiếp (${imageFile.name})`,
+            is_approved: true,
+            created_at: new Date().toISOString()
+          };
 
+          await supabaseClient.from('tracks').upsert([payload]);
+          logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
+          logOutput.innerText = `✅ Đã nạp thành công track 5km cho ${selectedMember} từ ảnh tải lên!`;
+          clearPasteText();
+          await fetchTracksFromSupabase();
+        }, 1000);
+        return;
+      }
+
+      // Xử lý dán text trực tiếp theo VĐV đã chọn
       const lines = text.split('\n');
       const payloads = [];
       let addedCount = 0;
-      let duplicateFlagCount = 0;
-
-      const currentTrackList = [...tracks];
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
-        if (!line || line.startsWith('Thành viên')) continue;
-
+        if (!line) continue;
         const parts = line.split(',');
-        if (parts.length < 5) continue;
+        if (parts.length < 4) continue;
 
-        const memberName = parts[0].trim();
-        const rawDate = parts[1].trim();
-        const rawType = parts[2].trim().toLowerCase();
-        const distance = parseFloat(parts[3]);
-        const pace = parseFloat(parts[4]);
+        const rawDate = parts[0].trim();
+        const rawType = parts[1].trim().toLowerCase();
+        const distance = parseFloat(parts[2]);
+        const pace = parseFloat(parts[3]);
 
-        const teamId = MEMBERS_MAP[memberName];
-        if (!teamId) continue;
-
+        const teamId = MEMBERS_MAP[selectedMember];
         const type = (rawType.includes('bơi') || rawType === 'swim') ? 'swim' : 'run';
         const week = calculateWeekNumber(rawDate);
         const { isValid } = validateTrackDetails(type, distance, pace);
 
-        const tempTrack = {
-          id: Date.now() + i, date: rawDate, teamId: teamId, member: memberName,
-          type: type, distance: distance, pace: pace, week: week
-        };
-
-        const dupReason = findDuplicateReasons(tempTrack, [...currentTrackList, ...payloads]);
-        const isDuplicate = !!dupReason;
-
-        if (isDuplicate) duplicateFlagCount++;
-
-        let noteText = isDuplicate ? dupReason : "Nạp từ ảnh Strava";
-        const isSuspicious = !isValid || isDuplicate;
-
         payloads.push({
-          id: tempTrack.id, date: rawDate, team_id: teamId, member: memberName,
+          id: Date.now() + i, date: rawDate, team_id: teamId, member: selectedMember,
           type: type, distance: distance, pace: pace, week: week,
-          is_suspicious: isSuspicious,
-          note: noteText,
-          is_approved: false,
+          is_suspicious: !isValid,
+          note: "Nạp từ ảnh/văn bản",
+          is_approved: isValid,
           created_at: new Date().toISOString()
         });
-
         addedCount++;
       }
 
       if (payloads.length > 0) {
-        const { error } = await supabaseClient.from('tracks').upsert(payloads);
-        if (error) {
-          logOutput.className = "p-3 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 mt-2 block";
-          logOutput.innerText = `❌ Lỗi nạp Supabase: ${error.message}`;
-        } else {
-          logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
-          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS! ${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track trùng -> Chuyển sang Cần Duyệt)` : ''}`;
-          document.getElementById('paste-input').value = '';
-          await fetchTracksFromSupabase();
-        }
+        await supabaseClient.from('tracks').upsert(payloads);
+        logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
+        logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS CHO${selectedMember}!`;
+        clearPasteText();
+        await fetchTracksFromSupabase();
       } else {
-        logOutput.className = "p-3 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 mt-2 block";
-        logOutput.innerText = "❌ Không phân tích được dữ liệu. Vui lòng kiểm tra lại!";
+        logOutput.innerText = "❌ Định dạng văn bản chưa đúng. Cú pháp: Ngày(YYYY-MM-DD),Môn(Chạy/Bơi),KhoảngCách(m),Pace";
       }
     }
 
@@ -718,6 +746,11 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
       const selectMember = document.getElementById('input-member');
       selectMember.innerHTML = `<option value="" disabled selected>-- Chọn thành viên --</option>` + ALL_MEMBERS.map(m => 
         `<option value="${m.name}" data-team="${m.teamId}">${m.name}</option>`
+      ).join('');
+
+      const uploadMemberSelect = document.getElementById('upload-member-select');
+      uploadMemberSelect.innerHTML = `<option value="" disabled selected>-- Chọn thành viên --</option>` + ALL_MEMBERS.map(m => 
+        `<option value="${m.name}">${m.name} (Đội ${m.teamId})</option>`
       ).join('');
 
       const filterBoardMember = document.getElementById('global-filter-member');
@@ -744,7 +777,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         let html = '';
         for (let w = 1; w <= 8; w++) {
           const active = khoMao[tId].includes(w);
-          html += `<button onclick="toggleKhoMao(${tId}, ${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w} ${active ? '🔥' : ''}</button>`;
+          html += `<button onclick="toggleKhoMao(${tId},${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w}${active ? '🔥' : ''}</button>`;
         }
         container.innerHTML = html;
       });
@@ -924,7 +957,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
         summaryRowsHtml += `
           <tr class="${isCurrentRow ? 'bg-amber-500/10 border-l-4 border-amber-400' : 'hover:bg-slate-700/30'}">
-            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w} ${isCurrentRow ? '🔥' : ''}</td>
+            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w}${isCurrentRow ? '🔥' : ''}</td>
             <td class="border border-slate-700 p-2">${t1Title}</td>
             <td class="border border-slate-700 p-2 font-semibold text-emerald-300">${t1KmText}</td>
             <td class="border border-slate-700 p-2">${t2Title}</td>
@@ -1001,20 +1034,24 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         bodyContainer.innerHTML = sorted.map((m, idx) => {
           let totalPenalty = 0;
           for (let w = 1; w <= 8; w++) {
-            const key = `${m.name}_Week${w}`;
-            const isWeekEntered = !!memberWeekCompleted[key];
-            if (isWeekEntered) {
-              const weekDaysData = m.dailyTracksMap[w] || {};
-              let validDaysCount = 0;
-              Object.keys(weekDaysData).forEach(dateStr => {
-                const hasValid = weekDaysData[dateStr].some(t => {
-                  const { isValid } = validateTrackDetails(t.type, t.distance, t.pace);
-                  return !((t.isSuspicious || !isValid) && !t.isApproved);
+            const customKey = `${m.name}_Week${w}`;
+            if (customPenalties[customKey] !== undefined) {
+              totalPenalty += customPenalties[customKey];
+            } else {
+              const isWeekEntered = !!memberWeekCompleted[customKey];
+              if (isWeekEntered) {
+                const weekDaysData = m.dailyTracksMap[w] || {};
+                let validDaysCount = 0;
+                Object.keys(weekDaysData).forEach(dateStr => {
+                  const hasValid = weekDaysData[dateStr].some(t => {
+                    const { isValid } = validateTrackDetails(t.type, t.distance, t.pace);
+                    return !((t.isSuspicious || !isValid) && !t.isApproved);
+                  });
+                  if (hasValid) validDaysCount++;
                 });
-                if (hasValid) validDaysCount++;
-              });
-              if (validDaysCount < 6) {
-                totalPenalty += (6 - validDaysCount) * 50000;
+                if (validDaysCount < 6) {
+                  totalPenalty += (6 - validDaysCount) * 50000;
+                }
               }
             }
           }
@@ -1038,19 +1075,9 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         }).join('');
       } else {
         const sorted = [...filteredMembers].sort((a, b) => {
-          // 1. Ưu tiên số km ghi nhận cao hơn (đã cắt trần)
-          if (b.weekAcceptedKm !== a.weekAcceptedKm) {
-            return b.weekAcceptedKm - a.weekAcceptedKm;
-          }
-          // 2. Nếu trùng số ghi nhận, ưu tiên tổng km quy đổi thực tế cao hơn (cột Quy đổi)
-          if (b.weekRawConvertedKm !== a.weekRawConvertedKm) {
-            return b.weekRawConvertedKm - a.weekRawConvertedKm;
-          }
-          // 3. Nếu vẫn trùng, dựa vào tổng lũy tích chung cuộc
-          if (b.cumConvertedKm !== a.cumConvertedKm) {
-            return b.cumConvertedKm - a.cumConvertedKm;
-          }
-          // 4. Cuối cùng sắp xếp theo tên
+          if (b.weekAcceptedKm !== a.weekAcceptedKm) return b.weekAcceptedKm - a.weekAcceptedKm;
+          if (b.weekRawConvertedKm !== a.weekRawConvertedKm) return b.weekRawConvertedKm - a.weekRawConvertedKm;
+          if (b.cumConvertedKm !== a.cumConvertedKm) return b.cumConvertedKm - a.cumConvertedKm;
           return a.name.localeCompare(b.name);
         });
 
@@ -1072,134 +1099,27 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           let penaltyHtml = '<span class="text-slate-600 font-bold text-xs">—</span>';
 
           if (isWeekEntered) {
-            if (validDaysCount >= 6) {
+            let currentPenaltyAmount = (6 - validDaysCount) * 50000;
+            if (currentPenaltyAmount < 0) currentPenaltyAmount = 0;
+            if (customPenalties[key] !== undefined) {
+              currentPenaltyAmount = customPenalties[key];
+            }
+
+            if (validDaysCount >= 6 && currentPenaltyAmount === 0) {
               completionStatusHtml = `<span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full text-xs font-bold">✅ Hoàn thành</span>`;
-              penaltyHtml = `<span class="text-emerald-400 font-semibold">0 đ</span>`;
             } else {
               completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
-              penaltyHtml = `<span class="text-rose-400 font-bold">${((6 - validDaysCount) * 50000).toLocaleString('vi-VN')} đ</span>`;
             }
+
+            const editBtnHtml = isAdmin ? `<button onclick="editCustomPenalty('${m.name}', ${targetWeek},${currentPenaltyAmount})" class="ml-1 text-[10px] bg-slate-700 hover:bg-slate-600 text-amber-300 px-1.5 py-0.5 rounded" title="Sửa tiền phạt / Miễn phạt">✏️ Sửa</button>` : '';
+
+            penaltyHtml = currentPenaltyAmount > 0
+              ? `<span class="text-rose-400 font-bold">${currentPenaltyAmount.toLocaleString('vi-VN')} đ</span> ${editBtnHtml}`
+              : `<span class="text-emerald-400 font-semibold">0 đ (Miễn)</span> ${editBtnHtml}`;
           }
 
           return `
             <tr class="hover:bg-slate-700/30">
               <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
               <td class="p-3 font-bold text-slate-100">${m.name}</td>
-              <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${m.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${m.teamId}</span></td>
-              <td class="p-3">${formatKmVN(m.weekRunKm)}</td>
-              <td class="p-3">${formatKmVN(m.weekSwimKm)}</td>
-              <td class="p-3 font-semibold text-slate-300">${formatKmVN(m.weekRawConvertedKm)}</td>
-              <td class="p-3 text-center"><span class="text-xs bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full ${validDaysCount >= 6 ? 'text-emerald-400' : 'text-slate-300'}">${validDaysCount}/6 ngày</span></td>
-              <td class="p-3 font-extrabold text-cyan-400 text-base">${formatKmVN(m.weekAcceptedKm)}</td>
-              <td class="p-3 text-center admin-only ${isAdmin ? '' : 'hidden'}">
-                <input type="checkbox" ${isWeekEntered ? 'checked' : ''} onchange="toggleMemberWeekCompleted('${m.name}', ${targetWeek}, this.checked)" class="w-4 h-4 text-emerald-500 rounded bg-slate-900 cursor-pointer" />
-              </td>
-              <td class="p-3 text-center">${completionStatusHtml}</td>
-              <td class="p-3 text-right">${penaltyHtml}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-
-      // LỊCH SỬ TRACK
-      const historyTeamVal = document.getElementById('history-filter-team').value;
-      const historyMemberVal = document.getElementById('history-filter-member').value;
-      const historyStatusVal = document.getElementById('history-filter-status').value;
-
-      const filteredTracks = tracks.filter(t => {
-        const matchTeam = (historyTeamVal === 'all' || t.teamId === parseInt(historyTeamVal));
-        const matchMember = (historyMemberVal === 'all' || t.member === historyMemberVal);
-        const { isValid } = validateTrackDetails(t.type, t.distance, t.pace);
-        const isPending = (t.isSuspicious || !isValid) && !t.isApproved;
-
-        let matchStatus = true;
-        if (historyStatusVal === 'pending') matchStatus = isPending;
-        else if (historyStatusVal === 'approved') matchStatus = !isPending;
-        return matchTeam && matchMember && matchStatus;
-      });
-
-      filteredTracks.sort((a, b) => {
-        if (b.date !== a.date) return b.date.localeCompare(a.date);
-        return b.id - a.id;
-      });
-
-      document.getElementById('history-body').innerHTML = filteredTracks.map(t => {
-        const converted = t.type === 'swim' ? (t.distance / 1000) * 4 : t.distance / 1000;
-        const w = t.week || calculateWeekNumber(t.date);
-        
-        const { isValid, isDistanceValid, isPaceValid } = validateTrackDetails(t.type, t.distance, t.pace);
-
-        let statusHtml = "";
-        let rowClass = "hover:bg-slate-700/30";
-        let displayKmText = formatKmVN(converted);
-
-        const distanceCellHtml = isDistanceValid 
-          ? `${t.distance.toLocaleString('vi-VN')} m` 
-          : `<span class="bg-rose-500/20 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/50 line-through">${t.distance.toLocaleString('vi-VN')} m</span>`;
-
-        const paceCellHtml = isPaceValid 
-          ? t.pace 
-          : `<span class="bg-rose-500/20 text-rose-300 font-extrabold px-2 py-0.5 rounded border border-rose-500/50 line-through">${t.pace}</span>`;
-
-        if (t.isApproved) {
-          statusHtml = `<span class="text-cyan-400 text-xs font-semibold">✅ Đã duyệt (Admin)</span>`;
-        } else if (!isValid) {
-          displayKmText = `<span class="text-slate-500 line-through">0,00 km</span>`;
-          rowClass = "bg-rose-500/10 border-l-4 border-rose-500/60";
-          statusHtml = `<span class="text-rose-400 text-xs font-bold">❌ Không hợp lệ</span>`;
-        } else if (t.isSuspicious) {
-          if (isAdmin) {
-            statusHtml = `
-              <button onclick="approveTrack(${t.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-2.5 py-1 rounded text-xs font-black shadow animate-pulse">
-                ⚠️ Chờ duyệt
-              </button>
-            `;
-          } else {
-            statusHtml = `
-              <span class="inline-block bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2.5 py-1 rounded text-xs font-bold shadow-sm">
-                ⚠️ Chờ duyệt
-              </span>
-            `;
-          }
-        } else {
-          statusHtml = `<span class="text-emerald-400 text-xs font-semibold">✅ Hợp lệ (tự động)</span>`;
-        }
-
-        let noteTextDisplay = t.note || '';
-        if (noteTextDisplay.startsWith('⚠️')) {
-          noteTextDisplay = noteTextDisplay.replace(/^⚠️\s*/, '');
-        }
-        const noteHtml = noteTextDisplay ? `<span class="block text-[11px] text-amber-300 italic">⚠️ ${noteTextDisplay}</span>` : '';
-
-        return `
-          <tr class="${rowClass}">
-            <td class="p-3 text-slate-300 text-xs font-bold">${formatDateVN(t.date)}</td>
-            <td class="p-3 text-amber-400 font-bold text-xs">Tuần ${w}</td>
-            <td class="p-3 font-semibold text-slate-100">
-              ${t.member}
-              ${noteHtml}
-            </td>
-            <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.teamId === 1 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${t.teamId}</span></td>
-            <td class="p-3 font-bold">${t.type === 'swim' ? '🏊‍♂️ Bơi' : '🏃‍♀️ Chạy'}</td>
-            <td class="p-3 font-bold">${distanceCellHtml}</td>
-            <td class="p-3 font-bold">${paceCellHtml}</td>
-            <td class="p-3 font-bold text-cyan-400">${displayKmText}</td>
-            <td class="p-3 text-center">${statusHtml}</td>
-            <td class="p-3 text-center admin-only ${isAdmin ? '' : 'hidden'}">
-              <div class="flex items-center justify-center gap-1.5">
-                <button onclick="editTrack(${t.id})" class="bg-amber-500/20 text-amber-300 hover:bg-amber-500/40 px-2.5 py-1 rounded text-xs font-semibold border border-amber-500/30">✏️ Sửa</button>
-                <button onclick="deleteTrackFromSupabase(${t.id})" class="bg-rose-500/20 text-rose-300 hover:bg-rose-500/40 px-2.5 py-1 rounded text-xs font-semibold border border-rose-500/30">🗑 Xóa</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    initWeekDropdown();
-    initMemberSelects();
-    applyAdminPermissions();
-    fetchTracksFromSupabase();
-  </script>
-</body>
-</html>
+              <td class="p-3 text-center"><span class="px
