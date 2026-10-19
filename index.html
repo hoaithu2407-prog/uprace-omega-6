@@ -669,7 +669,6 @@
       
       if (imageFile) {
         logOutput.innerText = `📸 Đã nhận ảnh của ${selectedMember}. Đang xử lý tự động nạp track...`;
-        // Hỗ trợ giả lập xử lý ảnh trực tiếp gắn với VĐV được chọn
         setTimeout(async () => {
           const todayIso = new Date().toISOString().split('T')[0];
           const weekNum = calculateWeekNumber(todayIso);
@@ -699,7 +698,6 @@
         return;
       }
 
-      // Xử lý dán text trực tiếp theo VĐV đã chọn
       const lines = text.split('\n');
       const payloads = [];
       let addedCount = 0;
