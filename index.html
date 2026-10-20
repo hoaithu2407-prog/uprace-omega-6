@@ -23,11 +23,12 @@
     }
 
     body.is-admin #sec-compare { order: 1; }
-    body.is-admin #sec-form { order: 2; }
-    body.is-admin #sec-history { order: 3; }
-    body.is-admin #sec-khomao { order: 4; }
-    body.is-admin #sec-team-board { order: 5; }
-    body.is-admin #sec-indiv-board { order: 6; }
+    body.is-admin #sec-paste { order: 2; }
+    body.is-admin #sec-form { order: 3; }
+    body.is-admin #sec-history { order: 4; }
+    body.is-admin #sec-khomao { order: 5; }
+    body.is-admin #sec-team-board { order: 6; }
+    body.is-admin #sec-indiv-board { order: 7; }
 
     body:not(.is-admin) #sec-compare { order: 1; }
     body:not(.is-admin) #sec-team-board { order: 2; }
@@ -146,6 +147,31 @@
           <span id="week-pct-team2" class="text-amber-400">50,0%</span>
         </div>
       </div>
+    </section>
+
+    <!-- KHU VỰC DÁN DỮ LIỆU BÓC TÁCH TỪ ẢNH (CHỈ ADMIN THẤY) -->
+    <section id="sec-paste" class="admin-only hidden bg-slate-800 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl space-y-3">
+      <div class="flex justify-between items-center">
+        <h2 class="text-emerald-400 font-bold text-base flex items-center gap-2">
+          📋 DÁN DỮ LIỆU ĐÃ BÓC TÁCH TỪ ẢNH STRAVA
+        </h2>
+        <span class="text-xs text-slate-400 italic">Dán văn bản dạng CSV do AI trả lời vào đây</span>
+      </div>
+
+      <div>
+        <textarea id="paste-input" rows="5" placeholder="Dán đoạn chữ bóc tách vào đây, ví dụ:
+Danh Nguyễn,2026-10-08,Bơi,2397,2.38
+Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-mono text-amber-300 focus:outline-none focus:border-emerald-400"></textarea>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button onclick="clearPasteText()" class="bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">Xóa văn bản</button>
+        <button onclick="processPastedData()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-2 rounded-xl text-xs shadow-lg flex items-center gap-2">
+          🚀 NẠP HÀNG LOẠT VÀO HỆ THỐNG
+        </button>
+      </div>
+
+      <div id="paste-log-output" class="hidden p-3 rounded-xl text-xs font-bold transition-all shadow-md mt-2"></div>
     </section>
 
     <!-- FORM NHẬP / SỬA TRACK (CHỈ ADMIN THẤY) -->
@@ -360,8 +386,6 @@
     let penaltyNotes = JSON.parse(localStorage.getItem('uprace_penalty_notes')) || {};
     let lastUpdatedFormatted = null;
 
-    document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
-
     function formatDateVN(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
@@ -454,17 +478,13 @@
 
     async function fetchTracksFromSupabase() {
       const { data, error } = await supabaseClient.from('tracks').select('*').order('created_at', { ascending: false });
-      if (error) {
-        console.error("Lỗi tải Supabase:", error);
-        return;
-      }
-      if (data) {
-        tracks = data.map(item => ({
+      if (!error) {
+        tracks = (data || []).map(item => ({
           id: item.id, date: item.date, teamId: item.team_id, member: item.member,
           type: item.type, distance: item.distance, pace: item.pace, week: item.week,
           isSuspicious: item.is_suspicious, note: item.note, isApproved: item.is_approved, createdAt: item.created_at
         }));
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           lastUpdatedFormatted = formatFullDateTimeVN(data[0].created_at);
         }
         render();
@@ -614,6 +634,105 @@
       await supabaseClient.from('tracks').upsert([payload]);
       cancelEditTrack();
       fetchTracksFromSupabase();
+    }
+
+    function clearPasteText() {
+      document.getElementById('paste-input').value = '';
+      document.getElementById('paste-log-output').classList.add('hidden');
+    }
+
+    function findDuplicateReasons(newTrack, existingTracks) {
+      for (let old of existingTracks) {
+        if (old.id === newTrack.id) continue;
+        
+        const isSameMember = (old.member === newTrack.member);
+        const isSameDate = (old.date === newTrack.date);
+        const isExactDistance = (old.distance === newTrack.distance);
+
+        if (isSameMember && isSameDate && isExactDistance) {
+          return `Lưu ý: Có thể trùng track`;
+        }
+      }
+      return null;
+    }
+
+    async function processPastedData() {
+      if (!isAdmin) return;
+      const text = document.getElementById('paste-input').value.trim();
+      const logOutput = document.getElementById('paste-log-output');
+
+      if (!text) return alert("⚠️ Vui lòng dán đoạn chữ vào ô nhé!");
+
+      logOutput.className = "p-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 mt-2 block";
+      logOutput.innerText = "⏳ Đang phân tích và đối soát trùng lặp...";
+
+      const lines = text.split('\n');
+      const payloads = [];
+      let addedCount = 0;
+      let duplicateFlagCount = 0;
+
+      const currentTrackList = [...tracks];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line || line.startsWith('Thành viên')) continue;
+
+        const parts = line.split(',');
+        if (parts.length < 5) continue;
+
+        const memberName = parts[0].trim();
+        const rawDate = parts[1].trim();
+        const rawType = parts[2].trim().toLowerCase();
+        const distance = parseFloat(parts[3]);
+        const pace = parseFloat(parts[4]);
+
+        const teamId = MEMBERS_MAP[memberName];
+        if (!teamId) continue;
+
+        const type = (rawType.includes('bơi') || rawType === 'swim') ? 'swim' : 'run';
+        const week = calculateWeekNumber(rawDate);
+        const { isValid } = validateTrackDetails(type, distance, pace);
+
+        const tempTrack = {
+          id: Date.now() + i, date: rawDate, teamId: teamId, member: memberName,
+          type: type, distance: distance, pace: pace, week: week
+        };
+
+        const dupReason = findDuplicateReasons(tempTrack, [...currentTrackList, ...payloads]);
+        const isDuplicate = !!dupReason;
+
+        if (isDuplicate) duplicateFlagCount++;
+
+        let noteText = isDuplicate ? dupReason : "Nạp từ ảnh Strava";
+        const isSuspicious = !isValid || isDuplicate;
+
+        payloads.push({
+          id: tempTrack.id, date: rawDate, team_id: teamId, member: memberName,
+          type: type, distance: distance, pace: pace, week: week,
+          is_suspicious: isSuspicious,
+          note: noteText,
+          is_approved: false,
+          created_at: new Date().toISOString()
+        });
+
+        addedCount++;
+      }
+
+      if (payloads.length > 0) {
+        const { error } = await supabaseClient.from('tracks').upsert(payloads);
+        if (error) {
+          logOutput.className = "p-3 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 mt-2 block";
+          logOutput.innerText = `❌ Lỗi nạp Supabase: ${error.message}`;
+        } else {
+          logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
+          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS! ${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track trùng -> Chuyển sang Cần Duyệt)` : ''}`;
+          document.getElementById('paste-input').value = '';
+          await fetchTracksFromSupabase();
+        }
+      } else {
+        logOutput.className = "p-3 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 mt-2 block";
+        logOutput.innerText = "❌ Không phân tích được dữ liệu. Vui lòng kiểm tra lại!";
+      }
     }
 
     function initMemberSelects() {
