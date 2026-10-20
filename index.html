@@ -578,12 +578,12 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
     function editCustomPenalty(memberName, weekNum, currentVal, currentNote) {
       if (!isAdmin) return;
-      const input = prompt(`💰 Nhập số tiền phạt mới cho ${memberName} (Tuần ${weekNum}):`, currentVal);
+      const input = prompt(`💰 Nhập số tiền nhà tài trợ mới cho ${memberName} (Tuần ${weekNum}):`, currentVal);
       if (input !== null) {
         const val = parseInt(input);
         if (!isNaN(val)) {
           customPenalties[`${memberName}_Week${weekNum}`] = val;
-          const noteInput = prompt(`📝 Nhập ghi chú/lý do phạt cho ${memberName} (Tuần ${weekNum}):`, currentNote || "");
+          const noteInput = prompt(`📝 Nhập ghi chú/lý do cho ${memberName} (Tuần ${weekNum}):`, currentNote || "");
           if (noteInput !== null) {
             penaltyNotes[`${memberName}_Week${weekNum}`] = noteInput.trim();
           }
@@ -725,7 +725,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           logOutput.innerText = `❌ Lỗi nạp Supabase: ${error.message}`;
         } else {
           logOutput.className = "p-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mt-2 block";
-          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS! ${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track trùng -> Chuyển sang Cần Duyệt)` : ''}`;
+          logOutput.innerText = `✅ ĐÃ NẠP THÀNH CÔNG ${addedCount} TRACKS!${duplicateFlagCount > 0 ? `(Phát hiện ${duplicateFlagCount} track trùng -> Chuyển sang Cần Duyệt)` : ''}`;
           document.getElementById('paste-input').value = '';
           await fetchTracksFromSupabase();
         }
@@ -765,7 +765,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
         let html = '';
         for (let w = 1; w <= 8; w++) {
           const active = khoMao[tId].includes(w);
-          html += `<button onclick="toggleKhoMao(${tId}, ${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w} ${active ? '🔥' : ''}</button>`;
+          html += `<button onclick="toggleKhoMao(${tId},${w})" class="px-2 py-1.5 rounded-lg text-xs font-bold transition-all ${active ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">Tuần ${w}${active ? '🔥' : ''}</button>`;
         }
         container.innerHTML = html;
       });
@@ -945,7 +945,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
         summaryRowsHtml += `
           <tr class="${isCurrentRow ? 'bg-amber-500/10 border-l-4 border-amber-400' : 'hover:bg-slate-700/30'}">
-            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w} ${isCurrentRow ? '🔥' : ''}</td>
+            <td class="border border-slate-700 p-2 font-bold ${isCurrentRow ? 'text-amber-300' : 'text-slate-400'}">Tuần ${w}${isCurrentRow ? '🔥' : ''}</td>
             <td class="border border-slate-700 p-2">${t1Title}</td>
             <td class="border border-slate-700 p-2 font-semibold text-emerald-300">${t1KmText}</td>
             <td class="border border-slate-700 p-2">${t2Title}</td>
@@ -997,7 +997,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
           <tr>
             <th class="p-3">Hạng</th><th class="p-3">TV</th><th class="p-3 text-center">Đội</th>
             <th class="p-3">Chạy</th><th class="p-3">Bơi</th><th class="p-3 text-cyan-400 font-black">Quy đổi</th>
-            <th class="p-3 text-center">Số Track</th><th class="p-3 text-right text-rose-400 font-bold">Tổng Phạt</th>
+            <th class="p-3 text-center">Số Track</th><th class="p-3 text-right text-rose-400 font-bold">NHÀ TÀI TRỢ</th>
           </tr>
         `;
       } else {
@@ -1007,7 +1007,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
             <th class="p-3">Chạy</th><th class="p-3">Bơi</th><th class="p-3">Quy đổi</th>
             <th class="p-3 text-center">Số Ngày</th><th class="p-3 text-cyan-400 font-black">Ghi Nhận</th>
             <th class="p-3 text-center admin-only ${isAdmin ? '' : 'hidden'}">Đã nhập</th>
-            <th class="p-3 text-center">Hoàn thành?</th><th class="p-3 text-right text-rose-400 font-bold">Tiền Phạt & Ghi Chú</th>
+            <th class="p-3 text-center">Hoàn thành?</th><th class="p-3 text-right text-rose-400 font-bold">NHÀ TÀI TRỢ</th>
           </tr>
         `;
       }
@@ -1046,7 +1046,7 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
 
           const penaltyDisplay = totalPenalty > 0 
             ? `<span class="text-rose-400 font-bold">${totalPenalty.toLocaleString('vi-VN')} đ</span>`
-            : `<span class="text-emerald-400 font-semibold">0 đ</span>`;
+            : ``;
 
           return `
             <tr class="hover:bg-slate-700/30">
@@ -1100,13 +1100,13 @@ Danh Nguyễn,2026-10-07,Bơi,1000,2.11" class="w-full bg-slate-900 border borde
               completionStatusHtml = `<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded-full text-xs font-bold">❌ Không hoàn thành</span>`;
             }
 
-            const editBtnHtml = isAdmin ? `<button onclick="editCustomPenalty('${m.name}', ${targetWeek}, ${currentPenaltyAmount}, '${currentNote.replace(/'/g, "\\'")}')" class="ml-1 text-[10px] bg-slate-700 hover:bg-slate-600 text-amber-300 px-1.5 py-0.5 rounded" title="Sửa tiền phạt và ghi chú">✏️ Sửa</button>` : '';
+            const editBtnHtml = isAdmin ? `<button onclick="editCustomPenalty('${m.name}',${targetWeek}, ${currentPenaltyAmount}, '${currentNote.replace(/'/g, "\\'")}')" class="ml-1 text-[10px] bg-slate-700 hover:bg-slate-600 text-amber-300 px-1.5 py-0.5 rounded" title="Sửa nhà tài trợ và ghi chú">✏️ Sửa</button>` : '';
 
             const noteDisplay = currentNote ? `<span class="block text-[11px] text-amber-300 italic">📝 ${currentNote}</span>` : '';
 
             const moneyText = currentPenaltyAmount > 0
               ? `<span class="text-rose-400 font-bold">${currentPenaltyAmount.toLocaleString('vi-VN')} đ</span>`
-              : `<span class="text-emerald-400 font-semibold">0 đ (Miễn)</span>`;
+              : ``;
 
             penaltyHtml = `
               <div class="flex flex-col items-end">
